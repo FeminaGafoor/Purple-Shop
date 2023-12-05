@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User Management</span></h4>
+
+      <hr class="my-5" />
+
+      <!-- Contextual Classes -->
+
+      <div class="card">
+        <h5 class="card-header"></h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User_Id</th>
+                <th>User_Name</th>
+                <th>Email</th>
+                  <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              {% for item in users %}
+              <tr class="table-default">
+                <td><i class="fab fa-sketch fa-lg text-warning me-3"></i> <strong>{{forloop.counter}} </strong></td>
+                <td>{{item.username}} </td>
+                <td>{{item.email}} </td>
+                <td>
+                  {% if item.is_active %}
+                  <ul class="list-styled users-list m-0 avatar-group d-flex rounded-pill alert-success text-align-centre ">
+                    Active
+                  </ul>
+                  {% else %}
+                  <ul class="list-styled users-list m-0 avatar-group d-flex rounded-pill alert-danger align-items-center">
+                    Deactive
+                  </ul>
+                  {% endif %}
+                </td>
+                <!-- <td> -->
+                  {% if item.is_active %}
+                  <td><a href="#" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" 
+                    data-bs-target="#confirmationModal{{ item.id }}">Block</a></td>
+              {% else %}
+                  <td><a href="#"  type="button" class="btn btn-outline-success" data-bs-toggle="modal" 
+                    data-bs-target="#confirmationModal{{ item.id }}">Unblock</a></td>
+              {% endif %}
+                   
+              </tr>
+            {% endfor %}
+
+
+            <!-- Confirmation Modal -->
+          {% for item in users %}
+           <div class="modal fade" id="confirmationModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+             <div class="modal-content">
+              <div class="modal-header">
+               <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+             <div class="modal-body">
+             {% if item.is_active %}
+             <p>Are you sure you want to block {{ item.username }}?</p>
+             {% else %}
+             <p>Are you sure you want to unblock {{ item.username }}?</p>
+             {% endif %}
+            </div>
+          <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <a href="{% url 'for_admin:user_block' item.id %}" class="btn btn-primary">Confirm</a>
+    </div>
+  </div>
+    </div>
+    </div>
+    {% endfor %}
+<!-- /Confirmation Modal -->
+           </tbody>
+          </table>
+        </div>
+      </div>
+      <!--/ Contextual Classes -->
+
+   
+      {% comment %} {% comment %} <hr class="my-5" />
+
+      
+    </div>
+    <!-- / Content -->
+
+    <!-- Footer -->
+    <footer class="content-footer footer bg-footer-theme">
+      <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+        <div class="mb-2 mb-md-0">
+          ©
+          <script>
+            document.write(new Date().getFullYear());
+          </script>
+          , made with ❤️ by
+          <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+        </div>
+        <div>
+          <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
+          <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
+
+          <a
+            href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+            target="_blank"
+            class="footer-link me-4"
+            >Documentation</a
+          >
+
+          <a
+            href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+            target="_blank"
+            class="footer-link me-4"
+            >Support</a
+          >
+        </div>
+      </div>
+    </footer>
+    <!-- / Footer --> {% endcomment %}
+
+    <div class="content-backdrop fade"></div>
+  </div>
+  <!-- Content wrapper --> 
+
+
+  
+
+  {% endblock %} 
