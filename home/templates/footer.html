@@ -116,23 +116,23 @@
 			<div class="p-t-40">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
+						<img src="{% static 'user\assets\images\icons\icon-pay-01.png' %}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
+						<img src="{% static 'user\assets\images\icons\icon-pay-02.png' %}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
+						<img src="{% static 'user\assets\images\icons\icon-pay-03.png' %}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
+						<img src="{% static 'user\assets\images\icons\icon-pay-04.png' %}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
+						<img src="{% static 'user\assets\images\icons\icon-pay-05.png' %}"alt="ICON-PAY">
 					</a>
 				</div>
 
@@ -354,7 +354,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 <script src="{% static 'user\assets\vendor\isotope\isotope.pkgd.min.js' %}"></script>
 <!--===============================================================================================-->
-<script src="{% static 'user\assets\vendor\sweetalert\sweetalert.min.js' %}"></script>
+{% comment %} <script src="{% static 'user\assets\vendor\sweetalert\sweetalert.min.js' %}"></script>
 <script>
     $('.js-addwish-b2').on('click', function(e){
         e.preventDefault();
@@ -379,18 +379,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             $(this).addClass('js-addedwish-detail');
             $(this).off('click');
         });
-    });
+    }); {% endcomment %}
 
-    /*---------------------------------------------*/
+    {% comment %} /*---------------------------------------------*/ {% endcomment %}
 
-    $('.js-addcart-detail').each(function(){
+    {% comment %} $('.js-addcart-detail').each(function(){
         var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
         $(this).on('click', function(){
             swal(nameProduct, "is added to cart !", "success");
         });
     });
 
-</script>
+</script> {% endcomment %}
 <!--===============================================================================================-->
 <script src="{% static 'user\assets\vendor\perfect-scrollbar\perfect-scrollbar.min.js' %}"></script>
 <script>

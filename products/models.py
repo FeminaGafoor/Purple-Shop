@@ -3,6 +3,9 @@ from django.db import models
 
 # Create your models here.
 
+# category model---------
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
     category_description = models.CharField(max_length=50, unique=True, null=True)
@@ -18,6 +21,10 @@ class Category(models.Model):
     
     def __str__(self):
         return self.category_name
+    
+    
+# product model---------
+
     
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=200)
