@@ -26,6 +26,9 @@ urlpatterns = [
     path('adminpanel/',include('adminpanel.urls')),
     path('products/',include('products.urls')),
     path('outgoing/',include('outgoing.urls')),
+    path('accounts/',include('accounts.urls')),
+    
+    
     
 ]
 
