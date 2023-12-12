@@ -1,10 +1,11 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
 
 from .models import Category, Product
+from django.db.models import Q
 
 # Create your views here.
 
@@ -69,7 +70,18 @@ def single_product(request,category_slug,product_slug):
     return render(request, "single_product.html",context)
     
     
-
-
+def search(request):
+    products = []  # Initialize products list
+    
+    if 'search_product' in request.GET:
+        search_product = request.GET['search_product']
+        if search_product:
+            products = Product.objects.order_by('-created_date').filter(Q(description__icontains=search_product) | Q(product_name__icontains=search_product))
+        
+    
+    context = {
+        'product': products
+    }
+    return render(request, "shop.html", context)
 
     
