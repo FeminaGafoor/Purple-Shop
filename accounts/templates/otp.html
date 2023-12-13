@@ -67,7 +67,7 @@
 </head>
 
 <body>
-    <h1>OTP Verification</h1>
+    
 
     <form method="POST" action="{% url 'account:verify_otp' %}"> <!-- Replace with your form action URL -->
         {% csrf_token %} <!-- Include this for security -->
@@ -77,14 +77,14 @@
 
         <button type="submit">Verify OTP</button>
 
-        {% if messages %}
+        {% comment %} {% if messages %}
         <!-- Bootstrap alert component -->
         <div class="alert">
             {% for message in messages %}
             {{ message }}
             {% endfor %}
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
     </form>
 </body>
 

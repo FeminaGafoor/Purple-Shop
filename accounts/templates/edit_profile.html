@@ -1,0 +1,158 @@
+{% load static %}
+{% include 'shop_header.html' %}
+{% block content %}
+
+
+<div style="text-align: center; margin-top: 20px;">
+    <span class="block1-name ltext-102 trans-04 p-b-8">
+        EDIT PROFILE
+    </span>
+</div>
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-0" action="{% url 'account:edit_profile' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}  
+    <div class="container">
+        <div class="row">
+             
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    
+                     <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_row">
+                                <td class="column-1">
+                                  
+
+                                    <div class="col-lg-10">
+                                
+                                       
+                                            <br>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="username" class="col-sm-4 col-form-label">Username:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user.username }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="first_name" class="col-sm-4 col-form-label">First Name:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.user_profile.first_name }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="last_name" class="col-sm-4 col-form-label">Last Name:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.user_profile.last_name }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                                                <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Phone:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ user_profile.phone }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Address_1:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="address_1" name="address_1" value="{{ user.address_1 }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Address_2:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="address_2" name="address_2" value="{{ user.address_2 }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">City:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="city" name="city" value="{{ user.city }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">State:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="state" name="state" value="{{ user.state }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="phone" class="col-sm-4 col-form-label">Country:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="country" name="country" value="{{ user.country }}">
+                                            </div>
+                                            
+                                            </div>
+                                            
+                                            <!-- Profile Photo -->
+                                            <div class="form-group row">
+                                                <label for="profile_photo" class="col-sm-3 col-form-label">Profile Photo:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="file" class="form-control-file" id="profile_photo" name="image">
+                                                </div>
+                                            </div>
+                            
+                                            
+                                            <br>
+                                        
+        
+                                        </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                   
+
+                    <div class="flex-w flex-t p-t-27 p-b-33">
+                
+                    </div>
+                    <button type="submit" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        Update Profile
+                    </button>
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        Change Password
+                    </button>
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        My Orders
+                    </button>
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        Log out
+                    </button>
+                
+                </div>
+            </div>
+       
+        </div>
+    </div>
+</form>
+    
+
+
+{% endblock %}
+{% include 'footer.html' %}

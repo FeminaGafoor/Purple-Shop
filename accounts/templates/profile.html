@@ -1,0 +1,120 @@
+{% load static %}
+{% include 'shop_header.html' %}
+{% block content %}
+
+
+<div style="text-align: center; margin-top: 20px;">
+    <span class="block1-name ltext-102 trans-04 p-b-8">
+        MY PROFILE
+    </span>
+</div>
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_row">
+                                <td class="column-1">
+                                    
+
+                                    <div class="col-lg-10">
+                                
+                                       
+                                            <br>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
+                                                <div class="col-sm-8">
+                                                    <div  class="form-control" id="username" name="username" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user.username }}</div>
+                                                </div>
+                                            </div>
+                                   
+
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="phone" class="col-sm-4 col-form-label">Phone:</label>
+                                                <div class="col-sm-8">
+                                                <div class="form-control" id="phone" name="phone" readonly style="color: black; background-color: #ffffff; pointer-events: none;" >
+                                                    {{ user_pro.phone }}</div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                                                <div class="col-sm-8">
+                                                <div  class="form-control" id="email" name="email" readonly style="color: black; background-color: #ffffff; pointer-events: none;" >
+                                                    {{ user.email }}</div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="address_1" class="col-sm-4 col-form-label">Address_1:</label>
+                                                <div class="col-sm-8">
+                                                <div class="form-control" id="address_1" name="address_1" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.address_1 }}</div>
+                                            </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="address_2" class="col-sm-4 col-form-label">Address_2:</label>
+                                                <div class="col-sm-8">
+                                                <div  class="form-control" id="address_2" name="address_2"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.address_2 }}</div>
+                                            </div>
+                                        </div>
+                                            <!-- Add more fields for address, city, state, country, etc. -->
+                                        <br>
+                                   
+        
+                                        </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                    <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                        <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 200px; height: 200px; display: flex; justify-content: center;
+                        text-align: center;margin-left: 45px;">
+                    </div>
+                   
+{% comment %} 
+                    <div class="flex-w flex-t p-t-27 p-b-33">
+                   </div> {% endcomment %}
+                    <a href="{% url 'account:edit_profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        Edit Profile
+                    </a>
+                    
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        Change Password
+                    </button>
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        My Orders
+                    </button>
+                    <br>
+                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                        Log out
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+    
+
+
+{% endblock %}
+{% include 'footer.html' %}
