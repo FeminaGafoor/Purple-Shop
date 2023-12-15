@@ -1,6 +1,7 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 from products.models import Product, ProductVariant
+from accounts.models import User_Profile
 
 # Create your models here.
     
@@ -17,9 +18,10 @@ class Cart(models.Model):
         return self.cart_id
     
 class CartItem(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_variant = models.ManyToManyField(ProductVariant, blank=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=1)
     is_active = models.BooleanField(default=True)
     

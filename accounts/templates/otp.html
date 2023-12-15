@@ -77,14 +77,14 @@
 
         <button type="submit">Verify OTP</button>
 
-        {% comment %} {% if messages %}
+         {% if messages %}
         <!-- Bootstrap alert component -->
         <div class="alert">
             {% for message in messages %}
             {{ message }}
             {% endfor %}
         </div>
-        {% endif %} {% endcomment %}
+        {% endif %} 
     </form>
 </body>
 

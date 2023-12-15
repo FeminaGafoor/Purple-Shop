@@ -63,6 +63,14 @@
                   </div>
                   
                 </form>
+                  {% comment %} {% if messages %}
+              <!-- Bootstrap alert component -->
+              <div class="alert">
+                  {% for message in messages %}
+                  {{ message }}
+                  {% endfor %}
+              </div>
+              {% endif %}  {% endcomment %}
                 <p class="text-center">
                   If You are a member ! <a  href="{% url 'account:user_login' %}">Login</a>
                 </p>

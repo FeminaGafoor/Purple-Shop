@@ -12,7 +12,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def _cart_id(request):
+    
     cart = request.session.session_key
+    
     if not cart:
         request.session.create()
         cart = request.session.session_key
@@ -20,7 +22,7 @@ def _cart_id(request):
 
 
 def add_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = Product.objects.get(id=product_id) # get the product
     product_variants = []
     if request.method=="POST":
         for item in request.POST:
@@ -28,16 +30,15 @@ def add_cart(request, product_id):
             value = request.POST[key]
             
             try:
-                variants = ProductVariant.objects.get(product= product,variant_types=key, variant_value=value)
+                variants = ProductVariant.objects.get(product= product,variant_types__iexact=key, variant_value__iexact=value)
                 product_variants.append(variants)
          
             except:
                 pass
-        
-    
-    
+      
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
+        print(cart,"cart in cart views")
     except Cart.DoesNotExist:
         cart = Cart.objects.create(
             cart_id = _cart_id(request)
@@ -57,7 +58,6 @@ def add_cart(request, product_id):
         for item in cart_item:
             
             existing_variation = item.product_variant.all()
-            
             ex_var_list.append(list(existing_variation))
             id.append(item.id)
             
@@ -123,6 +123,43 @@ def cart(request, total=0, quantity=0, cart_items=None):
     shipping = 40  
     tax = 0
     grand_total = 0
+
+    try:
+        if request.user.is_authenticated:
+            
+            cart_items = CartItem.objects.filter(user=request.user, is_active=True).order_by('id')
+        else:    
+            cart = Cart.objects.get(cart_id=_cart_id(request))
+            
+            cart_items = CartItem.objects.filter(cart=cart, is_active=True).order_by('id')
+
+        for cart_item in cart_items:
+            total += (cart_item.product.price * cart_item.quantity)
+            quantity += cart_item.quantity
+            tax = (2 * total)/100
+            tax = round(tax,2)
+            grand_total = total+tax+shipping
+            grand_total = round(grand_total, 2)
+    except ObjectDoesNotExist:
+        pass
+
+    context = {
+       
+        'quantity': quantity,
+        'shipping': shipping,
+        'cart_items': cart_items,
+        'total': total,
+        "tax":tax,
+        "grand_total":grand_total,
+    }
+    return render(request, 'cart.html', context)
+
+
+def checkout(request, total=0, quantity=0, cart_items=None):
+    
+    shipping = 40  
+    tax = 0
+    grand_total = 0
     
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -148,8 +185,5 @@ def cart(request, total=0, quantity=0, cart_items=None):
         "tax":tax,
         "grand_total":grand_total,
     }
-    return render(request, 'cart.html', context)
-
-
-def checkout(request):
-    return render(request, 'checkout.html')
+    
+    return render(request, 'checkout.html',context)

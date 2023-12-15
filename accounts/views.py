@@ -1,6 +1,7 @@
 import random
 import re
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -15,8 +16,7 @@ from django.core.mail import send_mail
 
 def sign_up(request):
     if request.method == 'POST':
-        print("!!!!!!!!!!!!!!!!!!")
-        
+        print("||||||||||||||||||signup")
         #otp with signup----------
         
         get_otp = request.POST.get('otp')
@@ -24,7 +24,7 @@ def sign_up(request):
             get_email = request.POST.get('email')
             user = Customer.objects.get(email=get_email)
             print(user,"user!!!!!!!!!!!!!!!!!!")
-
+            print("otp")
             
             if not re.search(re.compile(r'^/{6}$'),get_otp):
                 messages.error(request,'OTP should only contain numeric!')
@@ -56,7 +56,7 @@ def sign_up(request):
             email=request.POST.get('email')
             password=request.POST.get('password')
             repassword=request.POST.get('re_password')
-          
+            print("else||||||||||||||||||||")
             # if username.strip() == '' or email.strip() == '' or   password.strip() == '' or repassword.strip() == '': 
             #     messages.info(request , ' field is empty!')
             #     return render(request, 'signup.html')
@@ -163,45 +163,90 @@ def verify_otp(request):
     return render(request, 'otp.html')
 
 
-
-
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-
-        # Use authenticate for user authentication
+        
         user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            
+            
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                print(cart,"cart")
+                cart_item = CartItem.objects.filter(cart=cart)
+                for item in cart_item:
+                    item.user = user
+                    item.save()
+                    
+                login(request, user)
+                
+                # Get or create cart for the user
+               
 
-        # if user is not None:
-        #     try:
-        #         # Handle cart-related logic
-        #         cart = get_object_or_404(Cart, cart_id=_cart_id(request))
-        #         check_variant = CartItem.objects.filter(cart=cart)
-
-        #         if check_variant:
-        #             cart_pro = CartItem.objects.filter(cart=cart)
-        #             for product in cart_pro:
-        #                 product.user = user
-        #                 product.save()
-        #     except Exception as e:
-        #         # Log or handle exceptions appropriately
-        #         print(f"Error handling cart: {e}")
-
-            # Log in the user using Django's login function
-        login(request, user)
-        request.session['user'] = email
-        return redirect('outgoing_app:checkout')
-    else:
-        messages.error(request, 'Invalid Credentials')
+                request.session['user'] = email
+                return redirect('outgoing_app:checkout')
+                
+            except Exception as e:
+                print("Exception occurred:", e)
+                # Handle any other exceptions that might occur
+                pass
+        else:
+            messages.error(request, 'Invalid Credentials')
 
     return render(request, 'login.html')
+
+# def user_login(request):
+#     if request.method == "POST":
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+
+#         # Use authenticate for user authentication
+#         user = authenticate(request, username=username, password=password)
+#         print(user,"user")
+#         if user is not None:
+#             try:
+#                 print("||||||||||||||||try")
+#                 cart_id = _cart_id(request)
+#                 cart, created = Cart.objects.get_or_create(cart_id=cart_id)
+#                 # Get or create cart for the user
+#                 # cart = Cart.objects.get(cart_id=_cart_id(request))
+#                 # cart, created = Cart.objects.get_or_create(cart_id=_cart_id(request))
+#                 # cart = Cart.objects.all()
+#                 print(cart,"cart get all")
+#                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+#                 print(is_cart_item_exists,"is_cart_item_exists")
+                
+#                 if is_cart_item_exists:
+#                     cart_item = CartItem.objects.filter(cart=cart)
+#                     print(cart_item,"cart_iteminside if cart_item_exists")
+                    
+#                     for item in cart_item:
+#                         item.user = user
+#                         item.save()
+            
+#             except :
+                
+#                 print("Entering inside except block")
+#                 pass
+
+#             # Log in the user using Django's login function
+#         login(request, user)
+#         request.session['user'] = email
+#         return redirect('outgoing_app:checkout')
+#     else:
+#         messages.error(request, 'Invalid Credentials')
+
+#     return render(request, 'login.html')
 
 
 def user_logout(request):
     logout(request)
-    return redirect('account:user_login')
+    return redirect('home_app:home')
 
 
 

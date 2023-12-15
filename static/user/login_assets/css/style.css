@@ -8184,9 +8184,9 @@ h1, h2, h3, h4, h5,
   overflow: hidden;
   background: #fff;
   border-radius: 5px;
-  -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
-  -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
-  box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24); }
+  -webkit-box-shadow: 0px 10px 34px -15px #9a7d66;
+  -moz-box-shadow: 0px 10px 34px -15px #9a7d66;
+  box-shadow: 0px 10px 34px -15px #9a7d66; }
 
 .img, .login-wrap {
   width: 50%; }
@@ -8222,19 +8222,19 @@ h1, h2, h3, h4, h5,
   border-radius: 5px;
   -webkit-box-shadow: none;
   box-shadow: none;
-  border: 1px solid rgba(0, 0, 0, 0.1); }
+  border: 1px solid #9a7d66; }
   .form-control::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
-    color: rgba(0, 0, 0, 0.2) !important; }
+    color: #9a7d66 !important; }
   .form-control::-moz-placeholder {
     /* Firefox 19+ */
-    color: rgba(0, 0, 0, 0.2) !important; }
+    color: #9a7d66 !important; }
   .form-control:-ms-input-placeholder {
     /* IE 10+ */
-    color: rgba(0, 0, 0, 0.2) !important; }
+    color: #9a7d66!important; }
   .form-control:-moz-placeholder {
     /* Firefox 18- */
-    color: rgba(0, 0, 0, 0.2) !important; }
+    color: #9a7d66 !important; }
   .form-control:focus, .form-control:active {
     outline: none !important;
     -webkit-box-shadow: none;
@@ -8292,7 +8292,7 @@ h1, h2, h3, h4, h5,
   content: "\f0c8";
   font-family: "FontAwesome";
   position: absolute;
-  color: rgba(0, 0, 0, 0.1);
+  color: #9a7d66;
   font-size: 20px;
   margin-top: -4px;
   -webkit-transition: 0.3s;
@@ -8309,13 +8309,13 @@ h1, h2, h3, h4, h5,
   display: block;
   content: "\f14a";
   font-family: "FontAwesome";
-  color: rgba(0, 0, 0, 0.2); }
+  color: #9a7d66; }
 
 /* Style the checkmark/indicator */
 .checkbox-primary {
-  color: rgba(0,0,0,.2) !important; }
+  color: #9a7d66 !important; }
   .checkbox-primary input:checked ~ .checkmark:after {
-    color: rgba(0,0,0,.2) !important; }
+    color: #9a7d66 !important; }
 
 .btn {
   cursor: pointer;
@@ -8326,18 +8326,18 @@ h1, h2, h3, h4, h5,
   .btn:hover, .btn:active, .btn:focus {
     outline: none; }
   .btn.btn-primary {
-    background:  rgba(0,0,0,.2)!important;
-    border: 1px solid rgba(0,0,0,.2) !important;
+    background: #9a7d66!important;
+    border: 1px solid #9a7d66 !important;
     color: #fff !important; }
     .btn.btn-primary:hover {
-      border: 1px solid  rgba(0,0,0,.2) !important;
+      border: 1px solid #9a7d66!important;
       background: transparent;
-      color: rgba(0,0,0,.2) !important; }
+      color:#9a7d66 !important; }
     .btn.btn-primary.btn-outline-primary {
-      border: 1px solid  rgba(0,0,0,.2) !important;
+      border: 1px solid  #9a7d66 !important;
       background: transparent;
-      color:  rgba(0,0,0,.2) !important;  }
+      color:  #9a7d66 !important;  }
       .btn.btn-primary.btn-outline-primary:hover {
         border: 1px solid transparent;
-        background: rgba(0,0,0,.2) !important;
+        background: #9a7d66!important;
         color: #fff; }
