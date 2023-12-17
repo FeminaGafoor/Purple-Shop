@@ -6,140 +6,149 @@
 <!-- breadcrumb -->
 <div class="container">
     <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-        <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+        <a href="{% url 'home_app:home' %}" class="stext-109 cl8 hov-cl1 trans-04">
             Home
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
 
-        <span class="stext-109 cl4">
+        <a href="{% url 'outgoing_app:checkout' %}" class="stext-109 cl8 hov-cl1 trans-04">
             Checkout
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            Address
         </span>
     </div>
 </div>
     
 
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85">
+<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
+    {% csrf_token %}
     <div class="container">
     
         <div class="row">
-            
+
+
+
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
                     
-                    <div class="wrap-table-shopping-cart">
-                       
+                     <div class="wrap-table-shopping-cart">
                         <table class="table-shopping-cart">
-                            <tr class="table_head">
-                                <th class="column-1">Product</th>
-                                <th class="column-2"></th>
-                                <th class="column-4">Quantity</th>
-                                <th class="column-5">Total</th>
-                            </tr>
-                            {% for cart_item in cart_items %}
-
                             <tr class="table_row">
                                 <td class="column-1">
-                                    <div class="how-itemcart1">
-                                        <img src="{{ cart_item.product.images.url }}" alt="IMG" style="width: 70px; height: 70px;">
-                                    </div>
-                                </td>
-                                <td class="column-2">
-                                    <a href="{{ cart_item.product.get_url }}" style="color: black;">
-                                        {{ cart_item.product.product_name }}
-                                    </a>
-                                    <p style="font-size: 12px;">{% if cart_item.product_variant.all %}
+                                  
+
+                                    <div class="col-lg-10">
+                                        <br>
+                                        <br>
+                                       <h4>Add New Address</h4>
+                                       <br>
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user.username }}" placeholder="Enter Your phone Name">
+                                                </div>
+                                            </div>
+                                         
+                                    
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                                                <div class="col-sm-8">
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" placeholder="Enter Your Email">
+                                                </div>
+                                            </div>
+                                          
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Phone:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ user_pro.phone }}" placeholder="Enter Your Phone Number">
+                                                </div>
+                                            </div>
                                         
-                                        {% for item in cart_item.product_variant.all %}
-                                        {{ item.variant_types | capfirst }} : {{ item.variant_value }}<br>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </p>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Address_1:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="address_1" name="address_1" value="{{ user_pro.address_1 }}" placeholder="Enter Your Address_1">
+                                                </div>
+                                            </div>
+                                          
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">Address_2:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="address_2" name="address_2" value="{{ user_pro.address_2 }}"placeholder="Enter Your Address_2">
+                                                </div>
+                                            </div>
+                                       
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">City:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="city" name="city" value="{{ user_pro.city }}" placeholder="Enter Your City">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label">State:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="state" name="state" value="{{ user_pro.state }}" placeholder="Enter Your State">
+                                                </div>
+                                            </div>
+                                         
+                                            <div class="form-group row">
+                                                <label for="phone" class="col-sm-4 col-form-label">Country:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="country" name="country" value="{{ user_pro.country }}" placeholder="Enter Your Country">
+                                            </div>
+                                            
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="order_note" class="col-sm-4 col-form-label" >Order Note:</label>
+                                                <div class="col-sm-8">
+                                                    <textarea class="form-control" id="order_note" name="order_note" rows="4" placeholder="Enter Your Order Note">{{ form.order_note.value }}</textarea>
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                                                Save and Deliver Here
+                                            </button>
+                                        
+        
+                                        </div>
+
                                 </td>
-                             
-                                <td class="column-4">{{ cart_item.quantity }}</td> 
-                                <td class="column-5">$ {{ cart_item.sub_total }}</td>
                             </tr>
-                           {% endfor %}
                         </table>
-                      
                     </div>
 
                     
-
-                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                        <tr class="table_row">
-                            <td class="column-1">
-                                <div class="col-lg-10">
-                                  <br>
-                                    <div class="form-group row">
-                                        <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
-                                        <div class="col-sm-8">
-                                            <div  class="form-control" id="username" name="username" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                            {{ user.username }}</div>
-                                        </div>
-                                    </div>
-                                  <br>
-                                    <div class="form-group row">
-                                        <label for="phone" class="col-sm-4 col-form-label">Phone:</label>
-                                        <div class="col-sm-8">
-                                        <div class="form-control" id="phone" name="phone" readonly style="color: black; background-color: #ffffff; pointer-events: none;" >
-                                            {{ user_pro.phone }}</div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="form-group row">
-                                        <label for="email" class="col-sm-4 col-form-label">Email:</label>
-                                        <div class="col-sm-8">
-                                        <div  class="form-control" id="email" name="email" readonly style="color: black; background-color: #ffffff; pointer-events: none;" >
-                                            {{ user.email }}</div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="form-group row">
-                                        <label for="address_1" class="col-sm-4 col-form-label">Address_1:</label>
-                                        <div class="col-sm-8">
-                                        <div class="form-control" id="address_1" name="address_1" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                            {{ user_pro.address_1 }}</div>
-                                    </div>
-                                    </div>
-                                    <br>
-                                    <div class="form-group row">
-                                        <label for="address_2" class="col-sm-4 col-form-label">Address_2:</label>
-                                        <div class="col-sm-8">
-                                        <div  class="form-control" id="address_2" name="address_2"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                            {{ user_pro.address_2 }}</div>
-                                    </div>
-                                            </div>
-                                                <!-- Add more fields for address, city, state, country, etc. -->
-                                            <br>
-                                       </div>
-    
-                                    </td>
-                        </tr>
-                         
-                  </div>
                 </div>
-               
             </div>
+
+
+
+
+
 
             <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                 <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                     <h4 class="mtext-109 cl2 p-b-30">
-                        Cart Totals
+                        {{ user_pro.user_name }}
                     </h4>
 
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-208">
+                        {% comment %} <div class="size-208">
                             <span class="stext-110 cl2">
                                 Total Price:
                             </span>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="size-209">
                             <span class="mtext-110 cl2">
-                                $ {{ total }}
+                                {{ user_pro.address_1 }}
                             </span>
                         </div>
 
@@ -147,81 +156,38 @@
                     </div>
 
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Shipping:
-                            </span>
-                        </div>
+                        
                         <div class="size-209">
                             <span class="mtext-110 cl2">
-                                ${{ shipping }}
+                                {{user_pro.phone}}
                             </span>
                         </div>
                     </div>
 
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Tax:
-                            </span>
-                        </div>
+                        
                         <div class="size-209">
                             <span class="mtext-110 cl2">
-                                $ {{ tax }}
+                                {{user_pro.city}},{{user_pro.state}}
+                                {{user_pro.country}}
                             </span>
                         </div>
                     </div>
-                   <div class="flex-w flex-t p-t-27 p-b-33">
-                        <div class="size-208">
-                            <span class="mtext-101 cl2">
-                                Total:
-                            </span>
-                        </div>
-
-                        <div class="size-209 p-t-1">
-                            <span class="mtext-110 cl2">
-                                $ {{ grand_total }}
-                            </span>
-                        </div>
-                    </div>
+                   
 
                     <div class="p-t-40">
-                        <div class="flex-c-m flex-w p-b-18">
-                            <a href="#" class="m-all-1">
-                                <img src="{% static 'user\assets\images\icons\icon-pay-01.png' %}" alt="ICON-PAY">
-                            </a>
-        
-                            <a href="#" class="m-all-1">
-                                <img src="{% static 'user\assets\images\icons\icon-pay-02.png' %}" alt="ICON-PAY">
-                            </a>
-        
-                            <a href="#" class="m-all-1">
-                                <img src="{% static 'user\assets\images\icons\icon-pay-03.png' %}" alt="ICON-PAY">
-                            </a>
-        
-                            <a href="#" class="m-all-1">
-                                <img src="{% static 'user\assets\images\icons\icon-pay-04.png' %}" alt="ICON-PAY">
-                            </a>
-        
-                            <a href="#" class="m-all-1">
-                                <img src="{% static 'user\assets\images\icons\icon-pay-05.png' %}"alt="ICON-PAY">
-                            </a>
-                        </div>
-                        {% if user is authenticated %}
-                        <a href="{% url 'outgoing_app:checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
-                            Proceed to Checkout
-                        </a>
-                        {% else %}
-                        <a href="{% url 'account:sign_up' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
-                            Proceed to Checkout
-                        </a>
-                        {% endif %}
-                    </div>      
+                        
+                       
+                        <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                            Deliver to this Address
+                        </button>
+                     
+                   
                     
                 </div>
             </div>
         </div>
-    
+      </div>
     </div>
 </form>
     

@@ -22,18 +22,18 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('home.urls')),
-    path('adminpanel/',include('adminpanel.urls')),
-    path('products/',include('products.urls')),
-    path('outgoing/',include('outgoing.urls')),
-    path('accounts/',include('accounts.urls')),
-    
-    
-    
-]
+    path('', include('home.urls')),
+    path('adminpanel/', include('adminpanel.urls')),
+    path('products/', include('products.urls')),
+    path('outgoing/', include('outgoing.urls')),
+    path('accounts/', include('accounts.urls')),
+
+    # ORDERS
+    path('orders/', include('orders.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
