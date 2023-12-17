@@ -152,7 +152,7 @@ def verify_otp(request):
                 user.is_active = True
                 user.save()
                 auth.login(request, user)
-                messages.success(request, f'Account is created for {user.username}')
+                messages.success(request, f'Enter the OTP send to your mail {user.username}')
                 return redirect('account:user_login')
             except Customer.DoesNotExist:
                 messages.error(request, 'User not found. Please try registering again.')
@@ -172,76 +172,59 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            
-            
             try:
-                cart = Cart.objects.get(cart_id=_cart_id(request))
-                print(cart,"cart")
-                cart_item = CartItem.objects.filter(cart=cart)
-                for item in cart_item:
-                    item.user = user
-                    item.save()
-                    
-                login(request, user)
                 
-                # Get or create cart for the user
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                cart_item = CartItem.objects.filter(cart=cart)
+                
+                # product cariants by cart id
+                product_variants = []
+                for item in cart_item:
+                    variants = item.product_variant.all()
+                    product_variants.append(list(variants))
                
-
-                request.session['user'] = email
-                return redirect('outgoing_app:checkout')
+                 
+                #  get cart_items from user to access product_variation   
+                cart_item = CartItem.objects.filter(user=user)
+                ex_var_list=[]
+                id = []
+                for item in cart_item:
+                    existing_variation = item.product_variant.all()
+                    ex_var_list.append(list(existing_variation))
+                    id.append(item.id)
+                
+                
+                for pro in product_variants:
+                    if pro in ex_var_list:
+                        index = ex_var_list.index(pro)
+                        item_id = id[index]
+                        item = CartItem.objects.get(id = item_id)
+                        item.quantity += 1
+                        item.user = user
+                        item.save()
+                    
+                    else:
+                        cart_item = CartItem.objects.filter(cart = cart)
+                        for item in cart_item:
+                            item.user = user
+                            item.save()
+                
                 
             except Exception as e:
                 print("Exception occurred:", e)
                 # Handle any other exceptions that might occur
                 pass
+            login(request, user)
+            messages.success(request, "You are now logged in")
+             
+                # request.session['user'] = email
+            return redirect('outgoing_app:checkout')
+            
         else:
             messages.error(request, 'Invalid Credentials')
 
     return render(request, 'login.html')
 
-# def user_login(request):
-#     if request.method == "POST":
-#         username = request.POST.get('username')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-
-#         # Use authenticate for user authentication
-#         user = authenticate(request, username=username, password=password)
-#         print(user,"user")
-#         if user is not None:
-#             try:
-#                 print("||||||||||||||||try")
-#                 cart_id = _cart_id(request)
-#                 cart, created = Cart.objects.get_or_create(cart_id=cart_id)
-#                 # Get or create cart for the user
-#                 # cart = Cart.objects.get(cart_id=_cart_id(request))
-#                 # cart, created = Cart.objects.get_or_create(cart_id=_cart_id(request))
-#                 # cart = Cart.objects.all()
-#                 print(cart,"cart get all")
-#                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
-#                 print(is_cart_item_exists,"is_cart_item_exists")
-                
-#                 if is_cart_item_exists:
-#                     cart_item = CartItem.objects.filter(cart=cart)
-#                     print(cart_item,"cart_iteminside if cart_item_exists")
-                    
-#                     for item in cart_item:
-#                         item.user = user
-#                         item.save()
-            
-#             except :
-                
-#                 print("Entering inside except block")
-#                 pass
-
-#             # Log in the user using Django's login function
-#         login(request, user)
-#         request.session['user'] = email
-#         return redirect('outgoing_app:checkout')
-#     else:
-#         messages.error(request, 'Invalid Credentials')
-
-#     return render(request, 'login.html')
 
 
 def user_logout(request):
