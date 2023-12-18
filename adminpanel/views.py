@@ -314,3 +314,8 @@ def delete_product(request, product_id):
     else:
         return redirect('admin_panel:admin_login')
     
+    
+    
+def order_list(request):
+    return render(request,'order_list.html')
+    

@@ -35,67 +35,79 @@
                                     <div class="col-lg-10">
                                         <br>
                                         <br>
-                                       <h4>Add New Address</h4>
+                                        <h4>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+                                            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+                                          </svg>
+                                          <i class="bi bi-house-fill"></i> Add New Address</h4>
                                        <br>
                                             <br>
-                                            {% comment %} <div class="form-group row">
-                                                <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="user_name" name="user_name"  placeholder="Enter Your Full Name">
-                                                </div>
-                                            </div> {% endcomment %}
+                                            
                                             <div class="form-group row">
                                                 <label for="user_name" class="col-sm-4 col-form-label">Full Name:</label>
                                                 <div class="col-sm-8">
-                                                 <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name">{{ form.user_name }}
+                                                 <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name" required>{{ form.user_name }}
+                                                </div> 
+                                            </div>
+                                            {% comment %} <div class="form-group row">
+                                                <label for="user_name" class="col-sm-4 col-form-label">First Name:</label>
+                                                <div class="col-sm-8">
+                                                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter Your Full Name" >{{ form.first_name }}
                                                 </div> 
                                             </div>
                                             <div class="form-group row">
+                                                <label for="user_name" class="col-sm-4 col-form-label">Last Name:</label>
+                                                <div class="col-sm-8">
+                                                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter Your Full Name" >{{ form.last_name }}
+                                                </div> 
+                                            </div> {% endcomment %}
+                                            <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Email:</label>
                                                 <div class="col-sm-8">
-                                                <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email">{{ form.email }}
+                                                <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email" >{{ form.email }}
                                                 </div>
                                             </div>
                                           
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number">{{ form.phone }}
+                                                <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number" >{{ form.phone }}
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address_1:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_1" name="address_1"  placeholder="Enter Your Address_1">{{ form.address_1 }}
+                                                <input type="text" class="form-control" id="address_1" name="address_1"  placeholder="Enter Your Address_1" >{{ form.address_1 }}
                                                 </div>
                                             </div>
                                           
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address_2:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Enter Your Address_2">{{ form.address_2 }}
+                                                <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Enter Your Address_2" >{{ form.address_2 }}
                                                 </div>
                                             </div>
                                        
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">City:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City">{{ form.city }}
+                                                <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City" >{{ form.city }}
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">State:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State">{{ form.state }}
+                                                <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State" >{{ form.state }}
                                                 </div>
                                             </div>
                                          
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-4 col-form-label">Country:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country">{{ form.country }}
+                                                <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country" >{{ form.country }}
                                             </div>
                                             
                                             </div>
@@ -127,6 +139,8 @@
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                         <h4 class="mtext-109 cl2 p-b-30">
                             {{ user_pro.user_name }}
+                            {% comment %} {{ user_pro.first_name }}
+                            {{ user_pro.last_name }} {% endcomment %}
                             
 
                         </h4>
@@ -174,7 +188,8 @@
             // Fetch user data and populate the form fields
             var userPro = {
                 user_name: "{{ user_pro.user_name }}",
-                email: "{{ user_pro.email }}",
+                
+                email:   "{{ user_pro.email }}",
                 phone: "{{ user_pro.phone }}",
                 address_1: "{{ user_pro.address_1 }}",
                 address_2: "{{ user_pro.address_2 }}",

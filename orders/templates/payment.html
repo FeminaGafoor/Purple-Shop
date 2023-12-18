@@ -1,0 +1,220 @@
+{% load static %}
+{% include 'shop_header.html' %}
+{% block content %}
+  <!-- breadcrumb -->
+  <div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+      <a href="{% url 'home_app:home' %}" class="stext-109 cl8 hov-cl1 trans-04">
+        Home
+        <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+      </a>
+      <a href="{% url 'outgoing_app:checkout' %}" class="stext-109 cl8 hov-cl1 trans-04">
+        Checkout
+        <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+      </a>
+      <span class="stext-109 cl4">Payment</span>
+    </div>
+  </div>
+
+  <!-- Shoping Cart -->
+  <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:place_order' %}" method="POST">
+    {% csrf_token %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+          <div class="m-l-25 m-r--38 m-lr-0-xl">
+            <div class="wrap-table-shopping-cart">
+              <table class="table-shopping-cart">
+                <tr class="table_row">
+                  <td class="column-1">
+                    <div class="col-lg-10">
+                      <br />
+                      <br />
+                      <h4>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-credit-card-2-front-fill" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm0 3a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+                      </svg>
+                      <i class="bi bi-credit-card-2-front-fill"></i>Payment Options</h4>
+                      <hr />
+                      <br />
+                      
+                      <div class="form-group row">
+                        
+                        <div class="col-sm-8">
+                          <h4 id="user_name" name="user_name" >{{ order.user_name }}</h4>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="form-group row">
+                       
+                        <div class="col-sm-8">
+                          <h5 >Order Number:</h5>{{ order.order_number }}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="form-group row">
+                       
+                        <div class="col-sm-8">
+                          <p>{{ order.phone }}</p>
+                          <p>{{ order.address_1 }}
+                        </div>
+                      </div>
+                     
+                      <div class="form-group row">
+                      
+                        <div class="col-sm-8">
+                          
+                          <p  >{{ order.city }}/{{ order.state }}/{{ order.country }}
+                        </div>
+                      </div>
+                      <hr />
+                     
+
+                      <div class="form-group row">
+                        <div class="col-sm-8">
+                          Items:
+                           <p>{% for item in cart_items %}
+                            <li>{{ item.product.product_name }} {{ item.product.category }} {{ item.product.description }}</li>
+                        {% endfor %}</p> 
+                        </div>
+                      </div>
+
+                      {% if order.order_note %}
+                      <div class="form-group row">
+                        <div class="col-sm-8">
+                          <h6>Order Note:</h6>
+                          <p>{{ order.order_note }}</p>
+                        </div>
+                      </div>
+                      {% endif %}
+                      <hr>
+
+                      
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">Cash on Delivery</h5>
+                              <br />
+
+                              <p class="card-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0" />
+                                  <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z" />
+                                  <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z" />
+                                  <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z" />
+                                </svg>
+                                <i class="bi bi-cash-coin"></i>
+                                <span class="align-middle">Pay with cash upon delivery</span>
+                              </p>
+                              <br />
+                              <a href="#" class="flex-c-m stext-101 cl0 size-112 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Cash on Delivery</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Details Left ends -->
+
+        <!-- Payment Details Right starts -->
+
+        <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+          <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+            <h4 class="mtext-109 cl2 p-b-30">Price Details</h4>
+
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+              <div class="size-208">
+                <span class="stext-110 cl2">Total Price:</span>
+              </div>
+              <div class="size-209">
+                <span class="mtext-110 cl2">$ {{ total }}</span>
+              </div>
+            </div>
+
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+              <div class="size-208">
+                <span class="stext-110 cl2">Shipping:</span>
+              </div>
+              <div class="size-209">
+                <span class="mtext-110 cl2">${{ shipping }}</span>
+              </div>
+            </div>
+
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+              <div class="size-208">
+                <span class="stext-110 cl2">Tax:</span>
+              </div>
+              <div class="size-209">
+                <span class="mtext-110 cl2">$ {{ tax }}</span>
+              </div>
+            </div>
+            <div class="flex-w flex-t p-t-27 p-b-33">
+              <div class="size-208">
+                <span class="mtext-101 cl2">Total:</span>
+              </div>
+              <div class="size-209 p-t-1">
+                <span class="mtext-110 cl2">$ {{ grand_total }}</span>
+              </div>
+            </div>
+
+            <div class="p-t-40">
+              <div class="flex-c-m flex-w p-b-18">
+                <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-01.png' %}" alt="ICON-PAY" /></a>
+                <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-02.png' %}" alt="ICON-PAY" /></a>
+                <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-03.png' %}" alt="ICON-PAY" /></a>
+                <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-04.png' %}" alt="ICON-PAY" /></a>
+                <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-05.png' %}" alt="ICON-PAY" /></a>
+              </div>
+              {% if user.is_authenticated %}
+                <a href="{% url 'outgoing_app:checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Proceed to Checkout</a>
+              {% else %}
+                <a href="{% url 'account:sign_up' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Proceed to Checkout</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Details Right ends -->
+      </div>
+    </div>
+  </form>
+  <script>
+    document.getElementById('deliverButton').addEventListener('click', function () {
+      // Fetch user data and populate the form fields
+      var userPro = {
+        user_name: '{{ user_pro.user_name }}',
+        email: '{{ user_pro.email }}',
+        phone: '{{ user_pro.phone }}',
+        address_1: '{{ user_pro.address_1 }}',
+        address_2: '{{ user_pro.address_2 }}',
+        city: '{{ user_pro.city }}',
+        state: '{{ user_pro.state }}',
+        country: '{{ user_pro.country }}'
+        // Add other user-related fields as needed
+      }
+    
+      // Populate the form fields
+      document.getElementById('user_name').value = userPro.user_name
+      document.getElementById('email').value = userPro.email
+      document.getElementById('phone').value = userPro.phone
+      document.getElementById('address_1').value = userPro.address_1
+      document.getElementById('address_2').value = userPro.address_2
+      document.getElementById('city').value = userPro.city
+      document.getElementById('state').value = userPro.state
+      document.getElementById('country').value = userPro.country
+    
+      // Add any additional logic or adjustments based on your requirements
+    
+      // Optionally, you can submit the form programmatically
+      // document.getElementById('yourFormId').submit();
+    })
+  </script>
+{% endblock %}
+{% include 'footer.html' %}

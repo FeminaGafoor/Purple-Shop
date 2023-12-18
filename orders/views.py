@@ -3,15 +3,15 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from outgoing.models import CartItem
-from .models import Order
+
+from .models import Order, OrderProduct
 from .forms import OrderForm
 
 # Create your views here.
 
 def place_order(request, total=0, quantity=0):
-    print("|||||||||||||||||||||")
+    
     current_user = request.user
-    print(current_user,"|||||||||||||||||||||||||||||")
     # if the cart count <= 0 redirect to shop
     cart_items = CartItem.objects.filter(user = current_user)
     cart_count = cart_items.count()
@@ -66,7 +66,22 @@ def place_order(request, total=0, quantity=0):
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()
-            return redirect('order_app:payment')
+            
+            
+            
+            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+            print(order.user_name, order.order_number, order.phone, order.address_1, order.city, order.state, order.country)
+            context = {
+                'order':order,
+                'cart_items': cart_items,
+                'total':total,
+                'tax':tax,
+                'shipping':shipping,
+                'grand_total': grand_total
+            }
+            
+            
+            return render(request,'payment.html',context)
         else:
             print(form.errors)
             return render(request, 'checkout.html', {'form': form})
@@ -77,4 +92,31 @@ def place_order(request, total=0, quantity=0):
             
             
 def payment(request):
-    return HttpResponse("haiii")
+    # current_user = request.user
+    # orders = Order.objects.filter(user=current_user, is_ordered=False)
+    # print(orders, "order_user")
+    # if orders.exists():
+    #     order = (
+    #         orders.last()
+    #     )
+        
+    #     cart_item = CartItem.objects.filter(user=request.user)
+    #     for item in cart_item:
+    #         orderproduct = OrderProduct()
+    #         orderproduct.order = order
+    #         # orderproduct.payment = payment
+    #         # orderproduct.user = request.user
+    #         # orderproduct.product = item.product
+    #         # orderproduct.quantity = item.quantity
+    #         # orderproduct.variant = item.variant
+    #         # orderproduct.price = item.variant.price
+    #         # orderproduct.ordered = True
+    #         # orderproduct.save()
+
+    #         # variant = Variants.objects.get(id=item.variant.id)
+    #         # variant.quantity -= item.quantity
+    #         # variant.save()
+    # context = {
+    #     'orders': orders
+    # }
+    return render(request, 'payment.html')

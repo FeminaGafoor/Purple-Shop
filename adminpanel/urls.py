@@ -35,5 +35,7 @@ urlpatterns = [
     path('edit_product/',views.edit_product,name='edit_product'),
     path('delete_product/<int:product_id>/',views.delete_product,name='delete_product'),
     
+    # Order Management
     
+    path('order_list/',views.order_list,name='order_list'),
 ]

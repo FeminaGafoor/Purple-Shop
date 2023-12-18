@@ -29,12 +29,9 @@
                                                 <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
                                                 <div class="col-sm-8">
                                                     <div  class="form-control" id="username" name="username" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user.username }}</div>
+                                                    {{ user_pro.first_name }} {{ user_pro.last_name }}</div>
                                                 </div>
-                                            </div>
-                                   
-
-                                            <br>
+                                            </div> 
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
@@ -42,7 +39,7 @@
                                                     {{ user_pro.phone }}</div>
                                                 </div>
                                             </div>
-                                            <br>
+                                          
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Email:</label>
                                                 <div class="col-sm-8">
@@ -50,22 +47,47 @@
                                                     {{ user.email }}</div>
                                                 </div>
                                             </div>
-                                            <br>
                                             <div class="form-group row">
                                                 <label for="address_1" class="col-sm-4 col-form-label">Address_1:</label>
                                                 <div class="col-sm-8">
                                                 <div class="form-control" id="address_1" name="address_1" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user_pro.address_1 }}</div>
+                                                    {{ user_pro.address_1 }}
+                                                </div>
+                                                </div>
                                             </div>
-                                            </div>
-                                            <br>
                                             <div class="form-group row">
-                                                <label for="address_2" class="col-sm-4 col-form-label">Address_2:</label>
+                                                <label for="address_1" class="col-sm-4 col-form-label">Address_2:</label>
                                                 <div class="col-sm-8">
-                                                <div  class="form-control" id="address_2" name="address_2"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user_pro.address_2 }}</div>
+                                                <div class="form-control" id="address_2" name="address_2" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.address_2 }}
+                                                </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group row">
+                                                <label for="city" class="col-sm-4 col-form-label">City:</label>
+                                                <div class="col-sm-8">
+                                                <div class="form-control" id="city" name="city" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.city }}
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="state" class="col-sm-4 col-form-label">State:</label>
+                                                <div class="col-sm-8">
+                                                <div class="form-control" id="state" name="state" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.state }}
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="country" class="col-sm-4 col-form-label">Country:</label>
+                                                <div class="col-sm-8">
+                                                <div  class="form-control" id="country" name="country"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.country }}
+                                                </div>
+                                                </div>
+                                            </div>
+                                        
                                             <!-- Add more fields for address, city, state, country, etc. -->
                                         <br>
                                    

@@ -30,9 +30,9 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     order_number = models.CharField(max_length=20)
-    user_name = models.CharField(max_length=50)
-    # first_name = models.CharField(max_length=50)
-    # last_name = models.CharField(max_length=50)
+    user_name = models.CharField(max_length=50,)
+    # first_name = models.CharField(max_length=50, default=True)
+    # last_name = models.CharField(max_length=50, default=True)
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
     address_1 = models.CharField(max_length=50)
@@ -50,6 +50,10 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
         return self.user_name
     
