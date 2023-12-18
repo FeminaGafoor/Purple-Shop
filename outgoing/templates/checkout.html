@@ -10,12 +10,10 @@
             Home
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
-
         <a href="{% url 'outgoing_app:checkout' %}" class="stext-109 cl8 hov-cl1 trans-04">
             Checkout
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
-
         <span class="stext-109 cl4">
             Address
         </span>
@@ -27,80 +25,77 @@
 <form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
     <div class="container">
-    
         <div class="row">
-
-
-
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
-                    
-                     <div class="wrap-table-shopping-cart">
+                    <div class="wrap-table-shopping-cart">
                         <table class="table-shopping-cart">
                             <tr class="table_row">
                                 <td class="column-1">
-                                  
-
                                     <div class="col-lg-10">
                                         <br>
                                         <br>
                                        <h4>Add New Address</h4>
                                        <br>
                                             <br>
-                                            <div class="form-group row">
+                                            {% comment %} <div class="form-group row">
                                                 <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user.username }}" placeholder="Enter Your phone Name">
+                                                <input type="text" class="form-control" id="user_name" name="user_name"  placeholder="Enter Your Full Name">
                                                 </div>
+                                            </div> {% endcomment %}
+                                            <div class="form-group row">
+                                                <label for="user_name" class="col-sm-4 col-form-label">Full Name:</label>
+                                                <div class="col-sm-8">
+                                                 <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name">{{ form.user_name }}
+                                                </div> 
                                             </div>
-                                         
-                                    
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Email:</label>
                                                 <div class="col-sm-8">
-                                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" placeholder="Enter Your Email">
+                                                <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email">{{ form.email }}
                                                 </div>
                                             </div>
                                           
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ user_pro.phone }}" placeholder="Enter Your Phone Number">
+                                                <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number">{{ form.phone }}
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address_1:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_1" name="address_1" value="{{ user_pro.address_1 }}" placeholder="Enter Your Address_1">
+                                                <input type="text" class="form-control" id="address_1" name="address_1"  placeholder="Enter Your Address_1">{{ form.address_1 }}
                                                 </div>
                                             </div>
                                           
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address_2:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_2" name="address_2" value="{{ user_pro.address_2 }}"placeholder="Enter Your Address_2">
+                                                <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Enter Your Address_2">{{ form.address_2 }}
                                                 </div>
                                             </div>
                                        
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">City:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="city" name="city" value="{{ user_pro.city }}" placeholder="Enter Your City">
+                                                <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City">{{ form.city }}
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">State:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="state" name="state" value="{{ user_pro.state }}" placeholder="Enter Your State">
+                                                <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State">{{ form.state }}
                                                 </div>
                                             </div>
                                          
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-4 col-form-label">Country:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="country" name="country" value="{{ user_pro.country }}" placeholder="Enter Your Country">
+                                                <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country">{{ form.country }}
                                             </div>
                                             
                                             </div>
@@ -115,82 +110,97 @@
                                             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 Save and Deliver Here
                                             </button>
-                                        
-        
                                         </div>
-
-                                </td>
-                            </tr>
-                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-
-                    
                 </div>
-            </div>
+
+                <!--  Customer Address Left ends -->
 
 
+                <!--  Customer Address Right starts -->
 
+                <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                    <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                        <h4 class="mtext-109 cl2 p-b-30">
+                            {{ user_pro.user_name }}
+                            
 
+                        </h4>
 
-
-            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                    <h4 class="mtext-109 cl2 p-b-30">
-                        {{ user_pro.user_name }}
-                    </h4>
-
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        {% comment %} <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Total Price:
-                            </span>
-                        </div> {% endcomment %}
-
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                {{ user_pro.address_1 }}
-                            </span>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209">
+                                <span class="mtext-110 cl2">
+                                    {{ user_pro.email }}
+                                    {{ user_pro.address_1 }}
+                                </span>
+                            </div>
                         </div>
 
-                        
-                    </div>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209">
+                                <span class="mtext-110 cl2">
+                                    {{ user_pro.address_2 }}<br>
+                                    {{user_pro.phone}}
+                                </span>
+                            </div>
+                        </div>
 
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                {{user_pro.phone}}
-                            </span>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209">
+                                <span class="mtext-110 cl2">
+                                    {{user_pro.city}},{{user_pro.state}}
+                                    {{user_pro.country}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-t-40">
+                            <button type="button" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;" id="deliverButton">
+                                Deliver to this Address
+                            </button>
                         </div>
                     </div>
-
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                {{user_pro.city}},{{user_pro.state}}
-                                {{user_pro.country}}
-                            </span>
-                        </div>
-                    </div>
-                   
-
-                    <div class="p-t-40">
-                        
-                       
-                        <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
-                            Deliver to this Address
-                        </button>
-                     
-                   
-                    
                 </div>
+
+                <!--  Customer Address Right ends -->
             </div>
         </div>
-      </div>
-    </div>
-</form>
-    
+    </form>
+    <script>
+        document.getElementById('deliverButton').addEventListener('click', function() {
+            // Fetch user data and populate the form fields
+            var userPro = {
+                user_name: "{{ user_pro.user_name }}",
+                email: "{{ user_pro.email }}",
+                phone: "{{ user_pro.phone }}",
+                address_1: "{{ user_pro.address_1 }}",
+                address_2: "{{ user_pro.address_2 }}",
+                city: "{{ user_pro.city }}",
+                state: "{{ user_pro.state }}",
+                country: "{{ user_pro.country }}",
+                // Add other user-related fields as needed
+            };
+        
+            // Populate the form fields
+            document.getElementById('user_name').value = userPro.user_name;
+            document.getElementById('email').value = userPro.email;
+            document.getElementById('phone').value = userPro.phone;
+            document.getElementById('address_1').value = userPro.address_1;
+            document.getElementById('address_2').value = userPro.address_2;
+            document.getElementById('city').value = userPro.city;
+            document.getElementById('state').value = userPro.state;
+            document.getElementById('country').value = userPro.country;
+        
+            // Add any additional logic or adjustments based on your requirements
+        
+            // Optionally, you can submit the form programmatically
+            // document.getElementById('yourFormId').submit();
+        });
+        </script>
+        
 
 {% endblock %}
 {% include 'footer.html' %}
