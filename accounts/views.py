@@ -214,6 +214,16 @@ def user_login(request):
                 print("Exception occurred:", e)
                 # Handle any other exceptions that might occur
                 pass
+            
+            if user:
+                # Create or retrieve User_Profile using username
+                user_pro, created = User_Profile.objects.get_or_create(user=user, defaults={'user_name': username, 'email': email})
+                # Update User_Profile fields
+                user_pro.user_name = username
+                user_pro.email = email
+                # user_pro.phone = phone
+                user_pro.save()
+                
             login(request, user)
             messages.success(request, "You are now logged in")
              

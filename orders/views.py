@@ -1,10 +1,13 @@
 import datetime
-from django.http import HttpResponse
+from email import message
+from email.message import EmailMessage
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from outgoing.models import CartItem
+from products.models import ProductVariant
 
-from .models import Order, OrderProduct
+from .models import Order, OrderProduct, Payment
 from .forms import OrderForm
 
 # Create your views here.
@@ -81,7 +84,7 @@ def place_order(request, total=0, quantity=0):
             }
             
             
-            return render(request,'payment.html',context)
+            return render(request,'order_place.html',context)
         else:
             print(form.errors)
             return render(request, 'checkout.html', {'form': form})
@@ -91,32 +94,58 @@ def place_order(request, total=0, quantity=0):
             
             
             
-def payment(request):
-    # current_user = request.user
-    # orders = Order.objects.filter(user=current_user, is_ordered=False)
-    # print(orders, "order_user")
-    # if orders.exists():
-    #     order = (
-    #         orders.last()
-    #     )
+# def cash_on_delivery(request,number):
+#     url = request.META.get("HTTP_REFERER")
+#     orders = Order.objects.filter(
+#         user=request.user, is_ordered=False, order_number=number
+#     )
+#     if orders.exists():
+#         order = (
+#             orders.last()
+#         )  # You may want to add additional logic if there are multiple matching orders
         
-    #     cart_item = CartItem.objects.filter(user=request.user)
-    #     for item in cart_item:
-    #         orderproduct = OrderProduct()
-    #         orderproduct.order = order
-    #         # orderproduct.payment = payment
-    #         # orderproduct.user = request.user
-    #         # orderproduct.product = item.product
-    #         # orderproduct.quantity = item.quantity
-    #         # orderproduct.variant = item.variant
-    #         # orderproduct.price = item.variant.price
-    #         # orderproduct.ordered = True
-    #         # orderproduct.save()
+#         payment = Payment(
+#             user=request.user,
+#             payment_id=number,
+#             payment_method="COD",
+#             amount_paid=order.order_total,
+#             status="Completed",
+#         )
+#         payment.save()
+#         order.payment = payment
+#         order.is_ordered = True
+#         order.save()
+        
+#         cart_item = CartItem.objects.filter(user=request.user)
+#         for item in cart_item:
+#             orderproduct = OrderProduct()
+#             orderproduct.order = order
+#             orderproduct.payment = payment
+#             orderproduct.user = request.user
+#             orderproduct.product = item.product
+#             orderproduct.quantity = item.quantity
+#             # orderproduct.variant = item.variant
+#             # orderproduct.price = item.variant.price
+#             orderproduct.ordered = True
+#             orderproduct.save()
 
-    #         # variant = Variants.objects.get(id=item.variant.id)
-    #         # variant.quantity -= item.quantity
-    #         # variant.save()
-    # context = {
-    #     'orders': orders
-    # }
-    return render(request, 'payment.html')
+#             variant = ProductVariant.objects.get(id=item.variant.id)
+#             variant.quantity -= item.quantity
+#             variant.save()
+
+#         CartItem.objects.filter(user=request.user).delete()
+#         mail_subject = "Thank you for your order"
+#         # message = render_to_string(
+#         #     "order_recieved_email.html", {"user": request.user, "order": order}
+#         # )
+#         to_email = request.user.email
+
+#         send_mail = EmailMessage(mail_subject, message, to=[to_email])
+#         send_mail.send()
+#         order_products = OrderProduct.objects.filter(order=order, user=request.user)
+#         context = {
+#                 "order_products": order_products,
+#             }
+#         return render(request, "success.html",context)
+#     else:
+#         return HttpResponseRedirect(url)

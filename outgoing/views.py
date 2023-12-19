@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.contrib.auth.decorators import login_required
 from accounts.models import User_Profile
 from .models import Cart, CartItem
 from products.models import Product, ProductVariant
@@ -230,30 +230,33 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     return render(request, 'cart.html', context)
 
-
+@login_required
 def checkout(request, total=0, quantity=0, cart_items=None):
     
     shipping = 40  
     tax = 0
     grand_total = 0
-    user_pro = None
     
-    try:
-        if request.user.is_authenticated:
-            user = request.user
-            user_pro = User_Profile.objects.get(user=user)
-            
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-            
-        for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
-            quantity += cart_item.quantity
-            tax = (2 * total)/100
-            tax = round(tax,2)
-            grand_total = total+tax+shipping
-            grand_total = round(grand_total, 2)
-    except ObjectDoesNotExist:
-        pass
+    
+   
+        
+    user = request.user
+    user_pro, created = User_Profile.objects.get_or_create(user=user)
+    print(user, "user----------------")
+    print(user_pro, "user_pro----------------")
+        
+    user_pro.save()
+    print(user_pro,"user_pro----------------")
+    cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+
+    for cart_item in cart_items:
+        total += (cart_item.product.price * cart_item.quantity)
+        quantity += cart_item.quantity
+        tax = (2 * total)/100
+        tax = round(tax,2)
+        grand_total = total+tax+shipping
+        grand_total = round(grand_total, 2)
+
 
     context = {
         'user_pro':user_pro,
