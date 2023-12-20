@@ -228,7 +228,7 @@ def user_login(request):
             messages.success(request, "You are now logged in")
              
                 # request.session['user'] = email
-            return redirect('outgoing_app:checkout')
+            return redirect('account:edit_profile')
             
         else:
             messages.error(request, 'Invalid Credentials')

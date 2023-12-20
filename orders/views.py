@@ -6,13 +6,32 @@ from django.shortcuts import redirect, render
 
 from outgoing.models import CartItem
 from products.models import ProductVariant
+from accounts.models import User_Profile
 
 from .models import Order, OrderProduct, Payment
 from .forms import OrderForm
 
 # Create your views here.
 
-def place_order(request, total=0, quantity=0):
+
+# def order_place(request):
+    
+#     cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+#     user = request.user
+#     user_pro = User_Profile.objects.get(user=user)
+    
+#     context={
+#         'cart_items':cart_items,
+#         'user_pro':user_pro
+#     }
+    
+#     return render(request, 'order_place.html',context)
+    
+
+
+
+
+def payment(request, total=0, quantity=0):
     
     current_user = request.user
     # if the cart count <= 0 redirect to shop
@@ -84,7 +103,7 @@ def place_order(request, total=0, quantity=0):
             }
             
             
-            return render(request,'order_place.html',context)
+            return render(request,'payment.html',context)
         else:
             print(form.errors)
             return render(request, 'checkout.html', {'form': form})
@@ -93,59 +112,6 @@ def place_order(request, total=0, quantity=0):
             
             
             
-            
-# def cash_on_delivery(request,number):
-#     url = request.META.get("HTTP_REFERER")
-#     orders = Order.objects.filter(
-#         user=request.user, is_ordered=False, order_number=number
-#     )
-#     if orders.exists():
-#         order = (
-#             orders.last()
-#         )  # You may want to add additional logic if there are multiple matching orders
-        
-#         payment = Payment(
-#             user=request.user,
-#             payment_id=number,
-#             payment_method="COD",
-#             amount_paid=order.order_total,
-#             status="Completed",
-#         )
-#         payment.save()
-#         order.payment = payment
-#         order.is_ordered = True
-#         order.save()
-        
-#         cart_item = CartItem.objects.filter(user=request.user)
-#         for item in cart_item:
-#             orderproduct = OrderProduct()
-#             orderproduct.order = order
-#             orderproduct.payment = payment
-#             orderproduct.user = request.user
-#             orderproduct.product = item.product
-#             orderproduct.quantity = item.quantity
-#             # orderproduct.variant = item.variant
-#             # orderproduct.price = item.variant.price
-#             orderproduct.ordered = True
-#             orderproduct.save()
-
-#             variant = ProductVariant.objects.get(id=item.variant.id)
-#             variant.quantity -= item.quantity
-#             variant.save()
-
-#         CartItem.objects.filter(user=request.user).delete()
-#         mail_subject = "Thank you for your order"
-#         # message = render_to_string(
-#         #     "order_recieved_email.html", {"user": request.user, "order": order}
-#         # )
-#         to_email = request.user.email
-
-#         send_mail = EmailMessage(mail_subject, message, to=[to_email])
-#         send_mail.send()
-#         order_products = OrderProduct.objects.filter(order=order, user=request.user)
-#         context = {
-#                 "order_products": order_products,
-#             }
-#         return render(request, "success.html",context)
-#     else:
-#         return HttpResponseRedirect(url)
+def success(request):
+    return render(request,'success.html')
+    

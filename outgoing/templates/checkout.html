@@ -22,7 +22,7 @@
     
 
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
+<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:payment' %}" method="POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">
@@ -49,6 +49,7 @@
                                                 <div class="col-sm-8">
                                                  <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name" required>{{ form.user }}
                                                 </div> 
+                                                
                                             </div>
                                             {% comment %} <div class="form-group row">
                                                 <label for="user_name" class="col-sm-4 col-form-label">First Name:</label>
@@ -137,13 +138,19 @@
 
                 <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                        <h4 class="mtext-109 cl2 p-b-30">
-                            {{ user_pro.user_name }}
+                        <div class="mtext-109 cl2 p-b-30">
+                           <h4> {{ user_pro.user_name }}</h4>
+
                             {% comment %} {{ user_pro.first_name }}
                             {{ user_pro.last_name }} {% endcomment %}
-                            
+                            <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                                <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
+                                text-align: center;margin-left: 75px;">
+                            </div>
+                        </div>
 
-                        </h4>
+                        
+                        
 
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                             <div class="size-209">

@@ -191,7 +191,8 @@ def remove_cart_item(request,product_id,cart_item_id):
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_item = CartItem.objects.get(product = product,cart = cart,id=cart_item_id)
     cart_item.delete()
-    return redirect('outgoing_app:cart')
+    referring_page = request.META.get('HTTP_REFERER')
+    return redirect(referring_page)
 
 
     
@@ -242,6 +243,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         
     user = request.user
     user_pro, created = User_Profile.objects.get_or_create(user=user)
+    user_profile_image_url = user_pro.image.url if user_pro.image else None
     print(user, "user----------------")
     print(user_pro, "user_pro----------------")
         
@@ -266,5 +268,6 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'total': total,
         "tax":tax,
         "grand_total":grand_total,
+        'user_profile_image_url':user_profile_image_url,
     }
     return render(request, 'checkout.html', context)

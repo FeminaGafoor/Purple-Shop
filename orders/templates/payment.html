@@ -17,7 +17,7 @@
   </div>
 
   <!-- Shoping Cart -->
-  <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:place_order' %}" method="POST">
+  <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:payment' %}" method="POST">
     {% csrf_token %}
     <div class="container">
       <div class="row">
@@ -73,9 +73,13 @@
                       <div class="form-group row">
                         <div class="col-sm-8">
                           Items:
-                           <p>{% for item in cart_items %}
-                            <li>{{ item.product.product_name }} {{ item.product.category }} {{ item.product.description }}</li>
-                        {% endfor %}</p> 
+                          <ul>
+                            {% regroup cart_items by product.product_name as grouped_cart_items %}
+                            {% for product_group in grouped_cart_items %}
+                                <li>{{ product_group.grouper }}* {{ product_group.list|length }}</li>
+                            {% endfor %}
+                        </ul>
+                  
                         </div>
                       </div>
 
@@ -172,11 +176,9 @@
                 <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-04.png' %}" alt="ICON-PAY" /></a>
                 <a href="#" class="m-all-1"><img src="{% static 'user\assets\images\icons\icon-pay-05.png' %}" alt="ICON-PAY" /></a>
               </div>
-              {% if user.is_authenticated %}
-                <a href="{% url 'outgoing_app:checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Proceed to Checkout</a>
-              {% else %}
-                <a href="{% url 'account:sign_up' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Proceed to Checkout</a>
-              {% endif %}
+              
+                <a href="{% url 'order_app:success' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Order Confirmed</a>
+              
             </div>
           </div>
         </div>

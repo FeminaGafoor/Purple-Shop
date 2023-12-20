@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'adminpanel',
     'outgoing',
     'orders',
+    'users',
+    
     
 ]
 
