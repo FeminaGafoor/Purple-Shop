@@ -27,13 +27,13 @@
               </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-              {% for item in users %}
+              {% for user in user %}
               <tr class="table-default">
                 <td><i class="fab fa-sketch fa-lg text-warning me-3"></i> <strong>{{forloop.counter}} </strong></td>
-                <td>{{item.username}} </td>
-                <td>{{item.email}} </td>
+                <td>{{user.user_name}} </td>
+                <td>{{user.email}} </td>
                 <td>
-                  {% if item.is_active %}
+                  {% if user.is_active %}
                   <ul class="list-styled users-list m-0 avatar-group d-flex rounded-pill alert-success text-align-centre ">
                     Active
                   </ul>
@@ -44,12 +44,12 @@
                   {% endif %}
                 </td>
                 <!-- <td> -->
-                  {% if item.is_active %}
+                  {% if user.is_active %}
                   <td><a href="#" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" 
-                    data-bs-target="#confirmationModal{{ item.id }}">Block</a></td>
+                    data-bs-target="#confirmationModal{{ user.id }}">Block</a></td>
               {% else %}
                   <td><a href="#"  type="button" class="btn btn-outline-success" data-bs-toggle="modal" 
-                    data-bs-target="#confirmationModal{{ item.id }}">Unblock</a></td>
+                    data-bs-target="#confirmationModal{{ user.id }}">Unblock</a></td>
               {% endif %}
                    
               </tr>
@@ -57,8 +57,8 @@
 
 
             <!-- Confirmation Modal -->
-          {% for item in users %}
-           <div class="modal fade" id="confirmationModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+          {% for user in user %}
+           <div class="modal fade" id="confirmationModal{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
              <div class="modal-content">
               <div class="modal-header">
@@ -66,15 +66,15 @@
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
              <div class="modal-body">
-             {% if item.is_active %}
-             <p>Are you sure you want to block {{ item.username }}?</p>
+             {% if user.is_active %}
+             <p>Are you sure you want to block {{ user.username }}?</p>
              {% else %}
-             <p>Are you sure you want to unblock {{ item.username }}?</p>
+             <p>Are you sure you want to unblock {{ user.username }}?</p>
              {% endif %}
             </div>
           <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <a href="{% url 'for_admin:user_block' item.id %}" class="btn btn-primary">Confirm</a>
+      <a href="{% url 'admin_panel:user_block' user.id %}" class="btn btn-primary">Confirm</a>
     </div>
   </div>
     </div>

@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login,logout
 from products.models import Category, Color, Product, Size
 from django.utils.text import slugify
 
+from accounts.models import User_Profile
+
 # Create your views here.
 
 
@@ -57,10 +59,28 @@ def admin_logout(request):
 # User Management---------------------------------
 
 
-def user_list(request):
-    return render(request, "user_list.html")
+def user_manage(request):
+    
+    user = User_Profile.objects.all()
+    
+    context = {
+        'user':user
+    }
+    return render(request, "user_list.html",context)
 
 
+def user_block(request,user_id):
+    
+    #user is block
+    user=User_Profile.objects.get(id = user_id)
+    print(user,"user||||||||||||||||||||||||")
+    if user.is_active:
+        user.is_active = False
+        user.save()
+    else:
+        user.is_active = True
+        user.save()
+    return redirect('admin_panel:user_manage')
     
     
 # Category Management------------------------------

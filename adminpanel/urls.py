@@ -15,7 +15,8 @@ urlpatterns = [
     
      # User Management
      
-    path('user_list/',views.user_list,name='user_list'),
+    path('user_manage/',views.user_manage,name='user_manage'),
+    path('user_block/<int:user_id>/',views.user_block,name='user_block'),
     
    
       # Category Management

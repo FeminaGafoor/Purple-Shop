@@ -149,7 +149,7 @@
             </a>
             <ul class="menu-sub">
               <li class="menu-item">
-                <a href="{% url 'admin_panel:user_list' %}" class="menu-link">
+                <a href="{% url 'admin_panel:user_manage' %}" class="menu-link">
                   <div data-i18n="Accordion">Users</div>
                 </a>
               </li>
@@ -169,7 +169,7 @@
                   </ul>
                 </li>
 
-                  <li class="menu-item">
+                  {% comment %} <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                       <i class="menu-icon tf-icons bx bx-detail"></i>
                       <div data-i18n="User interface">Variant</div>
@@ -191,7 +191,7 @@
                         </a>
                       </li>
                     </ul>
-                  </li>
+                  </li> {% endcomment %}
                  <li class="menu-item">
                       <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-table"></i>
@@ -204,9 +204,9 @@
                           </a>
                         </li>
                         <li class="menu-item">
-                          <a href="" class="menu-link">
+                          {% comment %} <a href="" class="menu-link">
                             <div data-i18n="Accordion">Brand </div>
-                          </a>
+                          </a> {% endcomment %}
                         </li>
                       </ul>
                     </li>

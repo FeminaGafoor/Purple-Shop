@@ -4,7 +4,7 @@
 
 
 
-<style>
+ <style>
 
 
     .card {
@@ -22,6 +22,7 @@
 
     .card-header:first-child {
         border-radius: calc(0.37rem - 1px) calc(0.37rem - 1px) 0 0;
+        font-family: Poppins-Regular;
     }
 
     .card-header {
@@ -30,6 +31,7 @@
         background-color: #1e1e27;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         color: #fff;
+        font-family: Poppins-Regular;
     }
 
     .track {
@@ -39,6 +41,7 @@
         display: flex;
         margin-bottom: 60px;
         margin-top: 50px;
+        font-family: Poppins-Regular;
     }
 
     .track .step {
@@ -149,10 +152,10 @@
         <header class="card-header" style="background-color: #1e1e27;" > My Orders / Tracking </header>
 
         <div class="card-body">
-            <h6>Order ID:{{ orders.order.order_number }}</h6>
+            <h6 style="font-family: Poppins-Regular;">Order ID:{{ orders.order.order_number }}</h6>
             <article class="card">
                 <div class="card-body row">
-                    <div class="col"> <strong>Estimated Delivery time:</strong> <br>29 nov 2019 </div>
+                    <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2019 </div>
                     <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div>
                     <div class="col"> <strong>Status:</strong> <br> {{ orders.order.get_status_display }}
                     </div>
@@ -242,7 +245,7 @@
                         </figcaption>
                         
                     </figure>
-                    <a href="#" class="btn btn-success" data-abc="true">
+                    <a href="#" class="btn btn-success" data-abc="true" style="font-family: Poppins-Regular;">
                         <i class="fa fa-download"></i> Download Invoice
                     </a>
                 </li>
@@ -251,9 +254,9 @@
 
             <hr>
             
-            <a href="/category_products/" class="btn btn-info" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
+            <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true" style="font-family: Poppins-Regular;"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
             {% if orders.status != "Canceled"%}  
-            <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">
+            <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" style="font-family: Poppins-Regular;">
                 <i class=""></i> Cancel Order
             </a>
             {% endif %}
@@ -333,9 +336,10 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
 
 
 
 
 {% endblock %}
+{% include 'footer.html' %}

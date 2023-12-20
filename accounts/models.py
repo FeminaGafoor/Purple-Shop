@@ -25,6 +25,7 @@ class User_Profile(models.Model):
     state = models.CharField(max_length=15,default=True,null=True)
     country = models.CharField(max_length=15)
     image = models.ImageField( upload_to='images/',blank=True,null=True)
+    is_active = models.BooleanField(default=True) 
 
     def __str__(self) :
         return self.user_name

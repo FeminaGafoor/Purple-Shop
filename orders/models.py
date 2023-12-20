@@ -20,11 +20,14 @@ class Payment(models.Model):
 
 
 class Order(models.Model):
-    STATUS = (
-        ('New' , 'New'),
-        ('Accepted' , 'Accepted'),
-        ('Completed' , 'Completed'),
-        ('Cancelled' , 'Cancelled'),
+    ORDER_STATUS = (
+            (1, "New"),
+            (2, "Accepted"),
+            (3, "Preparing"),
+            (4, "OnShipping"),
+            (5, "Completed"),
+            (6, "Canceled"),
+            (7, "Return"),
     )
     
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -44,7 +47,7 @@ class Order(models.Model):
     order_total = models.FloatField()
     tax = models.FloatField()
     shipping = models.FloatField(default=True)
-    status = models.CharField(max_length=10, choices=STATUS, default=True)
+    status = models.CharField(max_length=10, choices=ORDER_STATUS, default=True)
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -72,10 +75,10 @@ class OrderProduct(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField()
     ordered = models.BooleanField(default=False)
-    # status = models.CharField(max_length=10, choices = STATUS, default=True)
+    status = models.CharField(max_length=10, choices = STATUS, default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
      
      
     def __str__(self):
-        return self.product.name
+        return self.product.product_name
