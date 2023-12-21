@@ -91,6 +91,7 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant_types = models.CharField(max_length=100,choices = variant_types_choice)
     variant_value = models.CharField(max_length=100)
+    quantity = models.IntegerField(default=1)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     

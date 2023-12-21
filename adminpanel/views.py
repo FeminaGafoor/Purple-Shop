@@ -1,13 +1,15 @@
 
 from django.db.models import Q 
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login,logout
+from django.urls import reverse
 from products.models import Category, Color, Product, Size
 from django.utils.text import slugify
 
 from accounts.models import User_Profile
+from orders.models import Order, OrderProduct
 
 # Create your views here.
 
@@ -400,7 +402,7 @@ def edit_size(request,id):
     
     
     
-# #DELETE-SIZE-----------------------------------------------------------------------------------      
+ #DELETE-SIZE-----------------------------------------------------------------------------------      
     
     
 def delete_size(request,id):
@@ -412,22 +414,6 @@ def delete_size(request,id):
         return redirect('adminpanel:admin_login')
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-      
 
 
 # Product Management------------------------------------
@@ -551,5 +537,33 @@ def delete_product(request, product_id):
     
     
 def order_list(request):
-    return render(request,'order_list.html')
     
+    order_product = OrderProduct.objects.all()
+    
+    context = {
+        'order_product':order_product,
+        'order_status':Order.ORDER_STATUS,
+    }
+    
+    if request.method == 'POST':
+        
+        selected_status = request.POST['orderStatus']
+        selected_order_id = request.POST['orderId']
+        selected_order = Order.objects.get(pk=selected_order_id)
+        selected_order.status = selected_status
+        selected_order.save()
+        return HttpResponseRedirect(reverse('admin_panel:order_list'))
+    return render(request,'order_list.html',context)
+    
+    
+    
+# def cancel_list(request):
+        
+#     orders = OrderProduct.objects.all().order_by('created_at')
+#     context={
+#         'orders':orders,
+#         'order_status':Order.ORDER_STATUS,
+
+#     }
+
+#     return render(request,'cancel_order.html',context)

@@ -22,7 +22,7 @@
     
 
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:payment' %}" method="POST">
+<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

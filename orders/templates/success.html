@@ -192,7 +192,7 @@ a{
 		<p class="main-content__body" data-lead-id="main-content-body">
             Thank you for your order! Your order is being processed and will be completed within 3-6 hours. You will receive an email confirmation when your order is completed.
         </p>
-        <button><a href="{% url 'user_app:user_order' %}">Order Details</a></button>
+        <button><a href="{% if order_products %}{% url 'user_app:user_order' %}{% endif %}">Order Details</a></button>
 
 	</div>
 

@@ -273,34 +273,36 @@ def profile(request):
 
 
 def edit_profile(request):
-    try:
-        user_profile, created = User_Profile.objects.get_or_create(user=request.user)
-       
-    except User_Profile.DoesNotExist:
-        user_profile = User_Profile(user=request.user)
+    
+    if request.user.is_authenticated:
+        try:
+            user_profile, created = User_Profile.objects.get_or_create(user=request.user)
         
-    if request.method == "POST":
+        except User_Profile.DoesNotExist:
+            user_profile = User_Profile(user=request.user)
+            
+        if request.method == "POST":
 
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-        if form.is_valid():
-            user_profile = form.save(commit=False)
-            user_profile.user = request.user
-           
-            user_profile.save()
+            form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+            if form.is_valid():
+                user_profile = form.save(commit=False)
+                user_profile.user = request.user
+            
+                user_profile.save()
 
-            # Update the user's email
-            user = request.user
-            user.email = form.cleaned_data['email']
-            user.save()
+                # Update the user's email
+                user = request.user
+                user.email = form.cleaned_data['email']
+                user.save()
 
-            messages.success(request, "Profile updated successfully!")
-            return redirect('account:profile')
+                messages.success(request, "Profile updated successfully!")
+                return redirect('account:profile')
+            else:
+                messages.error(request, "Please correct the errors in the form.")
         else:
-            messages.error(request, "Please correct the errors in the form.")
-    else:
-        form = UserProfileForm(instance=user_profile)
+            form = UserProfileForm(instance=user_profile)
 
-    context = {
-        'form': form,
-    }
-    return render(request, 'edit_profile.html', context)
+        context = {
+            'form': form,
+        }
+        return render(request, 'edit_profile.html', context)

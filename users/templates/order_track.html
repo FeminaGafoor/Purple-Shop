@@ -156,7 +156,7 @@
             <article class="card">
                 <div class="card-body row">
                     <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2019 </div>
-                    <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div>
+                    {% comment %} <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div> {% endcomment %}
                     <div class="col"> <strong>Status:</strong> <br> {{ orders.order.get_status_display }}
                     </div>
                     <div class="col"> <strong>Trasaction ID#:</strong> <br> {{ orders.order.payment.payment_id }} </div>
@@ -166,7 +166,9 @@
             </article>
 
             <div class="track">
-            {% if orders.status != "Canceled"%}    
+            
+            {% if orders.status != "Canceled"%}  
+            {{ orderstatus }}
                 {% if orderstatus >= 1 %}
                     <div class="step active">
                         <span class="icon"> <i class="fa fa-check"></i> </span>
@@ -229,7 +231,7 @@
             {% else %}
             <div class="step active">
                 <span class="icon"> <i class="fa fa-check"></i> </span>
-                <span class="text">canceled</span>
+                <span class="text">Cancelled</span>
             </div>
             {% endif %}
             </div>
@@ -239,9 +241,9 @@
             <ul class="row">
                 <li class="col-md-4">
                     <figure class="itemside mb-3">
-                        <div class="aside"><img src="{{ orders.variant.image }}" class="img-sm border"></div>
+                        <div class="aside"><img src="{{ orders.product.images.url }}" class="img-sm border"></div>
                         <figcaption class="info align-self-center">
-                            <p class="title">{{orders.variant.title }} <br>{{ orders.variant.color.name}} <br>{{ orders.variant.size.name}}</p> <span class="text-muted">{{orders.variant.price}}</span>
+                            <p class="title">{{orders.product.product_name }} <br>{{ orders.product_variant.variant_value}} <br>{{ orders.variant_value}}</p> <span class="text-muted">{{orders.variant.price}}</span>
                         </figcaption>
                         
                     </figure>
@@ -261,42 +263,42 @@
             </a>
             {% endif %}
             
-            <!-- Add a modal with an ID matching the data-target attribute -->
-<!-- Add a modal with an ID matching the data-target attribute -->
-<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to cancel your order? This action cannot be undone.</p>
-                
-                <!-- Add a reason input box -->
-                <form action="#" method="post">
-                    {% csrf_token %}
-                <div class="form-group">
-                    <label for="cancellationReason">Cancellation Reason:</label>
-                    <textarea class="form-control" name="cancel_reason" id="cancellationReason" rows="3" placeholder="Enter your reason" required></textarea>
-                </div>
             
-            </div>
-            <div class="modal-footer">
-                <button type="" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <!-- Add your logic to cancel the order when the user clicks "Cancel Order" -->
-                
-                <a href="" class="btn btn-danger" onclick="cancelOrder()">Submit</a>
-                
+            <!-- Add a modal with an ID matching the data-target attribute -->
+            <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to cancel your order? This action cannot be undone.</p>
+                            
+                            <!-- Add a reason input box -->
+                            <form action="#" method="post">
+                                {% csrf_token %}
+                            <div class="form-group">
+                                <label for="cancellationReason">Cancellation Reason:</label>
+                                <textarea class="form-control" name="cancel_reason" id="cancellationReason" rows="3" placeholder="Enter your reason" required></textarea>
+                            </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- Add your logic to cancel the order when the user clicks "Cancel Order" -->
+                            
+                            <a href="" class="btn btn-danger" onclick="cancelOrder()">Submit</a>
+                            
 
 
+                        </div>
+                    </form>
+                    </div>
+                </div>
             </div>
-        </form>
-        </div>
-    </div>
-</div>
 
 <script>
     function cancelOrder() {

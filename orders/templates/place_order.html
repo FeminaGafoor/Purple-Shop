@@ -17,7 +17,7 @@
   </div>
 
   <!-- Shoping Cart -->
-  <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:payment' %}" method="POST">
+  <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
     <div class="container">
       <div class="row">
@@ -112,7 +112,7 @@
                                 <span class="align-middle">Pay with cash upon delivery</span>
                               </p>
                               <br />
-                              <a href="{% url 'order_app:success' %}" class="flex-c-m stext-101 cl0 size-112 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Cash on Delivery</a>
+                              <a href="{% url 'order_app:cash_on_delivery' order.order_number %}" class="flex-c-m stext-101 cl0 size-112 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Cash on Delivery</a>
                             </div>
                           </div>
                         </div>
