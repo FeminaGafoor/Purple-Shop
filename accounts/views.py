@@ -11,12 +11,14 @@ from .forms import UserProfileForm
 from .models import Customer, User_Profile
 from django.contrib import auth
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 
 
 
 def sign_up(request):
     if request.method == 'POST':
-        print("||||||||||||||||||signup")
+        
         #otp with signup----------
         
         get_otp = request.POST.get('otp')
@@ -160,6 +162,7 @@ def verify_otp(request):
             # OTP verification failed
             messages.warning(request, 'You Entered a Wrong OTP')
             return render(request, 'otp.html', {'otp': True})
+        print("from login+++++++++++++++++++++++++")
     return render(request, 'otp.html')
 
 
@@ -242,7 +245,7 @@ def user_logout(request):
     return redirect('home_app:home')
 
 
-
+@login_required(login_url='/login/') 
 def profile(request):
     
     if request.user.is_authenticated:
@@ -271,7 +274,7 @@ def profile(request):
     
 
 
-
+@login_required(login_url='/login/')  
 def edit_profile(request):
     
     if request.user.is_authenticated:
@@ -306,3 +309,61 @@ def edit_profile(request):
             'form': form,
         }
         return render(request, 'edit_profile.html', context)
+    
+    
+    
+@login_required(login_url='/accounts/user_login/')    
+def change_password(request):
+    
+    if request.method == "POST":
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+        
+        user_profile = request.user.user_profile  # Access the User_Profile instance
+        user = user_profile.user  # Access the associated User instance
+        
+        if new_password == confirm_password:
+            # Use check_password on the User instance
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                user.save()
+             
+                messages.success(request,"Password updated successfully")
+                return redirect('account:change_password')
+            else:
+                messages.error(request,"Please enter valid current password")
+                return redirect('account:change_password')
+        else:
+            messages.error(request,"Password does not match")
+            return redirect('account:change password')
+    
+    return render(request, 'change_password.html')
+    
+    
+# @login_required(login_url='/login/')    
+# def change_password(request):
+    
+#     if request.method == "POST":
+#         current_password = request.POST['current_password']
+#         new_password = request.POST['new_password']
+#         confirm_password = request.POST['confirm_password']
+        
+#         # Use the authenticate method to verify the user's credentials
+#         user = authenticate(request, username=request.user.username, password=current_password)
+        
+#         if user is not None:
+#             if new_password == confirm_password:
+#                 # Authentication successful
+#                 user.set_password(new_password)
+#                 user.save()
+#                 messages.success(request, "Password updated successfully")
+#                 return redirect('account:change_password')
+#             else:
+#                 # Authentication failed
+#                 messages.error(request, "Please enter a valid current password")
+#                 return redirect('account:change_password')
+#         else:
+#             # Handle GET request (render the form)
+#             return render(request, 'change_password.html')

@@ -154,7 +154,7 @@
 
 button{
   border: none;
-  background-color: #99ed99;
+  background-color:  black;
   width: 211px;
   height: 64px;
   border-radius: 34px;
@@ -162,9 +162,10 @@ button{
 }
 
 a{
-    color: black !important;
+    color: white !important;
     text-decoration: none;
     font-size: 20px;
+    font-family: Poppins-Regular !important;
 }
 
 
@@ -184,19 +185,19 @@ a{
 </div> 
 </div>
 	<header class="site-header" id="header">
-		<h1 class="site-header__title" data-lead-id="site-header-title">THANK YOU!</h1>
+		<h1 class="site-header__title" data-lead-id="site-header-title"  style="font-family: Poppins-Regular;">THANK YOU!</h1>
 	</header>
 
-	<div class="main-content">
+	<div class="main-content" >
 		<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
 		<p class="main-content__body" data-lead-id="main-content-body">
             Thank you for your order! Your order is being processed and will be completed within 3-6 hours. You will receive an email confirmation when your order is completed.
         </p>
-        <button><a href="{% if order_products %}{% url 'user_app:user_order' %}{% endif %}">Order Details</a></button>
+        <button><a href="{% if order_products %}{% url 'user_app:user_order' %}{% endif %}"  style="font-family: Poppins-Regular;">Order Details</a></button>
 
 	</div>
 
-	<footer class="site-footer" id="footer">
+	<footer class="site-footer" id="footer"  style="font-family: Poppins-Regular;">
 		<p class="site-footer__fineprint" id="fineprint">Copyright ©2014 | All Rights Reserved</p>
 	</footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

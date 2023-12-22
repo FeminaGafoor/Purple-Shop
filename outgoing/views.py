@@ -205,7 +205,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         if request.user.is_authenticated:
            
            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-            
+           print("+++++++++++++cart")
         else:    
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)

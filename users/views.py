@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-
+from django.contrib import messages
 from outgoing.models import CartItem
 from accounts.models import User_Profile
 from orders.models import Order, OrderProduct
@@ -36,13 +36,32 @@ class OrderTrackView(View):
 
     def get(self, request, id):
         orders = get_object_or_404(OrderProduct, id=id)
-        print(orders.product.product_name,"||||||||||||||||||||||")
+        
         orderstatus = orders.order.status
-        print(orderstatus,"ordertrackview user")
+        
         context = {
             "orders": orders,
             "orderstatus":orderstatus,
             }
         return render(request, self.template_name, context)
 
+
+
+class CancelOrder(View):
+
+    template_name = "track_order.html" 
+
+    def post(self, request, id):
+        if request.method == 'POST':
+            reason = request.POST.get('cancel_reason')
+            if not reason:
+                messages.error(request,"Cancel reason is required.")
+                return render(request, self.template_name)
+                
+            orders = get_object_or_404(OrderProduct, id=id)
+            orders.user_note = reason
+            orders.status = "Canceled"
+            orders.save()
+            return render(request, self.template_name)
+    
    

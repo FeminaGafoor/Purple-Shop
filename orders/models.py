@@ -21,13 +21,13 @@ class Payment(models.Model):
 
 class Order(models.Model):
     ORDER_STATUS = (
-            (1, "New"),
-            (2, "Accepted"),
-            (3, "Preparing"),
-            (4, "OnShipping"),
-            (5, "Completed"),
-            (6, "Canceled"),
-            (7, "Return"),
+        ("New", "New"),
+        ("Accepted", "Accepted"),
+        ("Preparing", "Preparing"),
+        ("OnShipping", "On Shipping"),
+        ("Completed", "Completed"),
+        ("Canceled", "Canceled"),
+        ("Return", "Return"),
     )
     
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -47,7 +47,7 @@ class Order(models.Model):
     order_total = models.FloatField()
     tax = models.FloatField()
     shipping = models.FloatField(default=True)
-    status = models.CharField(max_length=10, choices=ORDER_STATUS, default=1)
+    status = models.CharField(max_length=10, choices=ORDER_STATUS, default="New")
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
     # tracking_no = models.CharField(max_length = 150, null=True)
@@ -76,9 +76,10 @@ class OrderProduct(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField()
     ordered = models.BooleanField(default=False)
-    status = models.CharField(max_length=10, choices = STATUS, default=True)
+    status = models.CharField(max_length=10, choices = STATUS, default="New")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user_note = models.CharField(blank=True, max_length=100)
      
      
     def __str__(self):

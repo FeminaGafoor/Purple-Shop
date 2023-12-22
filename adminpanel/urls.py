@@ -53,5 +53,6 @@ urlpatterns = [
     # Order Management
     
     path('order_list/',views.order_list,name='order_list'),
-    # path('cancel_list/',views.cancel_list,name='cancel_list'),
+    path('cancel_order/',views.cancel_order,name='cancel_order'),
+ 
 ]

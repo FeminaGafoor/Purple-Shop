@@ -174,15 +174,15 @@ def cash_on_delivery(request,number):
 
             send_mail = EmailMessage(mail_subject, message, to=[to_email])
             send_mail.send()
-            print("|||||||||||||")
+            
             order_products = OrderProduct.objects.filter(order=order, user=user_profile)
-            print(order_products,"order_products|||||||||||||||||||||||||||||||||||||||||")
+            
             context = {
                     "order_products": order_products,
                 }
             return render(request, "success.html",context)
         else:
-            return redirect('home_app:home')
+            return HttpResponseRedirect('/')
                     
 
     

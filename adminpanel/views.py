@@ -539,10 +539,12 @@ def delete_product(request, product_id):
 def order_list(request):
     
     order_product = OrderProduct.objects.all()
-    
+    for order in order_product:
+        print(order.order.status,"+++++++++++++++++++++++")
     context = {
         'order_product':order_product,
         'order_status':Order.ORDER_STATUS,
+        'order_product_status':OrderProduct.STATUS
     }
     
     if request.method == 'POST':
@@ -557,13 +559,14 @@ def order_list(request):
     
     
     
-# def cancel_list(request):
+def cancel_order(request):
         
-#     orders = OrderProduct.objects.all().order_by('created_at')
-#     context={
-#         'orders':orders,
-#         'order_status':Order.ORDER_STATUS,
+    orders = OrderProduct.objects.all().order_by('created_at')
+    context={
+        'orders':orders,
+        'order_status':Order.ORDER_STATUS,
 
-#     }
+    }
 
-#     return render(request,'cancel_order.html',context)
+    return render(request,'cancel_order.html',context)
+
