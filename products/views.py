@@ -1,9 +1,7 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
-
 from .models import Category, Product
 from django.db.models import Q
 

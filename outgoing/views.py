@@ -37,7 +37,8 @@ def add_cart(request, product_id):
                 try:
                     variants = ProductVariant.objects.get(product= product,variant_types__iexact=key, variant_value__iexact=value)
                     product_variants.append(variants)
-                
+                    print(variants,"variants_______________________________________")
+                    print(product_variants,"variants++++++++++++++++++++++++++++++++++++++")
                 except:
                     pass
             
@@ -97,9 +98,11 @@ def add_cart(request, product_id):
                 value = request.POST[key]
                 
                 try:
+                    
                     variants = ProductVariant.objects.get(product= product,variant_types__iexact=key, variant_value__iexact=value)
                     product_variants.append(variants)
-                
+                    print(variants,"variants|||||||||||||||||||||||||||||")
+                    print(product_variants,"product_variants|||||||||||||||||||||||||||||||||")
                 except:
                     pass
             
