@@ -289,13 +289,39 @@
        
         <!-- Pagination -->
 			<div class="flex-c-m flex-w w-full p-t-38">
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-					1
+                {% if product.has_other_pages %}
+                {% if product.has_previous %}
+                <a href="?page={{ product.previous_page_number }}" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					Back
 				</a>
+                {% else %}
+                <a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
+					Back
+				</a>
+                {% endif %}
 
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
-					2
+                {% for i in product.paginator.page_range %}
+                {% if product.number == i %}
+				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					{{i}}
 				</a>
+                {% else %}
+                <a href="?page={{i}}" class="flex-c-m how-pagination1 trans-04 m-all-7">
+					{{i}}
+				</a>
+                {% endif %}
+                {% endfor %}
+
+				{% if product.has_next %}
+                <a href="?page={{ product.next_page_number }}" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					Next
+				</a>
+                {% else %}
+                <a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 ">
+					Next
+				</a>
+                {% endif %}
+                {% endif %}
 			</div>
     </div>
 </div>

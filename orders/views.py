@@ -14,19 +14,6 @@ from .forms import OrderForm
 # Create your views here.
 
 
-# def order_place(request):
-    
-#     cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-#     user = request.user
-#     user_pro = User_Profile.objects.get(user=user)
-    
-#     context={
-#         'cart_items':cart_items,
-#         'user_pro':user_pro
-#     }
-    
-#     return render(request, 'order_place.html',context)
-    
 
 
 
