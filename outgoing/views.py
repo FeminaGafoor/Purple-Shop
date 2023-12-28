@@ -121,7 +121,7 @@ def add_cart(request, product_id):
             cart_item = CartItem.objects.filter(product=product,cart=cart)
             
             # existing variations --> database
-            # current variantions ---> product_variants = []
+            # current variations ---> product_variants = []
             # item_id ---> database
             ex_var_list=[]
             id = []
@@ -130,10 +130,11 @@ def add_cart(request, product_id):
                 existing_variation = item.product_variant.all()
                 ex_var_list.append(list(existing_variation))
                 id.append(item.id)
-                
+                print(ex_var_list,"+++++++++++++++++++++++++++++++++++++++++++++++++++")   
             
             
             if product_variants in ex_var_list:
+                print("@@@@@@@@@@@@@@")
                 # increase cart_item quantity
                 index = ex_var_list.index(product_variants)
                 item_id = id[index]
@@ -142,7 +143,7 @@ def add_cart(request, product_id):
                 item.save()
                 
             else:
-                # create a new cart item
+                # create a new cart_item
                 item = CartItem.objects.create(product = product, quantity =1, cart=cart)
                 if len(product_variants)>0:
                     item.product_variant.clear()

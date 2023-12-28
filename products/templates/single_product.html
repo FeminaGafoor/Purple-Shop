@@ -77,10 +77,10 @@
 
                 <div class="size-204 respon6-next">
                   <div class="rs1-select2 bor8 bg0">
-                    <select class="js-select2" name="color">
+                    <select class="js-select2" name="color" required>
                       <option value="" disabled selected >Choose a color</option>
                       {% for i in single_product.productvariant_set.colors %}
-                      <option>{{ i.variant_value }}</option>
+                      <option value="{{ i.variant_value }}">{{ i.variant_value }}</option>
                       {% endfor %}
                     </select>
                     <div class="dropDownSelect2"></div>
@@ -93,10 +93,10 @@
 
                 <div class="size-204 respon6-next">
                   <div class="rs1-select2 bor8 bg0">
-                    <select class="js-select2" name="size">
+                    <select class="js-select2" name="size" required>
                       <option value="" disabled selected >Choose a size</option>
                       {% for i in single_product.productvariant_set.sizes %}
-                      <option>{{ i.variant_value }}</option>
+                      <option value="{{ i.variant_value }}">{{ i.variant_value }}</option>
                       {% endfor %}
                     </select>
                     <div class="dropDownSelect2"></div>

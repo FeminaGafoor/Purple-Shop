@@ -59,13 +59,20 @@
                                     <a href="{{ cart_item.product.get_url }}" style="color: black;">
                                         {{ cart_item.product.product_name }}
                                     </a>
-                                    <p style="font-size: 12px;">{% if cart_item.product_variant.all %}
-                                        
-                                        {% for item in cart_item.product_variant.all %}
-                                        {{ item.variant_types | capfirst }} : {{ item.variant_value }}<br>
-                                        {% endfor %}
+                                    <p style="font-size: 12px;">
+                                        {% if cart_item.product_variant.all %}
+                                            {% for item in cart_item.product_variant.all %}
+                                                {% if item.variant_types == 'color' %}
+                                                    {{ item.variant_types | capfirst }}: {{ item.variant_value }}<br>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for item in cart_item.product_variant.all %}
+                                                {% if item.variant_types == 'size' %}
+                                                    {{ item.variant_types | capfirst }}: {{ item.variant_value }}<br>
+                                                {% endif %}
+                                            {% endfor %}
                                         {% endif %}
-                                        </p>
+                                    </p>
                                 </td>
                                 <td class="column-3">$ {{ cart_item.product.price }}</td>
                                 <td class="column-4">

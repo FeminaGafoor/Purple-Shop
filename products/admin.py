@@ -32,8 +32,8 @@ class ProductAdmin(admin.ModelAdmin):
     display_image.short_description = 'Product Image'
     
     
-class ColorAdmin(admin.ModelAdmin):
-    list_display=['name','code','color_tag']      
+# class ColorAdmin(admin.ModelAdmin):
+#     list_display=['name','code','color_tag']      
     
     
 class ProductVariantAdmin(admin.ModelAdmin):
@@ -41,8 +41,8 @@ class ProductVariantAdmin(admin.ModelAdmin):
     
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product,ProductAdmin)
-admin.site.register(Color,ColorAdmin)
-admin.site.register(Size)
+# admin.site.register(Color,ColorAdmin)
+# admin.site.register(Size)
 admin.site.register(ProductVariant, ProductVariantAdmin)
 
 
