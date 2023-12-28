@@ -63,10 +63,10 @@ def sign_up(request):
             #     messages.info(request , ' field is empty!')
             #     return render(request, 'signup.html')
             if Customer.objects.filter(username=username).exists():
-                messages.info(request, ' username is already taken')
+                messages.info(request, ' Username is already taken')
                 return render(request, 'signup.html')
             elif Customer.objects.filter(email = email).exists():
-                    messages.info(request, ' email is already taken')
+                    messages.info(request, ' Email is already taken')
                     return render(request, 'signup.html')
 
             elif password != repassword:
@@ -74,7 +74,7 @@ def sign_up(request):
                 return render(request, 'signup.html')
             email_check = validator_email(email)
             if email_check is False:
-                messages.info(request, 'email is not valid ')
+                messages.info(request, 'Email is not valid ')
                 return render(request, 'signup.html')
             password_check = validator_password(password)
             if password_check is False:
@@ -154,13 +154,13 @@ def verify_otp(request):
                 user.is_active = True
                 user.save()
                 auth.login(request, user)
-                messages.success(request, f'Enter the OTP send to your mail {user.username}')
+                messages.success(request, f'Welcome {user.username}')
                 return redirect('account:user_login')
             except Customer.DoesNotExist:
                 messages.error(request, 'User not found. Please try registering again.')
         else:
             # OTP verification failed
-            messages.warning(request, 'You Entered a Wrong OTP')
+            messages.warning(request, 'You entered a wrong OTP')
             return render(request, 'otp.html', {'otp': True})
         print("from login+++++++++++++++++++++++++")
     return render(request, 'otp.html')

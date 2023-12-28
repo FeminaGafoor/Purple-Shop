@@ -55,14 +55,8 @@
                     <button type="submit" class="form-control btn btn-primary rounded submit px-3" style="background-color:#7b5f4c;">Log In</button>
                   </div>
 
-                  {% comment %} {% if messages %}
-                  <!-- Bootstrap alert component -->
-                  <div class="alert alert-danger">
-                    {% for message in messages %}
-                    {{ message }}
-                    {% endfor %}
-                  </div>
-                  {% endif %} {% endcomment %}
+                  {% include 'alert.html' %}
+
                   <div class="form-group d-md-flex">
                     <div class="w-50 text-left">
                       <label class="checkbox-wrap checkbox-primary mb-0">

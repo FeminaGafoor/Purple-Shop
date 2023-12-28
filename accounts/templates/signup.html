@@ -63,14 +63,7 @@
                   </div>
                   
                 </form>
-                   {% if messages %}
-              <!-- Bootstrap alert component -->
-              <div class="alert">
-               
-                  {{ message }}
-                
-              </div>
-              {% endif %} 
+                 {% include 'alert.html' %}
                 <p class="text-center">
                   If You are a member ! <a  href="{% url 'account:user_login' %}">Login</a>
                 </p>
@@ -85,5 +78,10 @@
     <script src="{% static 'user\login_assets\js\popper.js' %}"></script>
     <script src="{% static 'user\login_assets\js\bootstrap.min.js' %}"></script>
     <script src="{% static 'user\login_assets\js\main.js' %}"></script>
+    <script>
+      setTimeout(function(){
+        $('#message').fadeOut('slow');
+      }, 3000);  // Add a duration parameter (in milliseconds) for the fadeOut
+    </script>
   </body>
 </html>

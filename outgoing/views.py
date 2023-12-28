@@ -130,7 +130,7 @@ def add_cart(request, product_id):
                 existing_variation = item.product_variant.all()
                 ex_var_list.append(list(existing_variation))
                 id.append(item.id)
-                print(ex_var_list,"+++++++++++++++++++++++++++++++++++++++++++++++++++")   
+            print(ex_var_list,"+++++++++++++++++++++++++++++++++++++++++++++++++++")   
             
             
             if product_variants in ex_var_list:

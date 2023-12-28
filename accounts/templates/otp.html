@@ -77,14 +77,7 @@
 
         <button type="submit">Verify OTP</button>
 
-         {% if messages %}
-        <!-- Bootstrap alert component -->
-        <div class="alert">
-            {% for message in messages %}
-            {{ message }}
-            {% endfor %}
-        </div>
-        {% endif %} 
+        {% include 'alert.html' %}
     </form>
 </body>
 

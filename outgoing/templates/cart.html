@@ -86,9 +86,9 @@
                                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                             <form action="{% url 'outgoing_app:add_cart' cart_item.product.id %}" method ="POST">
                                                 {% csrf_token %}
-                                                {% for item in cart_item.product_variant.all %}
-                                                <input type="hidden" name="{{ item.variant_types }}" value="{{ item.variant_value }}">
-                                                {% endfor %}
+                                                    {% for item in cart_item.product_variant.all %}
+                                                        <input type="hidden" name="{{ item.variant_types }}" value="{{ item.variant_value }}">
+                                                    {% endfor %}
                                                 <button type="submit" class="fs-16 zmdi zmdi-plus" style="color: black;"></button>
                                             </form>
                                         </div>
