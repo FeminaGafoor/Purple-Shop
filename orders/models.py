@@ -72,7 +72,7 @@ class OrderProduct(models.Model):
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True) 
     user = models.ForeignKey(User_Profile, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+    product_variant = models.ManyToManyField(ProductVariant, blank=True)
     quantity = models.IntegerField()
     price = models.FloatField()
     ordered = models.BooleanField(default=False)

@@ -137,19 +137,29 @@ def cash_on_delivery(request,number):
                 order_product.payment = payment
                 order_product.user = user_profile
                 order_product.product = item.product
+                order_product.price = item.product.price
+                order_product.quantity = item.quantity
+                order_product.save()
+                
+                
+                cart_item = CartItem.objects.get(id=item.id)
+                product_variation = cart_item.product_variant.all()
+                order_product = OrderProduct.objects.get(id=order_product.id)
+                order_product.product_variant.set((product_variation))
+                order_product.save()
 
                 # Assuming product_variant is a ForeignKey
-                product_variant_instance = item.product_variant.first()  # Assuming you want the first related instance
-                if product_variant_instance:
-                    order_product.product_variant = product_variant_instance
-                    order_product.quantity = item.quantity
-                    order_product.price = item.product.price
-                    order_product.ordered = True
-                    order_product.save()
+                # product_variant_instance = item.product_variant.first()  # Assuming you want the first related instance
+                # if product_variant_instance:
+                #     order_product.product_variant = product_variant_instance
+                #     order_product.quantity = item.quantity
+                #     order_product.price = item.product.price
+                #     order_product.ordered = True
+                #     order_product.save()
 
-                    # Update the product_variant quantity
-                    product_variant_instance.quantity -= item.quantity
-                    product_variant_instance.save()
+                #     # Update the product_variant quantity
+                #     product_variant_instance.quantity -= item.quantity
+                #     product_variant_instance.save()
                 
             CartItem.objects.filter(user=request.user).delete()
             

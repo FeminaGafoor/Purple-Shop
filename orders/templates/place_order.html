@@ -71,16 +71,36 @@
                      
 
                       <div class="form-group row">
+                        {% for cart_item in cart_items %}
                         <div class="col-sm-8">
                           Items:
+                          <br>{{ cart_item.product.product_name }}
                           <ul>
-                            {% regroup cart_items by product.product_name as grouped_cart_items %}
+                            {% comment %} {% regroup cart_items by product.product_name as grouped_cart_items %}
                             {% for product_group in grouped_cart_items %}
                                 <li>{{ product_group.grouper }}* {{ product_group.list|length }}</li>
-                            {% endfor %}
+                            {% endfor %} {% endcomment %}
+                            
+                            <p style="font-size: 12px;">
+                              {% if cart_item.product_variant.all %}
+                                  {% for item in cart_item.product_variant.all %}
+                                      {% if item.variant_types == 'color' %}
+                                          {{ item.variant_types | capfirst }}: {{ item.variant_value }}<br>
+                                      {% endif %}
+                                  {% endfor %}
+                                  {% for item in cart_item.product_variant.all %}
+                                      {% if item.variant_types == 'size' %}
+                                          {{ item.variant_types | capfirst }}: {{ item.variant_value }}<br>
+                                      {% endif %}
+                                  {% endfor %}
+                              {% endif %}
+                              Quantity:{{ cart_item.quantity }}
+                          </p>
+                          
                         </ul>
                   
                         </div>
+                        {% endfor %}
                       </div>
 
                       {% if order.order_note %}
