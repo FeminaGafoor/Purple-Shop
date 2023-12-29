@@ -41,10 +41,10 @@ def sign_up(request):
                 messages.success(request,f'Account is created for {user.username}')
        
                 return redirect('account:user_login')
-            else:
-                messages.warning(request,f'you Entered a Wrong OTP')
+            # else:
+            #     messages.warning(request,f'you Entered a Wrong OTP')
  
-                return render(request,'signup.html',{'otp':True,'user':user})
+            #     return render(request,'signup.html',{'otp':True,'user':user})
  
         else:
             get_otp=request.POST.get('otp1')
@@ -59,9 +59,7 @@ def sign_up(request):
             password=request.POST.get('password')
             repassword=request.POST.get('re_password')
             print("else||||||||||||||||||||")
-            # if username.strip() == '' or email.strip() == '' or   password.strip() == '' or repassword.strip() == '': 
-            #     messages.info(request , ' field is empty!')
-            #     return render(request, 'signup.html')
+            
             if Customer.objects.filter(username=username).exists():
                 messages.info(request, ' Username is already taken')
                 return render(request, 'signup.html')
@@ -123,7 +121,7 @@ def validator_email(email):
     
 
 def validator_password(password):
-    # Password validation criteria (you can customize these)
+    # Password validation criteria 
     min_length = 6
     if len(password) < min_length:
         return False
@@ -158,12 +156,14 @@ def verify_otp(request):
                 return redirect('account:user_login')
             except Customer.DoesNotExist:
                 messages.error(request, 'User not found. Please try registering again.')
-        else:
-            # OTP verification failed
-            messages.warning(request, 'You entered a wrong OTP')
-            return render(request, 'otp.html', {'otp': True})
+        # else:
+        #     # OTP verification failed
+        #     messages.warning(request, 'Incorrect OTP')
+        #     return render(request, 'otp.html', {'otp': True})
         print("from login+++++++++++++++++++++++++")
     return render(request, 'otp.html')
+
+
 
 
 def user_login(request):
@@ -175,42 +175,50 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
+            if user.email != email:
+                messages.error(request, 'Invalid Credentials')
+                return render(request, 'login.html')
+            
             try:
                 
                 cart = Cart.objects.get(cart_id=_cart_id(request))
-                cart_item = CartItem.objects.filter(cart=cart)
+                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                if is_cart_item_exists:
+                    cart_item = CartItem.objects.filter(cart=cart)
                 
-                # product cariants by cart id
-                product_variants = []
-                for item in cart_item:
-                    variants = item.product_variant.all()
-                    product_variants.append(list(variants))
+                    # product variants by cart id
+                    product_variants = []
+                    for item in cart_item:
+                        variants = item.product_variant.all()
+                        product_variants.append(list(variants))
+                
+                
                
                  
-                #  get cart_items from user to access product_variation   
-                cart_item = CartItem.objects.filter(user=user)
-                ex_var_list=[]
-                id = []
-                for item in cart_item:
-                    existing_variation = item.product_variant.all()
-                    ex_var_list.append(list(existing_variation))
-                    id.append(item.id)
-                
-                
-                for pro in product_variants:
-                    if pro in ex_var_list:
-                        index = ex_var_list.index(pro)
-                        item_id = id[index]
-                        item = CartItem.objects.get(id = item_id)
-                        item.quantity += 1
-                        item.user = user
-                        item.save()
+                    #  get cart_items from user to access product_variation   
+                    cart_item = CartItem.objects.filter(user=user)
+                    ex_var_list=[]
+                    id = []
+                    for item in cart_item:
+                        existing_variation = item.product_variant.all()
+                        ex_var_list.append(list(existing_variation))
+                        id.append(item.id)
                     
-                    else:
-                        cart_item = CartItem.objects.filter(cart = cart)
-                        for item in cart_item:
+                
+                    for pro in product_variants:
+                        if pro in ex_var_list:
+                            index = ex_var_list.index(pro)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id = item_id)
+                            item.quantity += 1
                             item.user = user
                             item.save()
+                        
+                        else:
+                            cart_item = CartItem.objects.filter(cart = cart)
+                            for item in cart_item:
+                                item.user = user
+                                item.save()
                 
                 
             except Exception as e:
@@ -240,12 +248,18 @@ def user_login(request):
 
 
 
+
+
+@login_required(login_url='/user_login/')
 def user_logout(request):
     logout(request)
     return redirect('home_app:home')
 
 
-@login_required(login_url='/login/') 
+
+
+
+@login_required(login_url='/user_login/') 
 def profile(request):
     
     if request.user.is_authenticated:
@@ -274,7 +288,7 @@ def profile(request):
     
 
 
-@login_required(login_url='/login/')  
+@login_required(login_url='/user_login/')  
 def edit_profile(request):
     
     if request.user.is_authenticated:
@@ -342,7 +356,7 @@ def change_password(request):
     return render(request, 'change_password.html')
     
     
-# @login_required(login_url='/login/')    
+# @login_required(login_url='/user_login/')    
 # def change_password(request):
     
 #     if request.method == "POST":

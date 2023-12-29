@@ -75,9 +75,16 @@
         <label for="otp">Enter the OTP sent to your email:</label>
         <input type="text" id="otp" name="otp" required>
 
-        <button type="submit">Verify OTP</button>
+        <button type="submit" style="background-color: black;">Verify OTP</button>
 
-        {% include 'alert.html' %}
+         {% if messages %}
+        <!-- Bootstrap alert component -->
+        <div class="alert">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %} 
     </form>
 </body>
 

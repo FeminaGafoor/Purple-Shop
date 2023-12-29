@@ -87,9 +87,10 @@ def add_cart(request, product_id):
             cart_item.save()
         return redirect('outgoing_app:cart')
         
-    # if the user is not authenticated    
         
-
+        
+        
+    # if the user is not authenticated 
     else:
         product_variants = []
         if request.method=="POST":
@@ -235,7 +236,9 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     return render(request, 'cart.html', context)
 
-@login_required
+
+
+@login_required(login_url='/user_login/')
 def checkout(request, total=0, quantity=0, cart_items=None):
     
     shipping = 40  
