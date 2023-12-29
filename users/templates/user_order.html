@@ -94,7 +94,8 @@
                                     
                               </td>
                               <td class="column-5">
-                                $ {{ item.price }}
+                                
+                                 ${{ item.subtotal }}
                             </td>
                             <td class="column-5">
                                 {{ item.created_at }}
@@ -152,7 +153,7 @@
                              </span>
                          </div>
                      </div>
-                    <a href="{% url 'account:edit_profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                    <a href="{% url 'account:profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
                         My Profile
                     </a>
                     

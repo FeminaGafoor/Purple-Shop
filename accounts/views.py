@@ -302,7 +302,7 @@ def edit_profile(request):
 
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
             if form.is_valid():
-                user_profile = form.save(commit=False)
+                user_profile = form.save()
                 user_profile.user = request.user
             
                 user_profile.save()

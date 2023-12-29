@@ -152,14 +152,14 @@
         <header class="card-header" style="background-color: #1e1e27;" > My Orders / Tracking </header>
 
         <div class="card-body">
-            <h6 style="font-family: Poppins-Regular;">Order ID:{{ orders.order.order_number }}</h6>
+            <h6 style="font-family: Poppins-Regular;">Order ID:{{ order_detail.order.order_number }}</h6>
             <article class="card">
                 <div class="card-body row">
                     <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2019 </div>
                     {% comment %} <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div> {% endcomment %}
-                    <div class="col"> <strong>Status:</strong> <br> {{ orders.status }}
+                    <div class="col"> <strong>Status:</strong> <br> {{ order_detail.status }}
                     </div>
-                    <div class="col"> <strong>Trasaction ID#:</strong> <br> {{ orders.order.payment.payment_id }} </div>
+                    <div class="col"> <strong>Trasaction ID#:</strong> <br> {{ order_detail.payment.payment_id }} </div>
 
                 </div>
                 
@@ -167,7 +167,7 @@
 
             <div class="track">
             
-            {% if orders.status != "Cancelled"%}  
+            {% if order_detail.status != "Cancelled"%}  
             
                 {% if orderstatus == "New" %}
                     <div class="step active">
@@ -241,9 +241,20 @@
             <ul class="row">
                 <li class="col-md-4">
                     <figure class="itemside mb-3">
-                        <div class="aside"><img src="{{ orders.product.images.url }}" class="img-sm border" ></div>
+                        <div class="aside"><img src="{{ order_detail.product.images.url }}" class="img-sm border" ></div>
                         <figcaption class="info align-self-center" style="font-family: Poppins-Regular;">
-                            <p class="title">{{orders.product.product_name }} <br>{{ orders.product_variant.variant_value}} <br>{{ orders.product.price }}</p> <span class="text-muted">{{orders.variant.price}}</span>
+                            <p class="title" >
+                                {{ order_detail.product.product_name }} <br>
+                                <span style="font-size: 12px;">{% for variant in order_detail.product_variant.all %}
+                                    {{ variant.variant_types | capfirst }}: {{ variant.variant_value }} <br>
+                                {% endfor %}
+                                
+                                Price: {{ order_detail.product.price }}<br>
+                                Quantity: {{ order_detail.quantity }} 
+                            </span>
+        
+                            </p>
+                             
                         </figcaption>
                         
                     </figure>
@@ -257,7 +268,7 @@
             <hr>
             
             <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true" style="font-family: Poppins-Regular;"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
-            {% if orders.status != "Canceled"%}  
+            {% if order_detail.status != "Canceled"%}  
             <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" style="font-family: Poppins-Regular;">
                 <i class=""></i> Cancel Order
             </a>
@@ -309,7 +320,7 @@
         // AJAX request to send the cancellation reason to the server
         $.ajax({
             type: 'POST',
-            url: '{% url "user_app:cancel_order" orders.id %}',  // Replace with the correct URL name
+            url: '{% url "user_app:cancel_order" order_detail.id %}',  // Replace with the correct URL name
             data: {
                 'cancel_reason': reason,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',  // Include the CSRF token

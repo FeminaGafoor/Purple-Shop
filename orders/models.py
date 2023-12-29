@@ -26,7 +26,7 @@ class Order(models.Model):
         ("Preparing", "Preparing"),
         ("OnShipping", "On Shipping"),
         ("Completed", "Completed"),
-        ("Canceled", "Canceled"),
+        ("Cancelled", "Cancelled"),
         ("Return", "Return"),
     )
     
@@ -84,3 +84,6 @@ class OrderProduct(models.Model):
      
     def __str__(self):
         return self.product.product_name
+    
+    def subtotal(self):
+        return self.price * self.quantity 

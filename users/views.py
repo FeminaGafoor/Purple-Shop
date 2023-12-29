@@ -20,19 +20,24 @@ class UserOrderView(View):
         order_products = OrderProduct.objects.filter(order__in=orders, user=user_profile).order_by("-id")
         user_profile_image_url = user_profile.image.url if user_profile.image else None
         
-        
-        
-        
-        sub_total=0
-        for i in order_products:
-            sub_total += (i.price * i.quantity)
+        sub_total = 0
+        for order_product in order_products:
+            # Calculate the subtotal for each ordered product
+            product_subtotal = order_product.price * order_product.quantity
+            sub_total += product_subtotal
+            tax = (2 * product_subtotal)/100
+
+        # Add additional charges (tax, shipping, etc.) to the subtotal
+        additional_charges = 40 + tax # Example: You can replace this with your actual additional charges
+        total = sub_total + additional_charges
             
         
         
         context = {
             "orders": orders,
             "order_products": order_products,
-            'sub_total' : sub_total,
+            'sub_total': sub_total,
+            'total': total,
             'user_profile':user_profile,
             'user_profile_image_url':user_profile_image_url
         }
@@ -45,12 +50,13 @@ class OrderTrackView(View):
     template_name = "order_track.html"
 
     def get(self, request, id):
-        orders = get_object_or_404(OrderProduct, id=id)
+        order_detail = get_object_or_404(OrderProduct, id=id)
         
-        orderstatus = orders.order.status
+        
+        orderstatus = order_detail.order.status
         
         context = {
-            "orders": orders,
+            "order_detail": order_detail,
             "orderstatus":orderstatus,
             }
         return render(request, self.template_name, context)
