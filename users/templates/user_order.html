@@ -38,7 +38,7 @@
                                     <th class="column-1">Product</th>
                                     <th class="column-2"></th>
                                     <th class="column-3">Billing Name</th>
-                                    <th class="column-4">Phone</th>
+                                    
                                     <th class="column-2"></th>
                                     <th class="column-5">Order Total</th>
                                     <th class="column-6">Date</th>
@@ -61,13 +61,23 @@
                                     <a href="{{ item.product }}" style="color: black;">
                                         {{ item.product }}
                                     </a>
-                                    <p style="font-size: 12px;">{% if item.product_variant.all %}
-                                        
-                                        {% for item in order_products.product_variant.all %}
-                                        {{ item.product_variant.variant_types | capfirst }} : {{ item.product_variant.variant_value }}<br>
-                                        {% endfor %}
+                                    
+                                    <p style="font-size: 12px;">
+                                        {% if item.product_variant.all %}
+                                            {% for i in item.product_variant.all %}
+                                                {% if i.variant_types == 'color' %}
+                                                    {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for i in item.product_variant.all %}
+                                                {% if i.variant_types == 'size' %}
+                                                    {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                                {% endif %}
+                                            {% endfor %}
                                         {% endif %}
-                                        </p>
+                                        Quantity:{{ item.quantity }}
+                                    </p>
+                                   
                                         <h6>Order ID:{{ item.order.order_number }}</h>
                                 </td>
                                 <td class="column-2">
@@ -77,7 +87,7 @@
                                     {{ user_profile.user_name }}
                                 </td>
                                
-                                <td class="column-4"> {{ user_profile.phone }}</td>
+                                
 
                               <!-- Your table row -->
                               <td class="column-2">

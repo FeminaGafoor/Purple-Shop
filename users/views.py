@@ -21,20 +21,18 @@ class UserOrderView(View):
         user_profile_image_url = user_profile.image.url if user_profile.image else None
         
         
-        for order_product in order_products:
-            try:
-                # Assuming you want to get the CartItem related to the OrderProduct
-                cart_item = CartItem.objects.get(id=order_product.product.id)
-                product_variations = cart_item.product_variant.all()
-                # Assuming you have a field named 'product_variants' in your OrderProduct model
-                order_product.product_variant.set(product_variations)
-            except CartItem.DoesNotExist:
-                # Handle the case where the CartItem does not exist
-                pass
+        
+        
+        sub_total=0
+        for i in order_products:
+            sub_total += (i.price * i.quantity)
+            
+        
         
         context = {
             "orders": orders,
             "order_products": order_products,
+            'sub_total' : sub_total,
             'user_profile':user_profile,
             'user_profile_image_url':user_profile_image_url
         }
