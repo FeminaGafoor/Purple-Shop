@@ -29,9 +29,15 @@ def shop(request, category_slug=None):
         page = request.GET.get('page')
         paged_product = paginator.get_page(page)
 
+        # price_range = request.GET.get('price_range', None)
+        # if price_range :
+        #     min_price, max_price = get_price_range(price_range)
+        #     product = product.filter(price__gte=min_price, price__lte=max_price)
+
 
     context = {
         'product': paged_product,
+        'category_slug': category_slug,
         
     }
     return render(request, "shop.html", context)
@@ -68,4 +74,21 @@ def search(request):
     }
     return render(request, "shop.html", context)
 
+
+# def get_price_range(price_range):
     
+#     if price_range == '$0.00 - $50.00':
+        
+#         print("|||||||||||||||||||")
+#         return 0.00, 50.00
+    
+#     elif price_range == '$50.00 - $100.00':
+#         return 50.00, 100.00
+#     elif price_range == '$100.00 - $150.00':
+#         return 100.00, 150.00
+#     elif price_range == '$150.00 - $200.00':
+#         return 150.00, 200.00
+#     elif price_range == '$200.00+':
+#         return 200.00, float('inf')
+#     else:
+#         return 0.00, float('inf')

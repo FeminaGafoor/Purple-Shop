@@ -96,9 +96,17 @@
                                 </td>
                                 <td class="column-5">$ {{ cart_item.sub_total }}</td>
 
-                              <!-- Your table row -->
+                              {% comment %} <!-- Your table row -->
                               <td class="column-6">
                                 <a title="Trash Icon" href="{% url 'outgoing_app:remove_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Are you sure you want to delete this item?')">
+                                    <span class="product-delete" style="color: black; cursor: pointer;">
+                                        <i class="fa fa-trash-o"></i>
+                                    </span>
+                                </a>
+                            </td> {% endcomment %}
+
+                            <td class="column-6">
+                                <a title="Trash Icon" href="#" class="delete-link" data-url="{% url 'outgoing_app:remove_cart_item' cart_item.product.id cart_item.id %}">
                                     <span class="product-delete" style="color: black; cursor: pointer;">
                                         <i class="fa fa-trash-o"></i>
                                     </span>
@@ -220,7 +228,51 @@
         {% endif %}
     </div>
 </form>
+
+<style>
+    .swal2-popup-custom {
+        font-family: 'Poppins-Regular', sans-serif !important;
+    }
     
+</style>
+
+<script>
+    // Add this script at the end of your template or in a separate JS file
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach a click event to all delete links with the delete-link class
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+    
+                const url = this.getAttribute('data-url');
+    
+                // Use SweetAlert for confirmation
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'rgb(20 20 20)',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        popup: 'swal2-popup-custom',
+                        title: 'swal2-title-custom',
+                        text: 'swal2-text-custom',
+                        confirmButton: 'swal2-confirm-button-custom',
+                        cancelButton: 'swal2-cancel-button-custom',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If user confirms, redirect to the delete URL
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    });
+    </script>
 
 {% endblock %}
 {% include 'footer.html' %}
