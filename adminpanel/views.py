@@ -538,13 +538,13 @@ def delete_product(request, product_id):
     
 def order_list(request):
     
-    order_product = OrderProduct.objects.all()
-    for order in order_product:
-        print(order.order.status,"+++++++++++++++++++++++")
+    order_product = OrderProduct.objects.all().order_by('created_at')
+    
+    
     context = {
         'order_product':order_product,
         'order_status':Order.ORDER_STATUS,
-        'order_product_status':OrderProduct.STATUS
+        
     }
     
     if request.method == 'POST':

@@ -39,6 +39,7 @@
                           <th>Status</th>
                           <th>User Status</th>
                           <th>Customer Email</th>
+                          <th>Orderd Product</th>
                           <th>Payment Method</th>
                           <th>Total</th>
                           <th>Order Status</th>
@@ -46,7 +47,7 @@
                       </thead>
                       <tbody class="table-border-bottom-0">
                         {% for order in order_product %}
-                        {% if order.order.status != "Cancelled" %}
+                        {% if order.order.status != "Return" %}
                         <tr>
                           <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
                           <td>{{ order.user.user_name}}</td>
@@ -63,6 +64,7 @@
                             </span>
                         </td>
                           <td>{{order.order.email }}</td>
+                          <td>{{order.product.product_name }}</td>
                           <td>{{order.order.payment.payment_method }}</td>
                           <td>{{order.order.order_total}}</td>
                          

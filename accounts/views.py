@@ -186,15 +186,14 @@ def user_login(request):
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
                 
+                
                     # product variants by cart id
                     product_variants = []
                     for item in cart_item:
                         variants = item.product_variant.all()
                         product_variants.append(list(variants))
                 
-                
-               
-                 
+                    
                     #  get cart_items from user to access product_variation   
                     cart_item = CartItem.objects.filter(user=user)
                     ex_var_list=[]
@@ -326,6 +325,8 @@ def edit_profile(request):
     
     
     
+    
+    
 @login_required(login_url='/accounts/user_login/')    
 def change_password(request):
     
@@ -351,33 +352,7 @@ def change_password(request):
                 return redirect('account:change_password')
         else:
             messages.error(request,"Password does not match")
-            return redirect('account:change password')
+            return redirect('account:change_password')
     
     return render(request, 'change_password.html')
     
-    
-# @login_required(login_url='/user_login/')    
-# def change_password(request):
-    
-#     if request.method == "POST":
-#         current_password = request.POST['current_password']
-#         new_password = request.POST['new_password']
-#         confirm_password = request.POST['confirm_password']
-        
-#         # Use the authenticate method to verify the user's credentials
-#         user = authenticate(request, username=request.user.username, password=current_password)
-        
-#         if user is not None:
-#             if new_password == confirm_password:
-#                 # Authentication successful
-#                 user.set_password(new_password)
-#                 user.save()
-#                 messages.success(request, "Password updated successfully")
-#                 return redirect('account:change_password')
-#             else:
-#                 # Authentication failed
-#                 messages.error(request, "Please enter a valid current password")
-#                 return redirect('account:change_password')
-#         else:
-#             # Handle GET request (render the form)
-#             return render(request, 'change_password.html')
