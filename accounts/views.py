@@ -1,180 +1,131 @@
 import random
 import re
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
-from .forms import UserProfileForm
-from .models import Customer, User_Profile
+# from .forms import UserProfileForm
+from django.contrib.auth.models import User
+from .models import User_Profile
 from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from accounts.forms import SignUpForm
 
 
 
 def sign_up(request):
+    
     if request.method == 'POST':
         
-        #otp with signup----------
-        
-        get_otp = request.POST.get('otp')
-        if get_otp:
-            get_email = request.POST.get('email')
-            user = Customer.objects.get(email=get_email)
-            print(user,"user!!!!!!!!!!!!!!!!!!")
-            print("otp")
+        form = SignUpForm(request.POST)
+        print("from signup")
+        if form.is_valid():
+            form.save() #completed sign up
+            username = form.cleaned_data.get('username')
             
-            if not re.search(re.compile(r'^/{6}$'),get_otp):
-                messages.error(request,'OTP should only contain numeric!')
-                return render(request,'signup.html',{'otp':True,'user':user})
+            password = form.cleaned_data.get('password1')
             
+            email = form.cleaned_data.get('email')
             
-            session_otp = request.session.get('otp')
-            if int(get_otp) == session_otp:
-                user.is_active = True
-                user.save()
-                auth.login(request,user)
-                messages.success(request,f'Account is created for {user.username}')
-       
-                return redirect('account:user_login')
-            # else:
-            #     messages.warning(request,f'you Entered a Wrong OTP')
- 
-            #     return render(request,'signup.html',{'otp':True,'user':user})
- 
+            otp = str(random.randint(1000, 9999))
+
+            request.session['signup_username']=username
+            request.session['signup_otp'] = otp
+  
+  
+            print(otp)
+
+
+
+            subject = 'OTP Verification Code'
+            message = f'Your OTP code for signup is: {otp}'
+            from_email = 'femitest.111@gmail.com'
+            recipient_list = [email]
+            
+            # return HttpResponse(from_email)
+
+            send_mail(subject, message, from_email, recipient_list)
+            
+            messages.success(request, 'Your account has been created!Please Enter OTP')
+            return redirect('account:otp_func')
         else:
-            get_otp=request.POST.get('otp1')
-            email=request.POST.get('user1')
-        if get_otp:
-            user=Customer.objects.get(email=email)
-            messages.error(request,'field cannot empty!')
-            return render(request,'signup.html',{'otp':True,'user':user})
-        else:
-            username=request.POST.get('username')
-            email=request.POST.get('email')
-            password=request.POST.get('password')
-            repassword=request.POST.get('re_password')
-            print("else||||||||||||||||||||")
-            
-            if Customer.objects.filter(username=username).exists():
-                messages.info(request, ' Username is already taken')
-                return render(request, 'signup.html')
-            elif Customer.objects.filter(email = email).exists():
-                    messages.info(request, ' Email is already taken')
-                    return render(request, 'signup.html')
+            messages.warning(request,form.errors)
+            return redirect('account:sign_up')
 
-            elif password != repassword:
-                messages.info(request,'Invalid Password')
-                return render(request, 'signup.html')
-            email_check = validator_email(email)
-            if email_check is False:
-                messages.info(request, 'Email is not valid ')
-                return render(request, 'signup.html')
-            password_check = validator_password(password)
-            if password_check is False:
-                messages.info(request, 'Please enter a strong password!')
-                return render(request, 'signup.html')
-                
-        if email_check and password_check:      
-            # creating user
-            new_user = Customer.objects.create_user(username=username , email= email , password=password )
-          
-            new_user.save()
-            new_user.is_active=False
-            new_user.last_login=None
-            new_user.save()
-            
-            
-              # Storing the user's email in the session
-            request.session['user_email'] = email
-            
-            user_otp=random.randint(100000,999999)
-            request.session['otp']=user_otp
-            mess=f'Hello \t{new_user.username},\nOTP to verify your account for Purple Shop  is {user_otp}\n Thanking You!'
-            send_mail(
-                    "Welcome to Purple Shop, verify your Email",
-                    mess,
-                    settings.EMAIL_HOST_USER,
-                    [new_user.email],
+    return render(request, 'signup.html')
 
-                    fail_silently=False
-                )
-            return redirect('account:verify_otp')
-                
-      
-
-    return render(request,'signup.html')
     
 
 
-def validator_email(email):
-    # Basic email format validation using a regular expression
-    if re.match(r'^\S+@\S+\.\S+$', email):
-        return True
+
+def otp_func(request):
+    
+    if request.method == 'POST':
+        
+        otp_entered = request.POST.get('otp_entered') 
+        
+        otp_saved = request.session.get('signup_otp')
+        
+        if otp_entered == otp_saved:
+            # OTP is valid; remove it from the session
+            del request.session['signup_otp']
+
+            # Save the user
+            username=request.session['signup_username']
+            print("++++++++++++++++++++save user")
+            user = User.objects.get(username=username)
+            user.is_active = True
+            user.is_otp=True
+            user.save()
+            messages.success(request, "Your registration is successful. You can now log in.")           
+            return redirect('account:user_login')  # Redirect to the login page or any other desired page
+        else:
+            messages.error(request, 'Invalid OTP. Please try again.')
+    return render(request,'otp.html')
+
+
+
+def new_otp(request):
+    
+    username=request.session.get('signup_username')
+    user = User.objects.get(username=username)
+    request.session.pop('signup_otp', None)
+  
+    if user.email:
+        otp = str(random.randint(1000, 9999))
+        request.session['signup_otp'] = otp
+        subject = 'Resent OTP Verification Code'
+        message = f'Your resent OTP code for signup is: {otp}'
+        from_email = 'femitest.111@gmail.com'
+        recipient_list = [user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+        messages.success(request, 'resend OTP sent successfully. Please check your email.')
     else:
-        return False
-    
-    
+        messages.warning(request, 'Failed to resend OTP. Please try again.')
 
-def validator_password(password):
-    # Password validation criteria 
-    min_length = 6
-    if len(password) < min_length:
-        return False
-
-    if not any(char.isupper() for char in password):
-        return False
-
-    if not any(char.islower() for char in password):
-        return False
-
-    if not any(char.isdigit() for char in password):
-        return False
-    
-    return True
-
-
-
-def verify_otp(request):
-    if request.method == 'POST':
-        entered_otp = request.POST.get('otp')
-        session_otp = request.session.get('otp')
-        user_email = request.session.get('user_email')  # Retrieve the user's email from the session
-        if entered_otp and session_otp and entered_otp == str(session_otp):
-            # OTP verification successful
-            # Update the user's status to active
-            try:
-                user = Customer.objects.get(email=user_email)
-                user.is_active = True
-                user.save()
-                auth.login(request, user)
-                messages.success(request, f'Welcome {user.username}')
-                return redirect('account:user_login')
-            except Customer.DoesNotExist:
-                messages.error(request, 'User not found. Please try registering again.')
-        # else:
-        #     # OTP verification failed
-        #     messages.warning(request, 'Incorrect OTP')
-        #     return render(request, 'otp.html', {'otp': True})
-        print("from login+++++++++++++++++++++++++")
-    return render(request, 'otp.html')
+    return redirect('account:otp_func')
 
 
 
 
 def user_login(request):
     if request.method == "POST":
-        username = request.POST.get('username')
+        # username = request.POST.get('username')
+        print("_____________________________________________")
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         
         if user is not None:
+            print("user||||||||||||||from userlogin")
             if user.email != email:
                 messages.error(request, 'Invalid Credentials')
                 return render(request, 'login.html')
@@ -185,7 +136,7 @@ def user_login(request):
                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
-                
+                    print("trycartitemfrom user_login||||||||||||||||||")
                 
                     # product variants by cart id
                     product_variants = []
@@ -234,7 +185,7 @@ def user_login(request):
                 user_pro.save()
                 
             login(request, user)
-            messages.success(request, "You are now logged in")
+            messages.success(request, "You are already a user,log in now")
              
                 # request.session['user'] = email
             return redirect('account:edit_profile')
