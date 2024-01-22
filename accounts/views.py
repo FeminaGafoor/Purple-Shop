@@ -193,7 +193,6 @@ def user_login(request):
                         variants = item.product_variant.all()
                         product_variants.append(list(variants))
                 
-                    
                     #  get cart_items from user to access product_variation   
                     cart_item = CartItem.objects.filter(user=user)
                     ex_var_list=[]

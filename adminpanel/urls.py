@@ -27,22 +27,6 @@ urlpatterns = [
     path('delete_category/<int:category_id>/',views.delete_category,name='delete_category'),
     
     
- 
-    # Color Management
-    
-    path('color_manage/',views.color_manage,name='color_manage'),
-    path('add_color/',views.add_color,name='add_color'),
-    path('edit_color/<int:color_id>',views.edit_color,name='edit_color'),
-    path('delete_color/<int:color_id>',views.delete_color,name='delete_color'),
-    
-     # Size Management
-    path('size_manage/',views.size_manage,name='size_manage'),
-    path('add_size/',views.add_size,name='add_size'),
-    path('edit_size/<int:id>',views.edit_size,name='edit_size'),
-    path('delete_size/<int:id>',views.delete_size,name='delete_size'),
-    
-    
-    
     # Product Management
     
     path('product_manage/',views.product_manage,name='product_manage'),
