@@ -7,48 +7,38 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
-# from .forms import UserProfileForm
 from django.contrib.auth.models import User
 from .models import User_Profile
 from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from accounts.forms import SignUpForm
+from accounts.forms import SignUpForm, UserProfileForm
 
+
+# -------------------------SIGN_UP-------------------------
 
 
 def sign_up(request):
-    
     if request.method == 'POST':
-        
         form = SignUpForm(request.POST)
-        print("from signup")
+        
         if form.is_valid():
-            form.save() #completed sign up
+            form.save()
             username = form.cleaned_data.get('username')
-            
             password = form.cleaned_data.get('password1')
-            
             email = form.cleaned_data.get('email')
             
             otp = str(random.randint(1000, 9999))
-
+            
             request.session['signup_username']=username
             request.session['signup_otp'] = otp
   
-  
-            print(otp)
-
-
-
             subject = 'OTP Verification Code'
             message = f'Your OTP code for signup is: {otp}'
             from_email = 'femitest.111@gmail.com'
             recipient_list = [email]
             
-            # return HttpResponse(from_email)
-
             send_mail(subject, message, from_email, recipient_list)
             
             messages.success(request, 'Your account has been created!Please Enter OTP')
@@ -60,15 +50,15 @@ def sign_up(request):
     return render(request, 'signup.html')
 
     
+# -------------------------SIGN_UP ENDED-------------------------
 
 
+# -------------------------GENERATE OTP----------------------------------
 
 def otp_func(request):
     
     if request.method == 'POST':
-        
-        otp_entered = request.POST.get('otp_entered') 
-        
+        otp_entered = request.POST.get('otp_entered')
         otp_saved = request.session.get('signup_otp')
         
         if otp_entered == otp_saved:
@@ -77,13 +67,13 @@ def otp_func(request):
 
             # Save the user
             username=request.session['signup_username']
-            print("++++++++++++++++++++save user")
             user = User.objects.get(username=username)
             user.is_active = True
             user.is_otp=True
             user.save()
             messages.success(request, "Your registration is successful. You can now log in.")           
-            return redirect('account:user_login')  # Redirect to the login page or any other desired page
+            return redirect('account:user_login')  
+        
         else:
             messages.error(request, 'Invalid OTP. Please try again.')
     return render(request,'otp.html')
@@ -113,19 +103,19 @@ def new_otp(request):
     return redirect('account:otp_func')
 
 
+# -------------------------GENERATE OTP ENDED-------------------------
 
+
+
+# -------------------------USER LOGIN ---------------------------------
 
 def user_login(request):
     if request.method == "POST":
-        # username = request.POST.get('username')
-        print("_____________________________________________")
         email = request.POST.get('email')
         password = request.POST.get('password')
-        
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
-            print("user||||||||||||||from userlogin")
             if user.email != email:
                 messages.error(request, 'Invalid Credentials')
                 return render(request, 'login.html')
@@ -136,8 +126,7 @@ def user_login(request):
                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
-                    print("trycartitemfrom user_login||||||||||||||||||")
-                
+                    
                     # product variants by cart id
                     product_variants = []
                     for item in cart_item:
@@ -172,22 +161,16 @@ def user_login(request):
                 
             except Exception as e:
                 print("Exception occurred:", e)
-                # Handle any other exceptions that might occur
                 pass
             
             if user:
-                # Create or retrieve User_Profile using username
-                user_pro, created = User_Profile.objects.get_or_create(user=user, defaults={'user_name': username, 'email': email})
-                # Update User_Profile fields
-                user_pro.user_name = username
+                user_pro, created = User_Profile.objects.get_or_create(user=user, defaults={'email': email})
                 user_pro.email = email
-                # user_pro.phone = phone
                 user_pro.save()
                 
             login(request, user)
             messages.success(request, "You are already a user,log in now")
              
-                # request.session['user'] = email
             return redirect('account:edit_profile')
             
         else:
@@ -195,8 +178,10 @@ def user_login(request):
 
     return render(request, 'login.html')
 
+# -------------------------USER LOGIN ENDED-------------------------
 
 
+# -------------------------USER LOGOUT -------------------------
 
 
 @login_required(login_url='/user_login/')
@@ -205,7 +190,11 @@ def user_logout(request):
     return redirect('home_app:home')
 
 
+# -------------------------USER LOGOUT ENDED-------------------------
 
+
+
+# -------------------------CREATE USER PROFILE-------------------------
 
 
 @login_required(login_url='/user_login/') 
@@ -213,10 +202,7 @@ def profile(request):
     
     if request.user.is_authenticated:
         user=request.user
-      
         user_pro, created = User_Profile.objects.get_or_create(user=user)
-       
-        
         user_profile_image_url = user_pro.image.url if user_pro.image else None
         
         # Printing for debugging
@@ -235,7 +221,7 @@ def profile(request):
     
     
     
-
+# -------------------------EDIT USER PROFILE-------------------------
 
 @login_required(login_url='/user_login/')  
 def edit_profile(request):
@@ -248,12 +234,10 @@ def edit_profile(request):
             user_profile = User_Profile(user=request.user)
             
         if request.method == "POST":
-
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
             if form.is_valid():
                 user_profile = form.save()
                 user_profile.user = request.user
-            
                 user_profile.save()
 
                 # Update the user's email
@@ -271,9 +255,10 @@ def edit_profile(request):
         context = {
             'form': form,
         }
-        return render(request, 'edit_profile.html', context)
+    return render(request, 'edit_profile.html',context)
+
     
-    
+# -------------------------USER PROFILE ENDED-------------------------    
     
     
     

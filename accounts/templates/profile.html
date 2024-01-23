@@ -5,7 +5,7 @@
 
 <div style="text-align: center; margin-top: 20px;">
     <span class="block1-name ltext-102 trans-04 p-b-8">
-        MY PROFILE
+        PROFILE
     </span>
 </div>
 <!-- Profile -->
@@ -87,10 +87,15 @@
                                                 </div>
                                                 </div>
                                             </div>
+
+                                          
                                         
                                             <!-- Add more fields for address, city, state, country, etc. -->
                                         <br>
-                                   
+                                        {% comment %} <a href="#" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                                            Add New Address
+                                        </a>
+                                    {% endcomment %}
         
                                         </div>
 
@@ -118,9 +123,7 @@
                         text-align: center;margin-left: 75px;">
                     </div>
                    
-{% comment %} 
-                    <div class="flex-w flex-t p-t-27 p-b-33">
-                   </div> {% endcomment %}
+
                     <a href="{% url 'account:edit_profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
                         Edit Profile
                     </a>
@@ -143,8 +146,99 @@
         </div>
     </div>
 </form>
-    
+     
 
+
+
+{% comment %}      
+<div class="container mt-4">
+    <h2 class="text-center mb-4">My Profile</h2>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <form class="bg0 p-4">
+                <!-- User Information -->
+                <div class="mb-4">
+                    <h4>User Information</h4>
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user_pro.user_name }} {{ user_pro.last_name }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone" class="col-sm-4 col-form-label">Phone:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ user_pro.phone }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="mb-4">
+                    <h4>Address Information</h4>
+                    <div class="form-group row">
+                        <label for="address_1" class="col-sm-4 col-form-label">Address 1:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="address_1" name="address_1" value="{{ user_pro.address_1 }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address_2" class="col-sm-4 col-form-label">Address 2:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="address_2" name="address_2" value="{{ user_pro.address_2 }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="city" class="col-sm-4 col-form-label">City:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="city" name="city" value="{{ user_pro.city }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="state" class="col-sm-4 col-form-label">State:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="state" name="state" value="{{ user_pro.state }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="country" class="col-sm-4 col-form-label">Country:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="country" name="country" value="{{ user_pro.country }}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue/Checkout Buttons -->
+                <div class="row justify-content-between">
+                    <a href="{% url 'shop_app:shop' %}" class="btn btn-secondary">Continue Shopping</a>
+                    <a href="{% url 'outgoing_app:checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card p-4">
+                <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid rounded-circle mb-3">
+                <div class="text-center">
+                    <a href="{% url 'account:edit_profile' %}" class="btn btn-outline-primary btn-sm mb-2">Edit Profile</a>
+                    <br>
+                    <a href="{% url 'account:change_password' %}" class="btn btn-outline-primary btn-sm mb-2">Change Password</a>
+                    <br>
+                    <a href="{% url 'user_app:user_order' %}" class="btn btn-outline-primary btn-sm mb-2">My Orders</a>
+                    <br>
+                    <a href="{% url 'account:user_logout' %}" class="btn btn-outline-danger btn-sm">Log out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
 
 {% endblock %}
 {% include 'footer.html' %}
