@@ -48,22 +48,15 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label for="address_1" class="col-sm-4 col-form-label">Address_1:</label>
+                                                <label for="address" class="col-sm-4 col-form-label">Address:</label>
                                                 <div class="col-sm-8">
-                                                <div class="form-control" id="address_1" name="address_1" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user_pro.address_1 }}
+                                                <div class="form-control" id="address" name="address" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
+                                                    {{ user_pro.address }}
                                                 </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label for="address_1" class="col-sm-4 col-form-label">Address_2:</label>
-                                                <div class="col-sm-8">
-                                                <div class="form-control" id="address_2" name="address_2" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user_pro.address_2 }}
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
+                                            
+                                            {% comment %} <div class="form-group row">
                                                 <label for="city" class="col-sm-4 col-form-label">City:</label>
                                                 <div class="col-sm-8">
                                                 <div class="form-control" id="city" name="city" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
@@ -78,12 +71,12 @@
                                                     {{ user_pro.state }}
                                                 </div>
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
                                             <div class="form-group row">
-                                                <label for="country" class="col-sm-4 col-form-label">Country:</label>
+                                                <label for="country" class="col-sm-4 col-form-label">Location:</label>
                                                 <div class="col-sm-8">
                                                 <div  class="form-control" id="country" name="country"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
-                                                    {{ user_pro.country }}
+                                                    {{ user_pro.city }},{{ user_pro.state }},{{ user_pro.country }}
                                                 </div>
                                                 </div>
                                             </div>

@@ -22,18 +22,18 @@ from accounts.forms import SignUpForm, UserProfileForm
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        print("||||||||||||||||||||||||||||||")
+        
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            print(username,"username")
+            print(username)
             password = form.cleaned_data.get('password1')
-            print(password,"password")
+            print(password)
             email = form.cleaned_data.get('email')
-            print(email,"email")
-            print("+++++++++++++++++++++++")
-            otp = str(random.randint(1000, 9999))
+            print(email)
             
+            otp = str(random.randint(1000, 9999))
+            print(otp)
             request.session['signup_username']=username
             request.session['signup_otp'] = otp
   
@@ -113,12 +113,17 @@ def new_otp(request):
 # -------------------------USER LOGIN ---------------------------------
 
 def user_login(request):
+    print("+++++++++++++++++++++")
     if request.method == "POST":
         email = request.POST.get('email')
+        print(email,"email")
         password = request.POST.get('password')
+        print(password,"password")
         user = authenticate(request, email=email, password=password)
-        
+
+        print(user,"from login")
         if user is not None:
+            print("not none")
             if user.email != email:
                 messages.error(request, 'Invalid Credentials')
                 return render(request, 'login.html')
@@ -168,7 +173,8 @@ def user_login(request):
             
             if user:
                 user_pro, created = User_Profile.objects.get_or_create(user=user)
-                # user_pro.email = email
+                user_pro.email = email
+                print(user_pro.email,"___________________________")
                 user_pro.save()
                 
             login(request, user)
@@ -229,37 +235,50 @@ def profile(request):
 @login_required(login_url='/user_login/')  
 def edit_profile(request):
     
-    if request.user.is_authenticated:
-        try:
-            user_profile, created = User_Profile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        username = request.POST["user_name"]
+        email = request.POST["email"]
+        firstname = request.POST["first_name"]
+        lastname = request.POST["last_name"]
+        phone = request.POST["phone"]
+        country = request.POST["country"]
+        state = request.POST["state"]
+        city = request.POST["city"]
+        address = request.POST["address"]
+        image = request.FILES.get("image")
         
-        except User_Profile.DoesNotExist:
-            user_profile = User_Profile(user=request.user)
-            
-        if request.method == "POST":
-            form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-            if form.is_valid():
-                user_profile = form.save()
-                user_profile.user = request.user
-                user_profile.save()
+        
 
-                # Update the user's email
-                user = request.user
-                user.email = form.cleaned_data['email']
-                user.save()
+        # Get or create the User instance based on the username
+        user_form, created = User.objects.get_or_create(username=username)
+        user_form.email = email
+        user_form.first_name = firstname
+        user_form.last_name = lastname
+        user_form.save()
 
-                messages.success(request, "Profile updated successfully!")
-                return redirect('account:profile')
-            else:
-                messages.error(request, "Please correct the errors in the form.")
-        else:
-            form = UserProfileForm(instance=user_profile)
+        # Get or create the UserProfile instance associated with the User
+        profile, created = User_Profile.objects.get_or_create(user=user_form)
+        profile.phone = phone
+        profile.country = country
+        profile.city = city
+        profile.state = state
+        profile.address = address
+        if image:
+            profile.image = image
+          
+        profile.save()
+        return redirect('account:profile')
+    else:
+        
+        user_form = request.user  # Assuming the request.user is authenticated
+        profile, created = User_Profile.objects.get_or_create(user=user_form)
 
-        context = {
-            'form': form,
-        }
-    return render(request, 'edit_profile.html',context)
+    context = {
+        "user_form": user_form,
+        "profile": profile,
+    }
 
+    return render(request, "edit_profile.html", context)
     
 # -------------------------USER PROFILE ENDED-------------------------    
     

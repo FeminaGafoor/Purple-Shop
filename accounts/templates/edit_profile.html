@@ -9,7 +9,7 @@
     </span>
 </div>
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-0" action="{% url 'account:edit_profile' %}" method="POST" enctype="multipart/form-data">
+<form class="bg0 p-t-75 p-b-0" action ={% url 'account:edit_profile' %} method="POST" enctype="multipart/form-data">
     {% csrf_token %}  
     <div class="container">
         <div class="row">
@@ -28,45 +28,46 @@
                                        
                                             <br>
                                             <br>
-                                            <div class="form-group row">
-                                                <label for="username" class="col-sm-4 col-form-label">User Name:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user.username }}" required>
-                                                </div>
-                                            </div>
+                                            
                                         
                                             <div class="form-group row">
                                                 <label for="first_name" class="col-sm-4 col-form-label">First Name:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_profile.first_name }}" required>
+                                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_form.first_name }}" required>
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="last_name" class="col-sm-4 col-form-label">Last Name:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_profile.last_name }}" required>
+                                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_form.last_name }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="username" class="col-sm-4 col-form-label">User Name:</label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user_form.username }}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Email:</label>
                                                 <div class="col-sm-8">
-                                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ user_form.email }}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ user_profile.phone }}" required>
+                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone }}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address" name="address" value="{{ user.address}}" required>
+                                                <input type="text" class="form-control" id="address" name="address" value="{{ profile.address}}" required>
                                                 </div>
                                             </div>
                                             
@@ -74,21 +75,21 @@
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">City:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="city" name="city" value="{{ user.city }}" required>
+                                                <input type="text" class="form-control" id="city" name="city" value="{{ profile.city }}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">State:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="state" name="state" value="{{ user.state }}" required>
+                                                <input type="text" class="form-control" id="state" name="state" value="{{ profile.state }}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-4 col-form-label">Country:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="country" name="country" value="{{ user.country }}" required>
+                                                <input type="text" class="form-control" id="country" name="country" value="{{ profile.country }}" required>
                                             </div>
                                             
                                             </div>
