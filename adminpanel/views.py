@@ -64,7 +64,7 @@ def admin_logout(request):
 def user_manage(request):
     
     user = User_Profile.objects.all()
-    
+    print(user,"user")
     context = {
         'user':user
     }
@@ -75,7 +75,7 @@ def user_block(request,user_id):
     
     #user is block
     user=User_Profile.objects.get(id = user_id)
-    print(user,"user||||||||||||||||||||||||")
+    
     if user.is_active:
         user.is_active = False
         user.save()
@@ -108,7 +108,7 @@ def add_category(request):
             category_name = request.POST.get('name')
             category_image = request.FILES.get('image')
             category_description = request.POST.get('description')
-            print(category_image,"|||||||||||||||||")
+            
             
             if category_name.strip() == '':
                 messages.error(request, 'field is empty!')

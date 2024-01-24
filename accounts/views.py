@@ -22,13 +22,16 @@ from accounts.forms import SignUpForm, UserProfileForm
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        
+        print("||||||||||||||||||||||||||||||")
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
+            print(username,"username")
             password = form.cleaned_data.get('password1')
+            print(password,"password")
             email = form.cleaned_data.get('email')
-            
+            print(email,"email")
+            print("+++++++++++++++++++++++")
             otp = str(random.randint(1000, 9999))
             
             request.session['signup_username']=username
@@ -164,8 +167,8 @@ def user_login(request):
                 pass
             
             if user:
-                user_pro, created = User_Profile.objects.get_or_create(user=user, defaults={'email': email})
-                user_pro.email = email
+                user_pro, created = User_Profile.objects.get_or_create(user=user)
+                # user_pro.email = email
                 user_pro.save()
                 
             login(request, user)
