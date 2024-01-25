@@ -47,78 +47,67 @@
                                             <div class="form-group row">
                                                 <label for="user_name" class="col-sm-4 col-form-label">Full Name:</label>
                                                 <div class="col-sm-8">
-                                                 <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name" required>{{ form.user }}
+                                                 <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name" required>
                                                 </div> 
                                                 
                                             </div>
-                                            {% comment %} <div class="form-group row">
-                                                <label for="user_name" class="col-sm-4 col-form-label">First Name:</label>
-                                                <div class="col-sm-8">
-                                                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter Your Full Name" >{{ form.first_name }}
-                                                </div> 
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="user_name" class="col-sm-4 col-form-label">Last Name:</label>
-                                                <div class="col-sm-8">
-                                                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter Your Full Name" >{{ form.last_name }}
-                                                </div> 
-                                            </div> {% endcomment %}
+                                            
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Email:</label>
                                                 <div class="col-sm-8">
-                                                <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email" >{{ form.email }}
+                                                <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email" >
                                                 </div>
+                                                
                                             </div>
                                           
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number" >{{ form.phone }}
+                                                <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number" >
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
-                                                <label for="email" class="col-sm-4 col-form-label">Address_1:</label>
+                                                <label for="email" class="col-sm-4 col-form-label">Address</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_1" name="address_1"  placeholder="Enter Your Address_1" >{{ form.address_1 }}
+                                                <input type="text" class="form-control" id="address" name="address"  placeholder="Enter Your Address" >
                                                 </div>
                                             </div>
                                           
-                                            <div class="form-group row">
-                                                <label for="email" class="col-sm-4 col-form-label">Address_2:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Enter Your Address_2" >{{ form.address_2 }}
-                                                </div>
-                                            </div>
+                                           
                                        
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">City:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City" >{{ form.city }}
+                                                <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City" >
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">State:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State" >{{ form.state }}
+                                                <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State" >
                                                 </div>
                                             </div>
                                          
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-4 col-form-label">Country:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country" >{{ form.country }}
+                                                <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country" >
                                             </div>
                                             
                                             </div>
-                                            <div class="form-group row">
+                                            {% comment %} <div class="form-group row">
                                                 <label for="order_note" class="col-sm-4 col-form-label" >Order Note:</label>
                                                 <div class="col-sm-8">
                                                     <textarea class="form-control" id="order_note" name="order_note" rows="4" placeholder="Enter Your Order Note">{{ form.order_note.value }}</textarea>
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
 
+                                            <br>
+                                            <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                                                Add Address
+                                            </button>
                                             <br>
                                             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 Save and Deliver Here
@@ -141,12 +130,14 @@
                         <div class="mtext-109 cl2 p-b-30">
                            <h4> {{ user_pro.user_name }}</h4>
 
-                            {% comment %} {{ user_pro.first_name }}
-                            {{ user_pro.last_name }} {% endcomment %}
+                            
                             <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
                                 <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
                                 text-align: center;margin-left: 75px;">
                             </div>
+
+
+
                         </div>
 
                         
@@ -155,27 +146,30 @@
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                             <div class="size-209">
                                 <span class="mtext-110 cl2">
-                                    {{ user_pro.email }}
-                                    {{ user_pro.address_1 }}
+                                    {{ user_pro.address}}
+                                    {{ user.email }}
+                                    
                                 </span>
-                            </div>
-                        </div>
-
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            <div class="size-209">
                                 <span class="mtext-110 cl2">
-                                    {{ user_pro.address_2 }}<br>
+                                    <br>
                                     {{user_pro.phone}}
                                 </span>
+                                <span class="mtext-110 cl2">
+                                    {{user_pro.city}},{{user_pro.state}},{{user_pro.country}}
+                                    
+                                </span>
                             </div>
                         </div>
 
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                             <div class="size-209">
-                                <span class="mtext-110 cl2">
-                                    {{user_pro.city}},{{user_pro.state}}
-                                    {{user_pro.country}}
-                                </span>
+                                
+                            </div>
+                        </div>
+
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209">
+                                
                             </div>
                         </div>
                         <div class="p-t-40">
@@ -190,16 +184,16 @@
             </div>
         </div>
     </form>
-    <script>
+     <script>
         document.getElementById('deliverButton').addEventListener('click', function() {
             // Fetch user data and populate the form fields
             var userPro = {
                 user_name: "{{ user_pro.user_name }}",
                 
-                email:   "{{ user_pro.email }}",
+                email:   "{{ user_pro.user.email }}",
                 phone: "{{ user_pro.phone }}",
-                address_1: "{{ user_pro.address_1 }}",
-                address_2: "{{ user_pro.address_2 }}",
+                address: "{{ user_pro.address }}",
+               
                 city: "{{ user_pro.city }}",
                 state: "{{ user_pro.state }}",
                 country: "{{ user_pro.country }}",
@@ -210,8 +204,7 @@
             document.getElementById('user_name').value = userPro.user_name;
             document.getElementById('email').value = userPro.email;
             document.getElementById('phone').value = userPro.phone;
-            document.getElementById('address_1').value = userPro.address_1;
-            document.getElementById('address_2').value = userPro.address_2;
+            document.getElementById('address').value = userPro.address;
             document.getElementById('city').value = userPro.city;
             document.getElementById('state').value = userPro.state;
             document.getElementById('country').value = userPro.country;
@@ -222,7 +215,7 @@
             // document.getElementById('yourFormId').submit();
         });
         </script>
-        
+
 
 
 

@@ -16,7 +16,12 @@ class User_Profile(models.Model):
     is_active = models.BooleanField(default=True) 
 
     def __str__(self):
+        print(f"User instance: {self.user}")
         return self.user.username
 
+
+    @property
     def user_name(self):
+        print(f"User first_name: {self.user.first_name}")
+        print(f"User last_name: {self.user.last_name}")
         return f"{self.user.first_name} {self.user.last_name}"

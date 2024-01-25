@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from accounts.forms import SignUpForm, UserProfileForm
+from accounts.forms import SignUpForm
 
 
 # -------------------------SIGN_UP-------------------------
@@ -174,6 +174,7 @@ def user_login(request):
             if user:
                 user_pro, created = User_Profile.objects.get_or_create(user=user)
                 user_pro.email = email
+                # user_pro.user_name
                 print(user_pro.email,"___________________________")
                 user_pro.save()
                 
@@ -214,13 +215,18 @@ def profile(request):
         user_pro, created = User_Profile.objects.get_or_create(user=user)
         user_profile_image_url = user_pro.image.url if user_pro.image else None
         
+        
+        print(user_pro)
+        print(user_pro.user_name,"|||||||||||||||||||||||||||||||||||||||||")
+        print(user_pro.user.first_name)
+        print(user_pro.user.last_name)
         # Printing for debugging
         print(user_profile_image_url)
 
         context = {
             
             'user_pro': user_pro,
-            'created': created,
+            # 'created': created,
             'user_profile_image_url':user_profile_image_url
         }
         return render(request, 'profile.html',context)
@@ -232,9 +238,31 @@ def profile(request):
     
 # -------------------------EDIT USER PROFILE-------------------------
 
+# @login_required(login_url='/user_login/')
+# def edit_profile(request):
+#     user_form = request.user  # Assuming the request.user is authenticated
+#     profile, created = User_Profile.objects.get_or_create(user=user_form)
+
+#     if request.method == "POST":
+#         form = UserProfileForm(request.POST, request.FILES, instance=profile)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('account:profile')
+#     else:
+#         form = UserProfileForm(instance=profile)
+
+#     context = {
+#         "form": form,
+#         "user_form": user_form,
+#         "profile": profile,
+#     }
+
+#     return render(request, "edit_profile.html", context)
+    
+    
 @login_required(login_url='/user_login/')  
 def edit_profile(request):
-    
+    print("|||||||||||||||||from edit")
     if request.method == "POST":
         username = request.POST["user_name"]
         email = request.POST["email"]
@@ -247,7 +275,7 @@ def edit_profile(request):
         address = request.POST["address"]
         image = request.FILES.get("image")
         
-        
+        print("|||||||||||||||||from")
 
         # Get or create the User instance based on the username
         user_form, created = User.objects.get_or_create(username=username)
@@ -255,7 +283,7 @@ def edit_profile(request):
         user_form.first_name = firstname
         user_form.last_name = lastname
         user_form.save()
-
+        print("|||||||||||||||||from|||||||||||||||||||||||")
         # Get or create the UserProfile instance associated with the User
         profile, created = User_Profile.objects.get_or_create(user=user_form)
         profile.phone = phone
@@ -267,6 +295,8 @@ def edit_profile(request):
             profile.image = image
           
         profile.save()
+        
+        print(profile.phone,"+++++++++++++++++++((((((((((((((((((((()))))))))))))))))))))")
         return redirect('account:profile')
     else:
         
@@ -278,7 +308,10 @@ def edit_profile(request):
         "profile": profile,
     }
 
-    return render(request, "edit_profile.html", context)
+    return render(request, "edit_profile.html", context)    
+    
+    
+    
     
 # -------------------------USER PROFILE ENDED-------------------------    
     
