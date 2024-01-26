@@ -273,8 +273,8 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'shipping': shipping,
         'cart_items': cart_items,
         'total': total,
-        "tax":tax,
-        "grand_total":grand_total,
+        'tax':tax,
+        'grand_total':grand_total,
         'user_profile_image_url':user_profile_image_url,
     }
     return render(request, 'checkout.html', context)
