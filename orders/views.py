@@ -1,7 +1,8 @@
 import datetime
 from email import message
+import json
 from django.core.mail import EmailMessage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from outgoing.models import CartItem
@@ -65,7 +66,7 @@ def place_order(request, total=0, quantity=0):
         ):
             print("++++++++++++++++++++")
             messages.error(request, "Please fill in all required fields.")
-            return redirect("order_app:place_order")
+            return redirect("order_app:place_order/")
 
             
         print("___________________________")
@@ -114,8 +115,7 @@ def place_order(request, total=0, quantity=0):
         
         return render(request,'place_order.html',context)
     else:
-        messages.error(request, "There was an error with your order. Please check the form.")
-        return HttpResponseRedirect("/orders/place_order/")
+        return redirect('outgoing_app:checkout')
                 
 
             
@@ -198,11 +198,99 @@ def cash_on_delivery(request,number):
             return HttpResponseRedirect('/')
                     
 
+            
+def payments(request,number):
+    body = json.loads(request.body)
+    orders = Order.objects.filter(user=request.user, 
+                                  is_ordered=False, order_number=number)
+    user_profile = get_object_or_404(User_Profile, user=request.user)
+    if orders.exists():
+        order = (
+            orders.last()
+        ) 
+        
+       
+        
+        if order:
+            payment = Payment(
+                user=user_profile,
+                payment_id=number,
+                payment_method="COD",
+                amount_paid=order.order_total, 
+                status="Completed",
+            )
+            
+            payment.save()
+            order.payment = payment
+            order.is_ordered = True
+            order.save()
+            
+            cart_item = CartItem.objects.filter(user=request.user)
+            
+            for item in cart_item:
+                order_product = OrderProduct()
+                order_product.order = order
+                order_product.payment = payment
+                order_product.user = user_profile
+                order_product.product = item.product
+                order_product.price = item.product.price
+                order_product.quantity = item.quantity
+                order_product.save()
+                
+                
+                cart_item = CartItem.objects.get(id=item.id)
+                product_variation = cart_item.product_variant.all()
+                order_product = OrderProduct.objects.get(id=order_product.id)
+                order_product.product_variant.set((product_variation))
+                order_product.save()
+
+                # Reduce the quantity of sold product
+                product = Product.objects.get(id=item.product_id)
+                product.stock -= item.quantity
+                product.save()
+                
+                
+            # Clear cart    
+            CartItem.objects.filter(user=request.user).delete()
+            
+            
+            # order recieved email
+            mail_subject = "Thank you for your order"
+            message = render_to_string(
+                "order_recieved_email.html", {"user": request.user, "order": order}
+            )
+            to_email = request.user.email
+
+            send_mail = EmailMessage(mail_subject, message, to=[to_email])
+            send_mail.send()
+
+        data = {"order_number": order.order_number, "transID": payment.payment_id}
+        return JsonResponse(data)
+    else:
+        # Handle the case when no matching order is found
+        return HttpResponse("Order not found.")
+
+
+def order_complete(request):
+    order_number = request.GET.get("order_number")
     
+    try:
+        orders = Order.objects.filter(order_number=order_number, is_ordered=True)
 
+        if orders.exists():
+       
+            order = orders.last()
 
-
-
+            order_products = OrderProduct.objects.filter(order=order, user=request.user)
+            context = {
+                    "order_products": order_products,
+                }
+            return render(request, "success.html",context)
+        else:
+            # Handle the case where no orders match the criteria
+            return HttpResponse("Order not found.")
+    except (Payment.DoesNotExist, Order.DoesNotExist):
+        return HttpResponseRedirect("/")
 
 
 
