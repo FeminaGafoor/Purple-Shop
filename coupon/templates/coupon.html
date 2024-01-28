@@ -1,0 +1,111 @@
+{% load static %}
+{% include 'shop_header.html' %}
+{% block content %}
+
+
+<div style="text-align: center; margin-top: 20px;">
+    <span class="block1-name ltext-102 trans-04 p-b-8">
+        COUPON
+    </span>
+</div>
+<!-- Profile -->
+<form class="bg0 p-t-75 p-b-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_row">
+                                <td class="column-1">
+                                    
+
+                                    <div class="col-lg-8 pb-5">
+                                        <!-- Item-->
+                                        {% if coupon %}
+                                        {% for i in coupon %}
+                                        <div class="card w-75 coupon-card" style="border: 2px solid #f0f0f0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                            <div class="card-body">
+                                                <div style="text-align: center; padding: 1rem;">
+                                                    <img src="{{ i.image.url }}" alt="Coupon Image" style="max-width: 100%; height: 16rem;">
+                                                </div>
+                                                <h5 class="card-title" style="font-size: 1.5rem; color: #333;">Get Exciting Discounts!</h5>
+                                                <p class="card-text" style="color: #666;">{{i.offer_name}}.</p>
+                                                <button class="btn btn-primary show-code-btn" style="background-color: #ff3f6c; border-color: #ff3f6c;">Show Coupon Code</button>
+                                                <p class="coupon-code" style="display: none; font-size: 1.2rem; color: #333; margin-top: 1rem;">Coupon Code: <span class="code-value">{{i.code}}</span></p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% else %}
+                                        <div class="alert alert-info" role="alert">
+                                            No coupon available at the moment.
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <script>
+                                // Use querySelectorAll to select all buttons and add the event listener to each
+                                document.querySelectorAll('.show-code-btn').forEach(function(button) {
+                                    button.addEventListener('click', function () {
+                                        // Use closest to find the parent coupon card and then find the coupon code within that card
+                                        var couponCode = this.closest('.coupon-card').querySelector('.coupon-code');
+                                        couponCode.style.display = 'block';
+                                    });
+                                });
+                            </script>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                        <a href="{% url 'shop_app:shop' %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
+                              Continue Shopping
+                          </a>
+                          <a href="{% url 'outgoing_app:checkout' %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
+                            Proceed to Checkout
+                        </a>
+                          
+                      </div>
+                    
+                </div>
+            </div>
+
+            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                    <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                        <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
+                        text-align: center;margin-left: 75px;">
+                    </div>
+                   
+
+                    <a href="{% url 'account:edit_profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        Edit Profile
+                    </a>
+                    
+                    <br>
+                    <a href="{% url 'account:change_password' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        Change Password
+                    </a>
+                    <br>
+                    <a href="{% url 'user_app:user_order' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        My Orders
+                    </a>
+                    <br>
+                    <a href="{% url 'account:user_logout' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                        Log out
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+     
+
+
+
+{% endblock %}
+{% include 'footer.html' %}

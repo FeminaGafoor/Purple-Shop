@@ -8,7 +8,7 @@ from django.contrib import messages
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
 from django.contrib.auth.models import User
-from .models import User_Profile
+from .models import  User_Profile
 from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -238,26 +238,6 @@ def profile(request):
     
 # -------------------------EDIT USER PROFILE-------------------------
 
-# @login_required(login_url='/user_login/')
-# def edit_profile(request):
-#     user_form = request.user  # Assuming the request.user is authenticated
-#     profile, created = User_Profile.objects.get_or_create(user=user_form)
-
-#     if request.method == "POST":
-#         form = UserProfileForm(request.POST, request.FILES, instance=profile)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('account:profile')
-#     else:
-#         form = UserProfileForm(instance=profile)
-
-#     context = {
-#         "form": form,
-#         "user_form": user_form,
-#         "profile": profile,
-#     }
-
-#     return render(request, "edit_profile.html", context)
     
     
 @login_required(login_url='/user_login/')  
@@ -313,10 +293,21 @@ def edit_profile(request):
     
     
     
-# -------------------------USER PROFILE ENDED-------------------------    
+# -------------------------USER PROFILE ENDED-------------------------  
+
+
+ 
+# -------------------------USER'S COUPON-------------------------  
+
     
     
     
+    
+   
+# -------------------------USER'S COUPON ENDED-------------------------  
+
+
+  
 @login_required(login_url='/accounts/user_login/')    
 def change_password(request):
     

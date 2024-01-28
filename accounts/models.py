@@ -1,5 +1,7 @@
+
 from django.contrib.auth.models import User
 from django.db import models
+
 
 
 # Create your models here.
@@ -8,6 +10,7 @@ from django.db import models
 class User_Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.BigIntegerField(null=True)
+    
     address = models.CharField(max_length=20)
     city = models.CharField(max_length=15)
     state = models.CharField(max_length=15,default=True,null=True)
@@ -25,3 +28,5 @@ class User_Profile(models.Model):
         print(f"User first_name: {self.user.first_name}")
         print(f"User last_name: {self.user.last_name}")
         return f"{self.user.first_name} {self.user.last_name}"
+
+

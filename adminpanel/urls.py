@@ -34,6 +34,16 @@ urlpatterns = [
     path('edit_product/',views.edit_product,name='edit_product'),
     path('delete_product/<int:product_id>/',views.delete_product,name='delete_product'),
     
+    
+    # Coupon Management
+    
+    # path('coupon_manage/', views.CouponManageView.as_view(), name='coupon_manage'),
+    # path("add_coupon/",views.AddCoupon.as_view(),name="add_coupon"),
+    # path("edit_coupon/<int:id>/",views.EditCoupon.as_view(),name="edit_coupon"),
+    
+    # path("soft_delete_coupon/<int:id>/",views.soft_delete_coupon,name="soft_delete_coupon"),
+    # path("undelete_coupon/<int:id>/",views.undelete_coupon,name="undelete_coupon"),
+    
     # Order Management
     
     path('order_list/',views.order_list,name='order_list'),

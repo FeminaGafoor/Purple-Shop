@@ -5,10 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login,logout
 from django.urls import reverse
+from django.views import View
 from products.models import Category, Color, Product, Size
 from django.utils.text import slugify
 
-from accounts.models import User_Profile
+from accounts.models import  User_Profile
 from orders.models import Order, OrderProduct
 
 # Create your views here.
@@ -334,6 +335,50 @@ def delete_product(request, product_id):
         return redirect('admin_panel:product_manage')
     else:
         return redirect('admin_panel:admin_login')
+    
+    
+# Coupon Management-----------------------------------------  
+
+
+# class CouponManageView(View):
+#     template_name = 'admin_coupon.html'
+
+#     def get(self, request):
+#         coupons = Coupon.objects.all()
+#         context = {'coupon': coupons}
+#         return render(request, self.template_name, context)
+
+
+
+# class AddCoupon(View):
+#    def post(self, request):
+#         # Retrieve data from the form
+#         coupon_name = request.POST.get('coupon_name')
+#         coupon_code = request.POST.get('coupon_code')
+#         coupon_image = request.FILES.get('coupon_image')  # Handle file upload
+#         coupon_discount = request.POST.get('coupon_discount')
+#         coupon_minimum_amount = request.POST.get('coupon_minimum_amount')
+#         coupon_expiration_time = request.POST.get('coupon_expiration_time')
+        
+
+#         # Create and save the Coupon object
+#         coupon = Coupon(
+#             user=request.user,  # Assuming you have a logged-in user
+#             offer_name=coupon_name,
+#             code=coupon_code,
+#             image=coupon_image,
+#             discount_price=coupon_discount,
+#             minimum_amount=coupon_minimum_amount,
+#             expiration_time=coupon_expiration_time,
+#         )
+#         coupon.save()
+#         return HttpResponseRedirect('/admin_login/')  
+            
+            
+      
+    
+    
+    
     
     
     

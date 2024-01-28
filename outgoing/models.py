@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from products.models import Product, ProductVariant
-from accounts.models import User_Profile
+from accounts.models import  User_Profile
 
 # Create your models here.
     
@@ -19,6 +19,7 @@ class Cart(models.Model):
     
 class CartItem(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=True )
+    # coupons = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_variant = models.ManyToManyField(ProductVariant, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
@@ -31,3 +32,11 @@ class CartItem(models.Model):
     
     def __str__(self):
         return self.product.product_name
+    
+    
+
+    # @property
+    # def amount(self):
+        
+    #     if self.coupons:
+    #         return self.product.price - self.coupons.discount_price

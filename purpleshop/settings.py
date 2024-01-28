@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'outgoing',
     'orders',
     'users',
+    'coupon',
     
     
 ]

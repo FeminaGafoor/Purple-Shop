@@ -216,11 +216,11 @@ def payments(request):
         user=request.user, is_ordered=False, order_number=body["orderID"]
     )
     user_profile = get_object_or_404(User_Profile, user=request.user)
-    print(orders,"+++++++++++++++++++")
+    
     if orders.exists():
         order = (
             orders.last()
-        )  # You may want to add additional logic if there are multiple matching orders
+        ) 
         
         coupon_discount = 0 
 
@@ -238,25 +238,34 @@ def payments(request):
         order.is_ordered = True
         order.save()
 
-        # cart_item = CartItem.objects.filter(user=request.user)
-        # for item in cart_item:
-        #     orderproduct = OrderProduct()
-        #     orderproduct.order = order
-        #     orderproduct.payment = payment
-        #     orderproduct.user = request.user
-        #     orderproduct.product = item.product
-        #     orderproduct.quantity = item.quantity
-        #     orderproduct.product_variant = item.variant
-        #     orderproduct.price = item.variant.price
-        #     orderproduct.grand_total = order.order_total 
-        #     orderproduct.ordered = True
-        #     orderproduct.save()
+        cart_item = CartItem.objects.filter(user=request.user)
+        
+        for item in cart_item:
+            order_product = OrderProduct()
+            order_product.order = order
+            order_product.payment = payment
+            order_product.user = user_profile
+            order_product.product = item.product
+            order_product.price = item.product.price
+            order_product.quantity = item.quantity
+            order_product.save()
+            
+            
+            cart_item = CartItem.objects.get(id=item.id)
+            product_variation = cart_item.product_variant.all()
+            order_product = OrderProduct.objects.get(id=order_product.id)
+            order_product.product_variant.set((product_variation))
+            order_product.save()
 
-        #     variant = ProductVariant.objects.get(id=item.variant.id)
-        #     variant.quantity -= item.quantity
-        #     variant.save()
-
+            # Reduce the quantity of sold product
+            product = Product.objects.get(id=item.product_id)
+            product.stock -= item.quantity
+            product.save()
+            
+            
+        # Clear cart    
         CartItem.objects.filter(user=request.user).delete()
+        
         mail_subject = "Thank you for your order"
         message = render_to_string(
             "order_recieved_email.html", {"user": request.user, "order": order}
@@ -268,9 +277,7 @@ def payments(request):
 
     data = {"order_number": order.order_number, "transID": payment.payment_id}
     return JsonResponse(data)
-    # else:
-    #     # Handle the case when no matching order is found
-    #     return HttpResponse("Order not found.")
+  
 
 
   
@@ -305,5 +312,9 @@ def order_complete(request):
             
             
 def success(request):
-    return render(request,'success.html')
+    order_products = OrderProduct.objects.filter(user=request.user).last()
+    context={
+        'order_products':order_products
+    }
+    return render(request,'success.html',context)
     

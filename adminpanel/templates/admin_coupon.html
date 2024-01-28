@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+    
+{% block content %}
+
+
+       
+  
+<!-- Content wrapper -->
+<div class="content-wrapper">
+              <!-- Content -->
+  
+              <div class="container-xxl flex-grow-1 container-p-y">
+                <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Coupon Management</h4>
+               <hr class="my-5" />
+                <!--Add button to trigger the add modal-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                    Add Coupon
+                </button>
+                {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div style="color: {% if message.tags == 'success' %}#94c494{% else %}red{% endif %}; padding: 10px; margin: 5px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+                <!-- Hoverable Table rows -->
+                <div class="card">
+                  <h5 class="card-header">Coupon List</h5>
+                  <div class="table-responsive text-nowrap">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Coupon Name</th>
+                          <th>Coupon Image</th>
+                          <th>Min Amount</th>
+                          <th>Discount</th>
+                          <th>Expire Date</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody class="table-border-bottom-0">
+                        {% for i in coupon %}
+                        <tr>
+                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
+                          <td>{{i.coupon_name}}</td>
+                          <td>{{i.coupon_image}}</td>
+                          <td><img style="width:50px" src="{{ i.images.url }}" alt="image"></td>
+                          <td>{{i.min_amount }}</td>
+                          <td>{{i.discount }}</td>
+                          <td>{{i.expire_date}}</td>
+                         
+                          
+                          <td><span class="badge bg-label-success me-1"></span>
+                            <div class="dropdown">
+                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                              </button>
+      
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                  <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+      
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ forloop.counter }}">
+                                  <i class="bx bx-trash me-1"></i> Delete
+                                </a>
+      
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %} 
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
+              <!--/ Hoverable Table rows -->
+             </div>
+              <!-- / Content -->
+  
+  <!--  Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Add Coupon</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Your form goes here -->
+          <form method="POST" action="#" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Coupon Name</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" name="name" placeholder="coupon name"/>
+            </div>
+
+            <div>
+                <label for="exampleFormControlTextarea1" class="form-label">Coupon Code</label>
+                <input type="text" name="coupon_code" class="form-control" id="coupon-code" name="code" placeholder="coupon code">
+              </div>
+            <td> 
+
+             
+    
+              <div class="mb-3">
+                <label for="image" class="form-label">Image URL</label>
+                <input type="file" class="form-control" id="images" name="images" required>
+              </div>
+
+            <div class="mb-3">
+              <label for="exampleFormControlSelect1" class="form-label">Coupon Discount (%)</label>
+              <div class="form-control-wrap">
+                <input type="number" name="coupon_discount" class="form-control" id="coupon-discount"name="discount" placeholder="coupon discount">
+            </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Coupon Minimum Amount</label>
+              
+                <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="min_amount" placeholder="Minimum Amount for Coupon">
+       
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Coupon Expiry Time</label>
+              <input type="datetime-local" name="coupon_expiration_time" class="form-control" id="coupon-expiration-time">
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="addCouponButton"> 
+                Add Coupon
+              </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+
+  {% for i in coupon %}
+<!-- Edit Modal for {{ item.name }} -->
+<div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="editModalLabel{{ forloop.counter }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel{{ forloop.counter }}">Edit Coupon - {{ i.coupon_name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      <!-- Your edit form goes here -->
+        <form method="POST" action="#" enctype="multipart/form-data">
+         {% csrf_token %}
+          <input type="hidden" name="coupon_id" value="{{ i.id }}">
+
+          <!-- Include form fields for editing -->
+          <div class="mb-3">
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Name</label>
+            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_name" value="{{ item.product_name }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="edit_description{{ forloop.counter }}" class="form-label">Description</label>
+            <textarea class="form-control" id="edit_description{{ forloop.counter }}" name="edit_description" required>{{ item.description }}</textarea>
+          </div>
+
+          <div class="mb-3">
+              <label for="edit_image{{ forloop.counter }}" class="form-label">Image</label>
+
+              <!-- Display existing image -->
+              <img src="{{ item.images.url }}" alt="image" style="width: 50px; margin-bottom: 10px;">
+          
+              <!-- File input for uploading a new image -->
+              <input type="file" class="form-control" id="edit_image{{ forloop.counter }}" name="edit_image" accept="image/*">
+          </div>
+
+    
+          <div class="mb-3">
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Price</label>
+            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_price" value="{{ item.price }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleFormControlSelect1" class="form-label">Category</label>
+            <select name="category" class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+                {% for c in category %}
+                    <option {% if c.id == item.category.id %} selected {% endif %} value="{{ c.id }}">{{ c.category_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+
+          <div class="mb-3">
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Stock</label>
+            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_stock" value="{{ item.stock }}" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+{% for item in product %}
+  <!-- Delete Modal for {{ item.name }} -->
+  <div class="modal fade" id="deleteModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ forloop.counter }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel{{ forloop.counter }}">Delete Product - {{ item.name }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this product?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a href="{% url 'admin_panel:delete_product' item.id %}" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+
+{% endblock %}       
+
+
+
+
+
+  
+  
