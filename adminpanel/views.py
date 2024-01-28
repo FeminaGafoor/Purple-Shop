@@ -8,9 +8,10 @@ from django.urls import reverse
 from django.views import View
 from products.models import Category, Color, Product, Size
 from django.utils.text import slugify
-
+from django.contrib.auth.decorators import login_required
 from accounts.models import  User_Profile
 from orders.models import Order, OrderProduct
+from coupon.models import Coupon
 
 # Create your views here.
 
@@ -40,7 +41,7 @@ def admin_login(request):
 
 # Admin Dashboard---------------------------------
 
-
+@login_required
 def admin_dashboard(request):
       
     if not request.user.is_superuser:
@@ -339,44 +340,91 @@ def delete_product(request, product_id):
     
 # Coupon Management-----------------------------------------  
 
-
-# class CouponManageView(View):
-#     template_name = 'admin_coupon.html'
-
-#     def get(self, request):
-#         coupons = Coupon.objects.all()
-#         context = {'coupon': coupons}
-#         return render(request, self.template_name, context)
-
-
-
-# class AddCoupon(View):
-#    def post(self, request):
-#         # Retrieve data from the form
-#         coupon_name = request.POST.get('coupon_name')
-#         coupon_code = request.POST.get('coupon_code')
-#         coupon_image = request.FILES.get('coupon_image')  # Handle file upload
-#         coupon_discount = request.POST.get('coupon_discount')
-#         coupon_minimum_amount = request.POST.get('coupon_minimum_amount')
-#         coupon_expiration_time = request.POST.get('coupon_expiration_time')
-        
-
-#         # Create and save the Coupon object
-#         coupon = Coupon(
-#             user=request.user,  # Assuming you have a logged-in user
-#             offer_name=coupon_name,
-#             code=coupon_code,
-#             image=coupon_image,
-#             discount_price=coupon_discount,
-#             minimum_amount=coupon_minimum_amount,
-#             expiration_time=coupon_expiration_time,
-#         )
-#         coupon.save()
-#         return HttpResponseRedirect('/admin_login/')  
-            
-            
-      
+def coupon_manage(request):
+    if request.user.is_superuser:
+        coupons = Coupon.objects.all()
+        context = {
+            'coupons': coupons
+            }
+        return render(request, 'admin_coupon.html', context)
     
+    return redirect('admin_panel:admin_login')
+
+
+
+
+def add_coupon(request):
+    if request.method == 'POST':
+        coupon_name = request.POST.get('coupon_name')
+        coupon_code = request.POST.get('coupon_code')
+        coupon_image = request.FILES.get('coupon_image')  # Handle file upload
+        coupon_discount = request.POST.get('coupon_discount')
+        coupon_minimum_amount = request.POST.get('coupon_minimum_amount')
+        coupon_expiration_time = request.POST.get('coupon_expiration_time')
+
+        # Create and save the Coupon object
+        coupon = Coupon(
+            user=request.user,  # Assuming you have a logged-in user
+            offer_name=coupon_name,
+            code=coupon_code,
+            image=coupon_image,
+            discount_price=coupon_discount,
+            minimum_amount=coupon_minimum_amount,
+            expiration_time=coupon_expiration_time,
+        )
+        coupon.save()
+        return redirect('admin_panel:coupon_manage')
+    
+    return redirect('admin_panel:admin_login')
+    
+    
+    
+def edit_coupon(request, id):
+    template_name = "edit_coupon.html"
+    coupon = get_object_or_404(Coupon, id=id)
+
+    if request.method == 'GET':
+        context = {
+            "coupon": coupon
+        }
+        return render(request, template_name, context)
+    elif request.method == 'POST':
+        # Retrieve form data
+        coupon_name = request.POST.get('coupon_name')
+        coupon_code = request.POST.get('coupon_code')
+        status = request.POST.get('status')
+        discount = request.POST.get('coupon_discount')
+        minimum_amount = request.POST.get('coupon_minimum_amount')
+        coupon_expiration_time = request.POST.get('coupon_expiration_time')
+        image = request.FILES.get('image')
+
+        # Update Coupon instance
+        coupon.offer_name = coupon_name
+        coupon.code = coupon_code
+        coupon.is_expired = status == 'true'
+        coupon.discount_price = discount
+        coupon.minimum_amount = minimum_amount
+
+        # Handle expiration time format conversion
+        if coupon_expiration_time:
+            coupon.expiration_time = coupon_expiration_time
+
+        if image:
+            coupon.image = image
+
+        coupon.save()
+        messages.success(request, 'Coupon edited successfully')
+        return redirect('admin_panel:coupon_manage')
+    
+    
+    
+def delete_coupon(request, id):
+    if request.user.is_superuser:
+        coupon = get_object_or_404(Coupon, id=id) 
+        coupon.delete()
+        return redirect('admin_panel:coupon_manage')
+    else:
+        return redirect('admin_panel:admin_login') 
     
     
     

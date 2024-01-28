@@ -37,6 +37,7 @@
                       <thead>
                         <tr>
                           <th>Coupon Name</th>
+                          <th>Coupon Code</th>
                           <th>Coupon Image</th>
                           <th>Min Amount</th>
                           <th>Discount</th>
@@ -45,15 +46,17 @@
                         </tr>
                       </thead>
                       <tbody class="table-border-bottom-0">
-                        {% for i in coupon %}
+                        {% for i in coupons %}
+                      
                         <tr>
-                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
-                          <td>{{i.coupon_name}}</td>
-                          <td>{{i.coupon_image}}</td>
-                          <td><img style="width:50px" src="{{ i.images.url }}" alt="image"></td>
-                          <td>{{i.min_amount }}</td>
-                          <td>{{i.discount }}</td>
-                          <td>{{i.expire_date}}</td>
+                          
+                          <td>{{i.offer_name}}</td>
+                          <td>{{i.code}}</td>
+                          
+                          <td><img style="width:50px" src="{{ i.image.url }}" alt="image"></td>
+                          <td>{{i.minimum_amount }}</td>
+                          <td>{{i.discount_price }}</td>
+                          <td>{{i.expiration_time}}</td>
                          
                           
                           <td><span class="badge bg-label-success me-1"></span>
@@ -85,6 +88,8 @@
               <!-- / Content -->
   
   <!--  Add Modal -->
+
+
   <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -94,17 +99,17 @@
         </div>
         <div class="modal-body">
           <!-- Your form goes here -->
-          <form method="POST" action="#" enctype="multipart/form-data">
+          <form method="POST" action="{% url 'admin_panel:add_coupon' %}" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Coupon Name</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" name="name" placeholder="coupon name"/>
+              <input type="text" class="form-control" id="exampleFormControlInput1" name="coupon_name" placeholder="coupon name"/>
             </div>
 
             <div>
                 <label for="exampleFormControlTextarea1" class="form-label">Coupon Code</label>
-                <input type="text" name="coupon_code" class="form-control" id="coupon-code" name="code" placeholder="coupon code">
+                <input type="text" name="coupon_code" class="form-control" id="coupon-code" name="coupon_code" placeholder="coupon code">
               </div>
             <td> 
 
@@ -112,20 +117,20 @@
     
               <div class="mb-3">
                 <label for="image" class="form-label">Image URL</label>
-                <input type="file" class="form-control" id="images" name="images" required>
+                <input type="file" class="form-control" id="images" name="coupon_image" required>
               </div>
 
             <div class="mb-3">
               <label for="exampleFormControlSelect1" class="form-label">Coupon Discount (%)</label>
               <div class="form-control-wrap">
-                <input type="number" name="coupon_discount" class="form-control" id="coupon-discount"name="discount" placeholder="coupon discount">
+                <input type="number" name="coupon_discount" class="form-control" id="coupon-discount"name="coupon_discount" placeholder="coupon discount">
             </div>
             </div>
             
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Coupon Minimum Amount</label>
               
-                <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="min_amount" placeholder="Minimum Amount for Coupon">
+                <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="coupon_minimum_amount" placeholder="Minimum Amount for Coupon">
        
             </div>
 
@@ -144,9 +149,10 @@
     </div>
   </div> 
 
+ 
+<!-- Edit Modal  -->
 
-  {% for i in coupon %}
-<!-- Edit Modal for {{ item.name }} -->
+{% for i in coupons %}
 <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="editModalLabel{{ forloop.counter }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -157,50 +163,47 @@
       <div class="modal-body">
 
       <!-- Your edit form goes here -->
-        <form method="POST" action="#" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'admin_panel:edit_coupon' i.id %}" enctype="multipart/form-data">
          {% csrf_token %}
           <input type="hidden" name="coupon_id" value="{{ i.id }}">
 
           <!-- Include form fields for editing -->
           <div class="mb-3">
-            <label for="edit_name{{ forloop.counter }}" class="form-label">Name</label>
-            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_name" value="{{ item.product_name }}" required>
+            <label for="edit_coupon_name{{ forloop.counter }}" class="form-label">Coupon Name</label>
+            <input type="text" class="form-control" id="edit_coupon_name{{ forloop.counter }}" name="coupon_name" value="{{ i.coupon_name }}" required>
           </div>
 
           <div class="mb-3">
-            <label for="edit_description{{ forloop.counter }}" class="form-label">Description</label>
-            <textarea class="form-control" id="edit_description{{ forloop.counter }}" name="edit_description" required>{{ item.description }}</textarea>
+            <label for="edit_description{{ forloop.counter }}" class="form-label">Coupon Code</label>
+            <input type="text" class="form-control" id="edit_coupon_code{{ forloop.counter }}" name="coupon_code" value="{{ i.coupon_code }}" required>
           </div>
 
           <div class="mb-3">
-              <label for="edit_image{{ forloop.counter }}" class="form-label">Image</label>
+              <label for="edit_image{{ forloop.counter }}" class="form-label">Image URL</label>
 
               <!-- Display existing image -->
-              <img src="{{ item.images.url }}" alt="image" style="width: 50px; margin-bottom: 10px;">
+              <img src="{{ i.images.url }}" alt="image" style="width: 50px; margin-bottom: 10px;">
           
               <!-- File input for uploading a new image -->
-              <input type="file" class="form-control" id="edit_image{{ forloop.counter }}" name="edit_image" accept="image/*">
+              <input type="file" class="form-control" id="edit_image{{ forloop.counter }}" name="image" accept="image/*">
           </div>
 
     
           <div class="mb-3">
-            <label for="edit_name{{ forloop.counter }}" class="form-label">Price</label>
-            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_price" value="{{ item.price }}" required>
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Coupon Discount (%)</label>
+            <input type="text" class="form-control" id="edit_coupon_discount{{ forloop.counter }}" name="coupon_discount" value="{{ i.oupon_discount }}" required>
           </div>
 
           <div class="mb-3">
-            <label for="exampleFormControlSelect1" class="form-label">Category</label>
-            <select name="category" class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
-                {% for c in category %}
-                    <option {% if c.id == item.category.id %} selected {% endif %} value="{{ c.id }}">{{ c.category_name }}</option>
-                {% endfor %}
-            </select>
+            <label for="exampleFormControlSelect1" class="form-label">Coupon Minimum Amount</label>
+            <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="coupon_minimum_amount" placeholder="Minimum Amount for Coupon">
+       
         </div>
         
 
           <div class="mb-3">
-            <label for="edit_name{{ forloop.counter }}" class="form-label">Stock</label>
-            <input type="text" class="form-control" id="edit_name{{ forloop.counter }}" name="edit_stock" value="{{ item.stock }}" required>
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Coupon Expiry Time</label>
+            <input type="datetime-local" name="coupon_expiration_time" class="form-control" id="coupon-expiration-time">
           </div>
 
           <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -212,26 +215,26 @@
 {% endfor %}
 
 
-{% for item in product %}
-  <!-- Delete Modal for {{ item.name }} -->
+{% for i in coupons %}
+  <!-- Delete Modal -->
   <div class="modal fade" id="deleteModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ forloop.counter }}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel{{ forloop.counter }}">Delete Product - {{ item.name }}</h5>
+          <h5 class="modal-title" id="deleteModalLabel{{ forloop.counter }}">Delete Coupon - {{ i.coupon_name }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete this product?</p>
+          <p>Are you sure you want to delete this coupon?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="{% url 'admin_panel:delete_product' item.id %}" class="btn btn-danger">Delete</a>
+          <a href="{% url 'admin_panel:delete_coupon' i.id %}" class="btn btn-danger">Delete</a>
         </div>
       </div>
     </div>
   </div>
-{% endfor %}
+{% endfor %} 
 
 
 {% endblock %}       

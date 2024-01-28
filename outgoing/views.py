@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from accounts.models import User_Profile
+from coupon.models import Coupon
 from .models import Cart, CartItem
 from products.models import Product, ProductVariant
 from django.core.exceptions import ObjectDoesNotExist
@@ -205,6 +206,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     shipping = 40  
     tax = 0
     grand_total = 0
+    coupon = Coupon.objects.all()
 
     try:
         if request.user.is_authenticated:
@@ -231,7 +233,8 @@ def cart(request, total=0, quantity=0, cart_items=None):
         'shipping': shipping,
         'cart_items': cart_items,
         'total': total,
-        "tax":tax,
+        'tax':tax,
+        'coupon':coupon,
         "grand_total":grand_total,
     }
     return render(request, 'cart.html', context)

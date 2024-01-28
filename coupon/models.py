@@ -12,7 +12,7 @@ class Coupon(models.Model):
     is_expired = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=100)
     minimum_amount = models.IntegerField(default=500)
-    expiration_time = models.DateTimeField(default=timezone.localtime) 
+    expiration_time = models.DateTimeField(default=timezone.now) 
     active = models.BooleanField(default=True)
     is_one_time_use = models.BooleanField(default=False) 
     

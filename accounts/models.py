@@ -1,6 +1,8 @@
 
+
 from django.contrib.auth.models import User
 from django.db import models
+from coupon.models import Coupon
 
 
 
@@ -10,7 +12,7 @@ from django.db import models
 class User_Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.BigIntegerField(null=True)
-    
+    coupon = models.ForeignKey(Coupon,on_delete=models.CASCADE,null=True,blank=True)
     address = models.CharField(max_length=20)
     city = models.CharField(max_length=15)
     state = models.CharField(max_length=15,default=True,null=True)
