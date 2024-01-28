@@ -166,6 +166,12 @@ EMAIL_HOST_PASSWORD = 'wocl hexs mlpo noue'
 
 
 
+RAZORPAY_API_KEY = 'rzp_test_LWWhai0NPTkmG5 '
+RAZORPAY_API_SECRET = 'vwsl0W1q0vH1DudQbwHoaviy'
+
+
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 # Default primary key field type
