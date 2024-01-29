@@ -7,8 +7,10 @@ from coupon.models import Coupon
     
 def coupon(request):
     
-    coupon = Coupon.objects.filter(active=True) 
+    coupon = Coupon.objects.all() 
+    print(coupon,"coupon")
     profile = User_Profile.objects.get(user=request.user)
+    print(profile)
     user_profile_image_url = profile.image.url if profile.image else None
     
     

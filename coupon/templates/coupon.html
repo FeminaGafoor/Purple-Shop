@@ -30,9 +30,7 @@
                                                     <img class="card-img" src="{{ i.image.url }}" alt="Card image">
                                                     
                                                   </div>
-                                                {% comment %} <div style="text-align: center; padding: 1rem;">
-                                                    <img src="{{ i.image.url }}" alt="Coupon Image" style="max-width: 100%; height: 16rem;">
-                                                </div> {% endcomment %}
+                                               
                                                 <h5 class="card-title" style="font-size: 1.5rem; color: #333;">Get Exciting Discounts!</h5>
                                                 <p class="card-text" style="color: #666;">{{i.offer_name}}.</p>
                                                 <button class="btn btn-primary show-code-btn" style="background-color: #ff3f6c; border-color: #ff3f6c;">Show Coupon Code</button>
@@ -52,8 +50,8 @@
                             <script>
                                 // Use querySelectorAll to select all buttons and add the event listener to each
                                 document.querySelectorAll('.show-code-btn').forEach(function(button) {
-                                    button.addEventListener('click', function () {
-                                        // Use closest to find the parent coupon card and then find the coupon code within that card
+                                    button.addEventListener('click', function (event) {
+                                        event.preventDefault();
                                         var couponCode = this.closest('.coupon-card').querySelector('.coupon-code');
                                         couponCode.style.display = 'block';
                                     });

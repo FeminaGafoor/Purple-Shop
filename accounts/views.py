@@ -8,6 +8,8 @@ from django.contrib import messages
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
 from django.contrib.auth.models import User
+
+from coupon.models import Coupon
 from .models import  User_Profile
 from django.contrib import auth
 from django.core.mail import send_mail
@@ -176,6 +178,8 @@ def user_login(request):
                 user_pro.email = email
                 # user_pro.user_name
                 print(user_pro.email,"___________________________")
+                coupon = Coupon.objects.first()  # Get the first coupon, you may adjust this based on your logic
+                user_pro.coupon = coupon
                 user_pro.save()
                 
             login(request, user)
@@ -273,7 +277,8 @@ def edit_profile(request):
         profile.address = address
         if image:
             profile.image = image
-          
+        coupon = Coupon.objects.first()  # Get the first coupon, you may adjust this based on your logic
+        profile.coupon = coupon
         profile.save()
         
         print(profile.phone,"+++++++++++++++++++((((((((((((((((((((()))))))))))))))))))))")
