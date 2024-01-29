@@ -16,6 +16,8 @@ from outgoing.models import CartItem
 from products.models import Product, ProductVariant
 from accounts.models import User_Profile
 from django.template.loader import render_to_string
+from django.utils import timezone
+from coupon.models import Coupon
 from .models import Order, OrderProduct, Payment
 
 
@@ -206,7 +208,76 @@ def cash_on_delivery(request,number):
             return render(request, "success.html",context)
         else:
             return HttpResponseRedirect('/')
+
+
+def apply_coupon(request,total=0, quantity=0):
+    if request.method =="POST":
+        user=request.user
+        cart_items = CartItem.objects.filter(user=user)
+        tax = 0
+        grand_total = 0
+        
+        for cart_item in cart_items:
+            total += (cart_item.product.price * cart_item.quantity)
+            quantity += cart_item.quantity
+        print(total,"total++++++++++++++++++==")    
+        tax = (2 * total)/100
+        tax = round(tax,2)
+        shipping = 40 
+        grand_total = total+tax+shipping
+        grand_total = round(grand_total, 2)
+    
+    
+        coupon_code = request.POST.get('coupon_code')
+        
+        coupon = Coupon.objects.filter(code=coupon_code, active=True).first()
+        
+        if coupon:
+            current_time=timezone.now()
+            if current_time<=coupon.expiration_time:
+                if Order.objects.filter(user=user, coupon=coupon, is_ordered=True).exists():
+                    return JsonResponse({'error': 'You have already used this coupon.'})
+                print("inside time")
+                orders = Order.objects.filter(user=user,is_ordered=False)
+                if orders.exists():
+                    order = orders.latest('created_at')
+                    print("inside tiem if")
+                else:
+                    order = Order.objects.create(user=user, total_amount=0)
+                    print("inside tiem else")
+
+                # Check if the order total meets the minimum amount requirement
+                if total >= coupon.minimum_amount:
+                    print("inside total if________________")
+                    # Apply the discount to the total
+                    discount_amount = total - coupon.discount_price
+                    grand_total = discount_amount + tax
+                    print("inside total if________________")
+                    order.coupon = coupon
+                    order.save()
                     
+                    for cart_item in cart_items:
+                        cart_item.product.price = grand_total
+                    print("inside cart")    
+                    response_data = {
+                        'total': total,
+                        'coupon': discount_amount,
+                        'tax': tax,
+                        'shipping': shipping,
+                        'grand_total': grand_total,
+                        'success': f"Coupon '{coupon.offer_name}' applied successfully! You saved ₹{coupon.discount_price:.2f}",
+                    }
+                    return JsonResponse(response_data)
+                else:
+                    return JsonResponse({'error': f"The order total must be greater than or equal to ₹{coupon.minimum_amount} to use this coupon."})
+            else:
+                return JsonResponse({'error': 'Invalid coupon or expired'})
+        else:
+            return JsonResponse({'error': 'Invalid coupon code'})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+                        
 
 
 def payments(request):
