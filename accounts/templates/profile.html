@@ -22,8 +22,11 @@
 
                                     <div class="col-lg-10">
                                 
-                                       
-                                            <br>
+                                        <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                                            <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 135px; height: 135px; display: flex; justify-content: center;
+                                            text-align: center;margin-left: 197px;">
+                                        </div>
+                                           
                                             <br>
                                             <div class="form-group row">
                                                 <label for="username" class="col-sm-4 col-form-label">Full Name:</label>
@@ -47,24 +50,24 @@
                                                     {{ user.email }}</div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            {% comment %} <div class="form-group row">
                                                 <label for="address" class="col-sm-4 col-form-label">Address:</label>
                                                 <div class="col-sm-8">
                                                 <div class="form-control" id="address" name="address" readonly style="color: black; background-color: #ffffff; pointer-events: none;">
                                                     {{ user_pro.address }}
                                                 </div>
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
                                             
                                             
-                                            <div class="form-group row">
+                                            {% comment %} <div class="form-group row">
                                                 <label for="country" class="col-sm-4 col-form-label">Location:</label>
                                                 <div class="col-sm-8">
                                                 <div  class="form-control" id="country" name="country"  readonly style="color: black; background-color: #ffffff; pointer-events: none;">
                                                     {{ user_pro.city }},{{ user_pro.state }},{{ user_pro.country }}
                                                 </div>
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
 
                                           
                                         
@@ -93,10 +96,7 @@
 
             <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                 <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
-                        <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
-                        text-align: center;margin-left: 75px;">
-                    </div>
+                    
                    
 
                     <a href="{% url 'account:edit_profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">

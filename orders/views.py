@@ -296,12 +296,13 @@ def payments(request):
         coupon_discount = 0 
 
         # Check if the order has a coupon applied
-        
+        if order.coupon:
+            coupon_discount = order.coupon.discount_price
         payment = Payment(
             user=user_profile,
             payment_id=body["transID"],
             payment_method=body["payment_method"],
-            amount_paid=order.order_total ,
+            amount_paid=order.order_total - coupon_discount,
             status=body["status"],
         )
         payment.save()

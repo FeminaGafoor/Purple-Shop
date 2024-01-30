@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from accounts.models import User_Profile
+from accounts.models import Address, User_Profile
 from coupon.models import Coupon
 from .models import Cart, CartItem
 from products.models import Product, ProductVariant
@@ -259,6 +259,11 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         
     user_pro.save()
     print(user_pro,"user_pro----------------")
+    user_address=Address.objects.filter(user=request.user)
+    print(user_address,"user_address||||||||||||||||||||||||")
+    
+    
+    
     cart_items = CartItem.objects.filter(user=request.user, is_active=True)
 
     for cart_item in cart_items:
@@ -272,6 +277,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
 
     context = {
         'user_pro':user_pro,
+        'user_address':user_address,
         'quantity': quantity,
         'shipping': shipping,
         'cart_items': cart_items,

@@ -63,8 +63,8 @@
                                                 <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number" value="{{ profile.phone }}" required>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="form-group row">
+                                            <br>
+                                            {% comment %} <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Address:</label>
                                                 <div class="col-sm-8">
                                                 <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address" value="{{ profile.address}}" required>
@@ -90,11 +90,12 @@
                                                 <label for="phone" class="col-sm-4 col-form-label">Country:</label>
                                                 <div class="col-sm-8">
                                                 <input type="text" class="form-control" id="country" name="country" placeholder="Enter Your Country" value="{{ profile.country }}" required>
-                                            </div>
+                                            </div> {% endcomment %}
                                             
-                                            </div>
+                                            {% comment %} </div> {% endcomment %}
                                             
                                             <!-- Profile Photo -->
+
                                             <div class="form-group row">
                                                 <label for="profile_photo" class="col-sm-3 col-form-label">Profile Photo:</label>
                                                 <div class="col-sm-9">

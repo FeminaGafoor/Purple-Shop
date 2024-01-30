@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .models import  User_Profile
+from .models import  Address, User_Profile
 
 
 
 # Register your models here.
     
 class User_ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user_name', 'phone','address','city','country' ,'image')
+    list_display = ('user_name', 'phone' ,'image')
 
 admin.site.register(User_Profile,User_ProfileAdmin)
 
-# admin.site.register(Coupon)
+admin.site.register(Address)

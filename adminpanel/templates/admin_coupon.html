@@ -157,11 +157,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel{{ forloop.counter }}">Edit Coupon - {{ i.coupon_name }}</h5>
+        <h5 class="modal-title" id="editModalLabel{{ forloop.counter }}">Edit Coupon - {{ i.offer_name }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
+        
       <!-- Your edit form goes here -->
         <form method="POST" action="{% url 'admin_panel:edit_coupon' i.id %}" enctype="multipart/form-data">
          {% csrf_token %}
@@ -170,19 +171,19 @@
           <!-- Include form fields for editing -->
           <div class="mb-3">
             <label for="edit_coupon_name{{ forloop.counter }}" class="form-label">Coupon Name</label>
-            <input type="text" class="form-control" id="edit_coupon_name{{ forloop.counter }}" name="coupon_name" value="{{ i.coupon_name }}" required>
+            <input type="text" class="form-control" id="edit_coupon_name{{ forloop.counter }}" name="coupon_name" value="{{ i.offer_name }}" required>
           </div>
 
           <div class="mb-3">
             <label for="edit_description{{ forloop.counter }}" class="form-label">Coupon Code</label>
-            <input type="text" class="form-control" id="edit_coupon_code{{ forloop.counter }}" name="coupon_code" value="{{ i.coupon_code }}" required>
+            <input type="text" class="form-control" id="edit_coupon_code{{ forloop.counter }}" name="coupon_code" value="{{ i.code }}" required>
           </div>
 
           <div class="mb-3">
               <label for="edit_image{{ forloop.counter }}" class="form-label">Image URL</label>
 
               <!-- Display existing image -->
-              <img src="{{ i.images.url }}" alt="image" style="width: 50px; margin-bottom: 10px;">
+              <img src="{{ i.image.url }}" alt="image" style="width: 50px; margin-bottom: 10px;">
           
               <!-- File input for uploading a new image -->
               <input type="file" class="form-control" id="edit_image{{ forloop.counter }}" name="image" accept="image/*">
@@ -191,19 +192,19 @@
     
           <div class="mb-3">
             <label for="edit_name{{ forloop.counter }}" class="form-label">Coupon Discount (%)</label>
-            <input type="text" class="form-control" id="edit_coupon_discount{{ forloop.counter }}" name="coupon_discount" value="{{ i.oupon_discount }}" required>
+            <input type="text" class="form-control" id="edit_coupon_discount{{ forloop.counter }}" name="coupon_discount" value="{{ i.discount_price }}" required>
           </div>
 
           <div class="mb-3">
             <label for="exampleFormControlSelect1" class="form-label">Coupon Minimum Amount</label>
-            <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="coupon_minimum_amount" placeholder="Minimum Amount for Coupon">
+            <input type="number" name="coupon_minimum_amount" class="form-control" id="coupon-minimum-amount" name="coupon_minimum_amount" value="{{ i.minimum_amount }}" >
        
         </div>
         
 
           <div class="mb-3">
             <label for="edit_name{{ forloop.counter }}" class="form-label">Coupon Expiry Time</label>
-            <input type="datetime-local" name="coupon_expiration_time" class="form-control" id="coupon-expiration-time">
+            <input type="datetime-local" name="coupon_expiration_time" class="form-control" id="coupon-expiration-time" value="{{ i.expiration_time }}" >
           </div>
 
           <button type="submit" class="btn btn-primary">Save Changes</button>

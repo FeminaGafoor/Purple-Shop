@@ -340,6 +340,24 @@ def delete_product(request, product_id):
     
 # Coupon Management-----------------------------------------  
 
+
+
+# def coupon_manage(request):
+    
+#     coupon = Coupon.objects.all() 
+#     print(coupon,"coupon")
+#     profile = User_Profile.objects.get(user=request.user)
+#     print(profile)
+#     user_profile_image_url = profile.image.url if profile.image else None
+    
+    
+#     context = {
+#         'profile': profile,
+#         'coupon': coupon,
+#         'user_profile_image_url':user_profile_image_url,
+#     }
+#     return render(request,"coupon.html",context)   
+
 def coupon_manage(request):
     if request.user.is_superuser:
         coupons = Coupon.objects.all()
@@ -349,8 +367,6 @@ def coupon_manage(request):
         return render(request, 'admin_coupon.html', context)
     
     return redirect('admin_panel:admin_login')
-
-
 
 
 def add_coupon(request):
@@ -373,6 +389,8 @@ def add_coupon(request):
             expiration_time=coupon_expiration_time,
         )
         coupon.save()
+        
+        messages.success(request, 'Coupon added successfully.')
         return redirect('admin_panel:coupon_manage')
     
     return redirect('admin_panel:admin_login')
@@ -413,7 +431,7 @@ def edit_coupon(request, id):
             coupon.image = image
 
         coupon.save()
-        messages.success(request, 'Coupon edited successfully')
+        messages.success(request, 'Coupon edited successfully.')
         return redirect('admin_panel:coupon_manage')
     
     
@@ -422,6 +440,7 @@ def delete_coupon(request, id):
     if request.user.is_superuser:
         coupon = get_object_or_404(Coupon, id=id) 
         coupon.delete()
+        messages.success(request, 'Coupon deleted successfully.')
         return redirect('admin_panel:coupon_manage')
     else:
         return redirect('admin_panel:admin_login') 

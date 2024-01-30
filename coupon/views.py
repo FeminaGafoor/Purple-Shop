@@ -1,22 +1,15 @@
-from django.shortcuts import render
-from accounts.models import User_Profile
+
+
+from django.shortcuts import redirect, render
 
 from coupon.models import Coupon
 
-# Create your views here.
-    
+
 def coupon(request):
     
-    coupon = Coupon.objects.all() 
-    print(coupon,"coupon")
-    profile = User_Profile.objects.get(user=request.user)
-    print(profile)
-    user_profile_image_url = profile.image.url if profile.image else None
+    coupon= Coupon.objects.all()
     
-    
-    context = {
-        'profile': profile,
-        'coupon': coupon,
-        'user_profile_image_url':user_profile_image_url,
+    context={
+        "coupon":coupon
     }
-    return render(request,"coupon.html",context)   
+    return render(request, "coupon.html", context)
