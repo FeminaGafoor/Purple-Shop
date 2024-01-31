@@ -206,7 +206,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     shipping = 40  
     tax = 0
     grand_total = 0
-    coupon = Coupon.objects.all()
+    
 
     try:
         if request.user.is_authenticated:
@@ -234,7 +234,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         'cart_items': cart_items,
         'total': total,
         'tax':tax,
-        'coupon':coupon,
+        
         "grand_total":grand_total,
     }
     return render(request, 'cart.html', context)

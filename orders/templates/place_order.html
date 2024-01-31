@@ -22,8 +22,7 @@
   </div>
 
   <!-- Shoping Cart -->
-  {% comment %} <form class="bg0 p-t-75 p-b-85" action="{% url 'orders:place_order' %}" method="POST">
-    {% csrf_token %} {% endcomment %}
+  
     <div class="container">
       <div class="row">
         <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -98,14 +97,7 @@
                         {% endfor %}
                       </div>
 
-                      {% if order.order_note %}
-                      <div class="form-group row">
-                        <div class="col-sm-8">
-                          <h6>Order Note:</h6>
-                          <p>{{ order.order_note }}</p>
-                        </div>
-                      </div>
-                      {% endif %}
+                  
                       <hr>
 
                       
@@ -172,11 +164,11 @@
 
         <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
           <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-            <form action="{% url 'order_app:apply_coupon'  %}" method="POST">
+            <form class="coupon-form"  id="coupon-form" method="POST">
               {% csrf_token %}
-            <input type="text" name="coupon_code" placeholder="Coupon code" class="flex-c-m  cl0 size-116 bg3 bor14 p-lr-15 " style="color: black; background-color:#f7f7f7; height: 44px;">
+            <input type="text" id="coupon-input" name="coupon_code" placeholder="Coupon code" class="flex-c-m  cl0 size-116 bg3 bor14 p-lr-15 " style="color: black; background-color:#f7f7f7; height: 44px;">
             <br>
-            <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" id="apply-coupon-btn" style="color: white; height: 44px;">Apply coupon</button>
+            <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer apply-button" id="apply-coupon-btn" style="color: white; height: 44px;">Apply coupon</button>
           </form>
           <br>
             <h4 class="mtext-109 cl2 p-b-30">Price Details</h4>
@@ -186,16 +178,27 @@
               <div class="size-208">
                 <span class="stext-110 cl2">Total Price:</span>
               </div>
-              <div class="size-209">
+              <div class="size-209" id="price-items">
                 <span class="mtext-110 cl2">$ {{ total }}</span>
               </div>
             </div>
+
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30" >
+              <div class="size-208">
+                <span class="stext-110 cl2">Coupon:</span>
+              </div>
+              <div class="size-209"  id="price-coupon">
+                <span class="mtext-110 cl2">{{ coupon }}</span>
+              </div>
+            </div>
+
+
 
             <div class="flex-w flex-t bor12 p-t-15 p-b-30">
               <div class="size-208">
                 <span class="stext-110 cl2">Delivery charge:</span>
               </div>
-              <div class="size-209">
+              <div class="size-209" id="price-shipping">
                 <span class="mtext-110 cl2">${{ shipping }}</span>
               </div>
             </div>
@@ -204,7 +207,7 @@
               <div class="size-208">
                 <span class="stext-110 cl2">Tax:</span>
               </div>
-              <div class="size-209">
+              <div class="size-209" id="price-tax">
                 <span class="mtext-110 cl2">$ {{ tax }}</span>
               </div>
             </div>
@@ -244,7 +247,7 @@
 
 
 
-<!-- Filling address -->
+{% comment %} <!-- Filling address -->
   <script>
     document.getElementById('deliverButton').addEventListener('click', function () {
       // Fetch user data and populate the form fields
@@ -275,17 +278,21 @@
       // Optionally, you can submit the form programmatically
       // document.getElementById('yourFormId').submit();
     })
-  </script>
+  </script> {% endcomment %}
 
 
 <!-- Coupon Success -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
   $(document).ready(function() {
-      // Handle Apply button click
-      $("#apply-coupon-btn").on("click", function() {
+     console.log('haioooooooooooooooo')
+      $("#coupon-form").on("submit", function(e) {
+        e.preventDefault()
+ 
           // Get the value from the coupon input field
           var couponValue = $("#coupon-input").val();
-          console.log("Coupon Value:", couponValue);
+
+          console.log(couponValue)     
 
           // Perform AJAX request
           $.ajax({
@@ -341,13 +348,13 @@
 
       // Function to update price details on the page
       function updatePriceDetails(data) {
-          // Update the price details using the received data
-          $("#total-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.total);
-          $("#coupon-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.coupon);
-          $("#tax-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.tax);
-          $("#shipping-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.shipping);
-          $("#grand-total").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.grand_total);
-      }
+        // Update the price details using the received data
+        $("#total-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.total);
+        $("#coupon-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.coupon);
+        $("#tax-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.tax);
+        $("#shipping-price").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.shipping);
+        $("#grand-total").html("<strong style=\"font-family: 'Arial', 'Helvetica', sans-serif;\">&#8377;</strong>" + data.grand_total);
+    }
       
   });
 </script>

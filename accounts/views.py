@@ -321,129 +321,71 @@ def address(request):
 
 
 
-# def add_address(request):
-#     print("add address")
-#     count = request.session.get("address_count", 0)
-#     print(count,"count")
-#     if count >= 2:
-#         print("count>2")
-#         messages.error(request, "Maximum 2 addresses allowed")
-#         return redirect("account:address")
-#     else:
-#         if request.method == "POST":
-#             print("post method|||||||||||||||||||||||||")
-#             address = request.POST.get("address")
-#             city = request.POST.get("city")
-#             state = request.POST.get("state")
-#             country = request.POST.get("country")
-#             print("else||||||||||||||||||||")
-
-            
-
-#             user_address = Address.objects.create(
-#                 user=request.user,
-#                 address=address,
-#                 city=city,
-#                 state=state,
-#                 country=country,
-#             )
-#             print(user_address,"user_address++++++++++++++++++++")
-#             user_address.save()
-
-#             count += 1
-#             request.session["address_count"] = count
-#             print("+++++++++++++++++++++++")
-#             messages.success(request, "Successfully added")
-#             return redirect("account:address")
-
-#         return render(request, "address.html")
-
 
 def add_address(request):
-    count = request.session.get("address_count", 0)
+    print("|||||||||||||||||||||||||||||||||")
+    # count = request.session.get("address_count", 0)
 
-    if count >= 3:
-        messages.error(request, "Maximum 3 addresses allowed")
-        return redirect("account:address")
-    else:
-        if request.method == "POST":
-            address = request.POST.get("address")
-            city = request.POST.get("city")
-            state = request.POST.get("state")
-            country = request.POST.get("country")
-
-            
-
-            user_address = Address.objects.create(
-                user=request.user,
-                address=address,
-                city=city,
-                state=state,
-                country=country,
-            )
-
-            user_address.save()
-
-            count += 1
-            request.session["address_count"] = count
-
-            messages.success(request, "Successfully added")
-            return redirect("account:address")
-
-        return redirect("account:address")
-
-        
-        
-# def update_address(request,id):   
-    
-#     if request.method == "POST":
-#             print("post method|||||||||||||||||||||||||")
-#             address = request.POST["address"]
-#             city = request.POST["city"]
-#             state = request.POST["state"]
-#             country = request.POST["country"]
-#             print("else||||||||||||||||||||")
-
-#             user_address = get_object_or_404(Address, id=id)
-
-#             user_address = Address.objects.create(
-#                 user=request.user,
-#                 address=address,
-#                 city=city,
-#                 state=state,
-#                 country=country,
-#             )
-#             print("user_address++++++++++++++++++++")
-#             user_address.address=address
-#             user_address.city=city
-#             user_address.state=state
-#             user_address.country=country
-            
-#             user_address.save()
-#             messages.success(request, 'Address updated successfully')
-#             return redirect('account:add_address')
-            
-#     return render(request,"checkout.html")
-    
-def update_address(request, id):
-    # Retrieve the existing address object
-    user_address = get_object_or_404(Address, id=id)
-
+    # if count >= 3:
+    #     messages.error(request, "Maximum 3 addresses allowed")
+    #     return redirect("account:address")
+    # else:
     if request.method == "POST":
-        # Update the fields based on the form data
-        user_address.address = request.POST["address"]
-        user_address.city = request.POST["city"]
-        user_address.state = request.POST["state"]
-        user_address.country = request.POST["country"]
+        user_name = request.POST.get("user_name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        country = request.POST.get("country")
+        print("|||||||||||||||||||||||||||||||||")
+        # user_form, created = User.objects.get_or_create(username=user_name)
+        # user_form.email = email
+        
+        # user_form.save()
+        
+        
 
-        # Save the updated address
+        user_address = Address.objects.create(user=request.user,new_name=user_name,phone=phone,
+            address=address,
+            city=city,
+            state=state,
+            country=country,)
+        
+
         user_address.save()
 
-        messages.success(request, 'Address updated successfully')
-        return redirect('account:add_address')
+        # count += 1
+        # request.session["address_count"] = count
 
-    # If the request method is not POST, render the template
-    return render(request, "checkout.html")    
+        messages.success(request, "Successfully added")
+        return redirect("outgoing_app:checkout")
+
+    return redirect("account:address")
+
+        
+        
+
+    
+# def update_address(request, id):
+#     # Retrieve the existing address object
+#     user_address = get_object_or_404(Address, id=id)
+
+#     if request.method == "POST":
+#         # Update the fields based on the form data
+#         user_address.address = request.POST["address"]
+#         user_address.city = request.POST["city"]
+#         user_address.state = request.POST["state"]
+#         user_address.country = request.POST["country"]
+
+#         # Save the updated address
+#         user_address.save()
+
+#         messages.success(request, 'Address updated successfully')
+#         return redirect('account:add_address')
+
+#     # If the request method is not POST, render the template
+#     return render(request, "checkout.html")    
     
    
 # -------------------------ADD ADDRESS ENDED-------------------------  

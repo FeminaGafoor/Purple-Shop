@@ -22,7 +22,8 @@
     
 
 <!-- Address -->
-
+<form class="bg0 p-t-75 p-b-85" action= "{% url 'account:add_address' %}" method="POST">
+    {% csrf_token %}
     <div class="container">
         <div class="row">
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -99,12 +100,11 @@
                                           
 
                                             <br>
-                                            <form class="bg0 p-t-75 p-b-85" action= "#" method="POST">
-                                                {% csrf_token %}
+                                            
                                             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 Update Address
                                             </button>
-                                            </form>
+                                           
                                             <br>
                                             
                                         </div>
@@ -151,7 +151,7 @@
                 <!--  Customer Address Right ends -->
             </div>
         </div>
-
+</form>
      <script>
         document.getElementById('deliverButton').addEventListener('click', function() {
             // Fetch user data and populate the form fields

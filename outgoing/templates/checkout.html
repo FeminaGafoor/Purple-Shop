@@ -21,7 +21,7 @@
 </div>
     
 
-<!-- Shoping Cart -->
+<!-- Delivery Details -->
 <form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
     <div class="container">
@@ -105,7 +105,7 @@
                                             </div> {% endcomment %}
 
                                             <br>
-                                            <a href="{% url 'account:add_address' %}"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                                            <a href="{% url 'account:address' %}"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 Add Address
                                             </a>
                                             <br>
