@@ -183,7 +183,7 @@ def user_login(request):
                 user_pro.save()
                 
             login(request, user)
-            messages.success(request, "You are already a user,log in now")
+            messages.success(request, "You are already a user,Create your profile")
              
             return redirect('account:edit_profile')
             

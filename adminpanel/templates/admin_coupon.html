@@ -1,13 +1,9 @@
 {% extends "base.html" %}
-
 {% load static %}
-
-
-    
 {% block content %}
 
 
-       
+    
   
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -20,15 +16,7 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                     Add Coupon
                 </button>
-                {% if messages %}
-                <div>
-                    {% for message in messages %}
-                        <div style="color: {% if message.tags == 'success' %}#94c494{% else %}red{% endif %}; padding: 10px; margin: 5px;">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+                
                 <!-- Hoverable Table rows -->
                 <div class="card">
                   <h5 class="card-header">Coupon List</h5>

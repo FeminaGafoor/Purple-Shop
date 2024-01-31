@@ -1,3 +1,5 @@
+{% include 'alert.html' %} 
+
 <!DOCTYPE html>
 <html>
 
@@ -87,14 +89,7 @@
         <button type="submit" style="background-color: black;">Verify OTP</button>
 
         
-         {% if messages %}
-        <!-- Bootstrap alert component -->
-        <div class="alert">
-            {% for message in messages %}
-            {{ message }}
-            {% endfor %}
-        </div>
-        {% endif %} 
+        
         
     </form>
     <script>
