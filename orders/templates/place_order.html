@@ -166,7 +166,7 @@
           <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
             <form class="coupon-form"  id="coupon-form" method="POST">
               {% csrf_token %}
-            <input type="text" id="coupon-input" name="coupon_code" placeholder="Coupon code" class="flex-c-m  cl0 size-116 bg3 bor14 p-lr-15 " style="color: black; background-color:#f7f7f7; height: 44px;">
+            <input type="text" id="coupon-input" name="coupon_code" placeholder="Coupon code" class="flex-c-m  cl0 size-116 bg3 bor14 p-lr-15 " style="color: black; background-color:#f7f7f7; height: 44px; font-family: Poppins-Medium; text-align: center;">
             <br>
             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer apply-button" id="apply-coupon-btn" style="color: white; height: 44px;">Apply coupon</button>
           </form>
@@ -187,8 +187,8 @@
               <div class="size-208">
                 <span class="stext-110 cl2">Coupon:</span>
               </div>
-              <div class="size-209"  id="price-coupon">
-                <span class="mtext-110 cl2">{{ coupon }}</span>
+              <div class="size-209"  id="coupon-price">
+                <span class="mtext-110 cl2"> {{ coupon }}</span>
               </div>
             </div>
 
@@ -285,7 +285,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
   $(document).ready(function() {
-     console.log('haioooooooooooooooo')
+     
       $("#coupon-form").on("submit", function(e) {
         e.preventDefault()
  

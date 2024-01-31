@@ -43,7 +43,7 @@ def place_order(request, total=0, quantity=0):
     grand_total = 0
     shipping = 40  
     tax = 0
-    coupon=Coupon.objects.all()
+    
     
     for cart_item in cart_items:
         total += (cart_item.product.price * cart_item.quantity)
@@ -117,7 +117,6 @@ def place_order(request, total=0, quantity=0):
             'order_id':order_id,
             'order':order,
             'cart_items': cart_items,
-            'coupon':coupon,
             'total':total,
             'tax':tax,
             'shipping':shipping,
@@ -222,41 +221,44 @@ def apply_coupon(request,total=0, quantity=0):
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
-        print(total,"total++++++++++++++++++==================================================")    
+           
         tax = (2 * total)/100
         tax = round(tax,2)
+        
         shipping = 40 
         grand_total = total+tax+shipping
         grand_total = round(grand_total, 2)
-        print(grand_total,"grand_total___________________________")
+        print(grand_total,"grand_total")
     
         coupon_code = request.POST.get('coupon')
         print(coupon_code,"coupon||||||||")
         coupon = Coupon.objects.filter(code=coupon_code, active=True).first()
         
+        
         if coupon:
             current_time=timezone.now()
             if current_time<=coupon.expiration_time:
+                
                 if Order.objects.filter(user=user, coupon=coupon, is_ordered=True).exists():
                     return JsonResponse({'error': 'You have already used this coupon.'})
-                print("inside time")
+                
                 orders = Order.objects.filter(user=user,is_ordered=False)
                 if orders.exists():
                     order = orders.latest('created_at')
-                    print("inside tiem if")
+                    
                 else:
                     order = Order.objects.create(user=user, total_amount=0)
-                    print("inside tiem else")
+                    
 
                 # Check if the order total meets the minimum amount requirement
                 if total >= coupon.minimum_amount:
-                    print(coupon.discount_price,"coupon.discount_price________________")
-                    print(total,"totale________________")
+                    print(coupon.discount_price,"coupon.discount_price")
+                    
                     # Apply the discount to the total
                     discount_amount = total - coupon.discount_price
-                    print(discount_amount,"discount_amount++++++++++++++++++")
+                    
                     grand_total = discount_amount + tax
-                    print(grand_total,"grand_total________________")
+                    
                     order.coupon = coupon
                     order.save()
                     
