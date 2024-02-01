@@ -44,21 +44,7 @@
               }
             });
   
-            if (window.location.pathname === '/') {
-              Swal.fire({
-                title: "Congratulations!",
-                text: "Your registration was successful! 🎉 You've earned a special coupon. 🎁 Purchase now and enjoy the benefits!",
-                icon: "success",
-                showConfirmButton: false,
-                footer: '<a class="btn btn-info" href="/user/coupon/">Click Now</a>',
-                backdrop: `
-                rgba(0,0,0,0.0)
-                url("/images/nyan-cat.gif")
-                left top
-                no-repeat
-              `
-              });
-            }
+           
           {% endif %}
         {% endif %}
       {% endfor %}
