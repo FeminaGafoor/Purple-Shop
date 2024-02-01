@@ -10,6 +10,7 @@ from coupon.models import Coupon
 
 class Payment(models.Model):
     user = models.ForeignKey(User_Profile,on_delete=models.CASCADE)
+    # user = models.ForeignKey(User,on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
     amount_paid = models.CharField(max_length=100)
@@ -22,21 +23,19 @@ class Payment(models.Model):
 
 class Order(models.Model):
     ORDER_STATUS = (
-        ("New", "New"),
-        ("Accepted", "Accepted"),
-        ("Preparing", "Preparing"),
-        ("OnShipping", "On Shipping"),
-        ("Completed", "Completed"),
-        ("Cancelled", "Cancelled"),
-        ("Return", "Return"),
+        (1, "New"),
+        (2, "Accepted"),
+        (3, "Preparing"),
+        (4, "On Shipping"),
+        (5, "Completed"),
+        (6, "Cancelled"),
+        (7, "Return"),
     )
     
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     order_number = models.CharField(max_length=20)
     user_name = models.CharField(max_length=50,)
-    # first_name = models.CharField(max_length=50, default=True)
-    # last_name = models.CharField(max_length=50, default=True)
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
     address_1 = models.CharField(max_length=50)
@@ -62,6 +61,9 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user_name
+    
+    # def get_status_display(self):
+    #     return dict(Order.ORDER_STATUS)[self.status]
     
     
 class OrderProduct(models.Model):

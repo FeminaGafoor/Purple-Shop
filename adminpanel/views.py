@@ -470,16 +470,47 @@ def order_list(request):
         return HttpResponseRedirect(reverse('admin_panel:order_list'))
     return render(request,'order_list.html',context)
     
-    
-    
-def cancel_order(request):
-        
-    orders = OrderProduct.objects.all().order_by('created_at')
-    context={
-        'orders':orders,
-        'order_status':Order.ORDER_STATUS,
 
+def order_details(request, id):
+    print("Order ID:", id)
+    print("|||||||||||||||||||||||||||")
+   
+    orders = get_object_or_404(OrderProduct, id=id)
+    print(orders,"+++++++++++++++++++++++++")
+ 
+    orderstatus = orders.order.status
+    print(orderstatus,"orderstatus-----------")
+    # accepted_timestamp = orders.updated_at if orders.updated_at else orders.created_at
+    # seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
+    # time = timezone.now()
+
+    context = {
+        "orders": orders,
+        # "colo": colo,
+        "orderstatus": orderstatus,
+        # "seven": seven_days_ago,
+        # "time": time
     }
 
-    return render(request,'cancel_order.html',context)
+    return render(request, "customer_order_details.html", context)
+
+
+
+    
+    
+def cancel_order(request, id):
+
+
+    if request.method == 'POST':
+        reason = request.POST.get('cancel_reason')
+        if not reason:
+            messages.error(request, "Cancel reason is required.")
+            return render(request, "customer_order_details.html")
+
+        orders = get_object_or_404(OrderProduct, id=id)
+        orders.user_note = reason
+        orders.status = "Canceled"
+        orders.save()
+
+    return render(request, "order_details.html")
 

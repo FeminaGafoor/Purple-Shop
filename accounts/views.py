@@ -46,7 +46,7 @@ def sign_up(request):
             
             send_mail(subject, message, from_email, recipient_list)
             
-            messages.success(request, 'Your account has been created!Please Enter OTP')
+            messages.success(request, 'Your account has been created! Please enter OTP send to your mail')
             return redirect('account:otp_func')
         else:
             messages.warning(request,form.errors)

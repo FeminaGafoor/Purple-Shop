@@ -245,42 +245,6 @@
 
 
 
-
-
-{% comment %} <!-- Filling address -->
-  <script>
-    document.getElementById('deliverButton').addEventListener('click', function () {
-      // Fetch user data and populate the form fields
-      var userPro = {
-        user_name: '{{ user_pro.user_name }}',
-        email: '{{ user_pro.email }}',
-        phone: '{{ user_pro.phone }}',
-        address: '{{ user_pro.address }}',
-        //address_2: '{{ user_pro.address_2 }}',
-        city: '{{ user_pro.city }}',
-        state: '{{ user_pro.state }}',
-        country: '{{ user_pro.country }}'
-        // Add other user-related fields as needed
-      }
-    
-      // Populate the form fields
-      document.getElementById('user_name').value = userPro.user_name
-      document.getElementById('email').value = userPro.email
-      document.getElementById('phone').value = userPro.phone
-      document.getElementById('address').value = userPro.address
-      //document.getElementById('address_2').value = userPro.address_2
-      document.getElementById('city').value = userPro.city
-      document.getElementById('state').value = userPro.state
-      document.getElementById('country').value = userPro.country
-    
-      // Add any additional logic or adjustments based on your requirements
-    
-      // Optionally, you can submit the form programmatically
-      // document.getElementById('yourFormId').submit();
-    })
-  </script> {% endcomment %}
-
-
 <!-- Coupon Success -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>

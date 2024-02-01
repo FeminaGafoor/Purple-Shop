@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% include "alert.html" %}
 
 
        
@@ -12,17 +13,7 @@
               <div class="container-xxl flex-grow-1 container-p-y">
                 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Order Management</h4>
                <hr class="my-5" />
-                
-                {% comment %} {% if messages %}
-                <div>
-                    {% for message in messages %}
-                        <div style="color: {% if message.tags == 'success' %}#94c494{% else %}red{% endif %}; padding: 10px; margin: 5px;">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %} {% endcomment %}
-                <!-- Hoverable Table rows -->
+               
                 <div class="card">
                   <h5 class="card-header">Order List</h5>
                   <div class="table-responsive text-nowrap">
@@ -43,12 +34,13 @@
                       </thead>
                       <tbody class="table-border-bottom-0">
                         {% for order in order_product %}
-                        {% if order.order.status != "Return" %}
+                        {% comment %} {% if order.order.status != "Return" %} {% endcomment %}
+                        {% if order.order.status != 6 and order.order.status != 7 %}
                         <tr>
                           <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
                           <td>{{ order.user.user_name}}</td>
                           <td>{{order.created_at}}</td>
-                          <td>{{order.order.status}}</td>
+                          <td>{{ order.status }}</td>
                           <td>
                             <span class="badge badge-sm badge-dot has-bg
                                 {% if order.status == 'New' %}bg-success
@@ -70,12 +62,12 @@
                               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                 <i class="bx bx-dots-vertical-rounded"></i>
                               </button>
-                              {% comment %} <a href="{% url 'admin_panel:customer_order_details' %}">
+                               {% comment %} <a href="{% url 'admin_panel:order_details' order.order.id %}"> 
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                 <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                 <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
                               </svg><i class="bi bi-eye-fill"></i>
-                            </a> {% endcomment %}
+                            </a>  {% endcomment %}
                              
       
                               <div class="dropdown-menu dropdown-menu-end" style="min-width: 200px; padding: 10px;">

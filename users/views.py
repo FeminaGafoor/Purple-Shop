@@ -80,4 +80,27 @@ class CancelOrder(View):
             orders.save()
             return render(request, self.template_name)
     
-   
+#    class OrderReturn(View):
+    
+#     def post(self, request, id):
+#         url = request.META.get('HTTP_REFERER')
+#         if request.method == 'POST':
+#             reason = request.POST.get('return_reason')
+#             if not reason:
+#                 messages.error(request,"return reason is required.")
+#                 return HttpResponseRedirect(url)
+#             order_product = get_object_or_404(OrderProduct, id=id)
+#             # Check if the order was placed within the last 7 days since status became "Accepted"
+#             accepted_timestamp = order_product.update_at if order_product.update_at else order_product.create_at
+#             seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
+#             time = timezone.now()
+#             if time > seven_days_ago:
+#                 messages.error(request, "You can only return the order within 7 days after it's accepted.")
+                
+#                 return HttpResponseRedirect(url)
+#             else:   
+#                 orders = get_object_or_404(OrderProduct, id=id)
+#                 orders.user_note = reason
+#                 orders.status = "Return"
+#                 orders.save()
+#                 return HttpResponseRedirect(url)
