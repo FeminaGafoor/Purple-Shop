@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.contrib import messages
@@ -51,13 +52,18 @@ class OrderTrackView(View):
 
     def get(self, request, id):
         order_detail = get_object_or_404(OrderProduct, id=id)
-        
+        print(order_detail,"order_detail+++++++++++++++++")
         
         orderstatus = order_detail.order.status
-        
+        print(orderstatus,"orderstatus+++++++++++++++++")
+        accepted_timestamp = order_detail.updated_at if order_detail.updated_at else order_detail.create_at
+        seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
+        time = timezone.now()
         context = {
             "order_detail": order_detail,
             "orderstatus":orderstatus,
+            "seven":seven_days_ago,
+            "time":time,
             }
         return render(request, self.template_name, context)
 

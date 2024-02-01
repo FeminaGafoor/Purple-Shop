@@ -10,7 +10,6 @@ from coupon.models import Coupon
 
 class Payment(models.Model):
     user = models.ForeignKey(User_Profile,on_delete=models.CASCADE)
-    # user = models.ForeignKey(User,on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
     amount_paid = models.CharField(max_length=100)

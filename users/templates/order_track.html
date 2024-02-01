@@ -155,7 +155,7 @@
             <h6 style="font-family: Poppins-Regular;">Order ID:{{ order_detail.order.order_number }}</h6>
             <article class="card">
                 <div class="card-body row">
-                    <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2019 </div>
+                    <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2023 </div>
                     {% comment %} <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div> {% endcomment %}
                     <div class="col"> <strong>Status:</strong> <br> {{ order_detail.status }}
                     </div>
@@ -260,6 +260,7 @@
                         </figcaption>
                         
                     </figure>
+                   
                     <a href="#" class="btn btn-success" data-abc="true" style="font-family: Poppins-Regular;">
                         <i class="fa fa-download"></i> Download Invoice
                     </a>
@@ -268,6 +269,66 @@
             </ul>
 
             <hr>
+
+            <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
+            {% if  time > seven %} 
+            <button class="btn btn-danger" disabled>
+                <i></i> Order Return (Expired)
+            </button>
+            {%else%}
+            <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#returnModal">
+                <i></i> Order Return
+            </a>
+            {% endif %}
+
+
+        <!-- return modal body -->
+            <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="returnModalLabel">Order Return</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <form action="#" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="returnReason">Reason for Return:</label>
+                                <input name="return_reason" type="text" class="form-control" id="returnReason" placeholder="Enter reason">
+                            </div>
+                            <p>Note: You can return the order within 7 days.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Submit Return</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+        {% if order_detail.status == "Return"%}
+            {% if order_detail.order.status != 7 %}
+            <p>Note:<span style="color:green">  Your return request is processing.</span></p>
+            {%else%}
+            <p>Note: <span style="color:green">Your return request has been submitted; your refund will be processed shortly.check your mail</span></p>
+            {%endif%}
+            <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
+            {%else%}
+                </li>
+         
+            </ul>
+
+            <hr>
+            
+           
+
+
+
+
             
             <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true" style="font-family: Poppins-Regular;"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
             {% if order_detail.status != "Canceled"%}  
@@ -275,9 +336,13 @@
                 <i class=""></i> Cancel Order
             </a>
             {% endif %}
+        {% endif %}
             
             
-            <!-- Add a modal with an ID matching the data-target attribute -->
+
+
+
+<!-- Cancel order modal -->
             <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -304,9 +369,6 @@
                             <!-- Add your logic to cancel the order when the user clicks "Cancel Order" -->
                             
                             <a href="" class="btn btn-danger" onclick="cancelOrder()">Submit</a>
-                            
-
-
                         </div>
                     </form>
                     </div>
