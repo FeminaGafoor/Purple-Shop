@@ -30,9 +30,9 @@ class User_Profile(models.Model):
 
 
 class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     new_name = models.CharField(max_length=20)
     phone = models.CharField(max_length=20, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=20)
     city = models.CharField(max_length=15)
     state = models.CharField(max_length=15,default=True,null=True)

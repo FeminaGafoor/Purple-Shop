@@ -81,6 +81,7 @@ def place_order(request, total=0, quantity=0):
             
         print("___________________________")
         data = Order()
+        print(data,"data__________________")
         data.user = current_user
         data.user_name = user_name
         data.phone = phone                                               
@@ -93,6 +94,7 @@ def place_order(request, total=0, quantity=0):
         data.tax = tax
         data.shipping = shipping
         data.ip = request.META.get('REMOTE_ADDR')
+        print(data,"dtaa2__________________")
         data.save()
         print(data,"______________")
         order_id = data.id
@@ -111,7 +113,7 @@ def place_order(request, total=0, quantity=0):
         
         
         order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
-        print(order.user_name, order.order_number, order.phone, order.address_1, order.city, order.state, order.country)
+        print(order.user_name, order.order_number,order.status, order.phone, order.address_1, order.city, order.state, order.country)
         print("_________________________________")
         context = {
             'order_id':order_id,
@@ -258,7 +260,7 @@ def apply_coupon(request,total=0, quantity=0):
                     discount_amount = total - coupon.discount_price
                     
                     grand_total = discount_amount + tax
-                    
+                    print(grand_total,"grand_total+++++++++++++++++++++++++++++++++")
                     order.coupon = coupon
                     order.save()
                     

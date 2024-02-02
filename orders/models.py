@@ -42,7 +42,6 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
-    order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
     tax = models.FloatField()
     shipping = models.FloatField(default=True)
@@ -69,6 +68,7 @@ class OrderProduct(models.Model):
     STATUS = (
         ('New' , 'New'),
         ('Accepted' , 'Accepted'),
+        ('Return','Return'),
        ('Cancelled' , 'Cancelled'),
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

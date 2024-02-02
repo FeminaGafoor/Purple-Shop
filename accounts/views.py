@@ -8,7 +8,7 @@ from django.contrib import messages
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
 from django.contrib.auth.models import User
-
+from django.views.decorators.cache import cache_control
 from coupon.models import Coupon
 from .models import  Address, User_Profile
 from django.contrib import auth
@@ -116,6 +116,7 @@ def new_otp(request):
 
 def user_login(request):
     print("+++++++++++++++++++++")
+    
     if request.method == "POST":
         email = request.POST.get('email')
         print(email,"email")
@@ -197,7 +198,7 @@ def user_login(request):
 
 # -------------------------USER LOGOUT -------------------------
 
-
+@cache_control(no_cache=True, no_store=True)
 @login_required(login_url='/user_login/')
 def user_logout(request):
     logout(request)
@@ -230,7 +231,7 @@ def profile(request):
         context = {
             
             'user_pro': user_pro,
-            # 'created': created,
+            'created': created,
             'user_profile_image_url':user_profile_image_url
         }
         return render(request, 'profile.html',context)
@@ -308,12 +309,13 @@ def address(request):
     
     # Get or create User_profile for the current user
     profile, created = User_Profile.objects.get_or_create(user=request.user)
-
+    user_profile_image_url = profile.image.url if profile.image else None
     user_address = Address.objects.filter(user=request.user)
 
     context = {
         "profile": profile,
         "user_address": user_address,
+        "user_profile_image_url":user_profile_image_url,
     }
     return render(request, "address.html", context)
 

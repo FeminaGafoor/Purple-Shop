@@ -446,29 +446,33 @@ def delete_coupon(request, id):
         return redirect('admin_panel:admin_login') 
     
     
-    
-    
-    
+
 def order_list(request):
-    
     order_product = OrderProduct.objects.all().order_by('created_at')
-    
-    
+    print(order_product,"order_product+++++++++++++++")
+    order_status = Order.ORDER_STATUS
+    print(order_status,"order_status_________________")
+
     context = {
-        'order_product':order_product,
-        'order_status':Order.ORDER_STATUS,
-        
+        'order_product': order_product,
+        'order_status': order_status,
     }
-    
+
     if request.method == 'POST':
-        
+        print("pooooooooooooooost")
         selected_status = request.POST['orderStatus']
+        print(selected_status,"selected_status")
         selected_order_id = request.POST['orderId']
+        print(selected_order_id,"selected_order_id")
         selected_order = Order.objects.get(pk=selected_order_id)
+        print(selected_order,"selected_order")
         selected_order.status = selected_status
         selected_order.save()
         return HttpResponseRedirect(reverse('admin_panel:order_list'))
-    return render(request,'order_list.html',context)
+
+    return render(request, 'order_list.html', context)
+    
+    
     
 
 def order_details(request, id):

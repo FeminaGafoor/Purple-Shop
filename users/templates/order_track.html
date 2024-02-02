@@ -165,78 +165,78 @@
                 
             </article>
 
-            <div class="track">
-                
             
-            {% if order_detail.status != "Cancelled"%} 
-             
-            
-                {% if orderstatus >= "1" %}
+
+
+                <div class="track">
+                    {% if orders.status != "Canceled"%}    
+                        {% if orderstatus >= "1" %}
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Order confirmed</span>
+                            </div>
+                        {% else %}
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Order confirmed</span>
+                            </div>
+                        {% endif %}
+                    
+                        {% if orderstatus >= "2" %}
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Picked by courier</span>
+                            </div>
+                        {% else %}
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Picked by courier</span>
+                            </div>
+                        {% endif %}
+                    
+                        {% if orderstatus >= "3" %}
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-cogs"></i> </span>
+                                <span class="text">Preparing</span>
+                            </div>
+                        {% else %}
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-cogs"></i> </span>
+                                <span class="text">Preparing</span>
+                            </div>
+                        {% endif %}
+                    
+                        {% if orderstatus >= "4" %}
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-truck"></i> </span>
+                                <span class="text">On the way</span>
+                            </div>
+                        {% else %}
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-truck"></i> </span>
+                                <span class="text">On the way</span>
+                            </div>
+                        {% endif %}
+                    
+                        {% if orderstatus >= "5" %}
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-box"></i> </span>
+                                <span class="text">Ready for pickup</span>
+                            </div>
+                        {% else %}
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Ready for pickup</span>
+                            </div>
+                        {% endif %}
+                    {% else %}
                     <div class="step active">
                         <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">Order confirmed</span>
+                        <span class="text">canceled</span>
                     </div>
-                {% else %}
-                    <div class="step">
-                        <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">Order confirmed</span>
+                    {% endif %}
                     </div>
-                {% endif %}
-            
-                {% if orderstatus >= "2" %}
-                    <div class="step active">
-                        <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">Picked by courier</span>
-                    </div>
-                {% else %}
-                    <div class="step">
-                        <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">Picked by courier</span>
-                    </div>
-                {% endif %}
-            
-                {% if orderstatus >= "3" %}
-                    <div class="step active">
-                        <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                        <span class="text">Preparing</span>
-                    </div>
-                {% else %}
-                    <div class="step">
-                        <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                        <span class="text">Preparing</span>
-                    </div>
-                {% endif %}
-            
-                {% if orderstatus >= "4" %}
-                    <div class="step active">
-                        <span class="icon"> <i class="fa fa-truck"></i> </span>
-                        <span class="text">On the way</span>
-                    </div>
-                {% else %}
-                    <div class="step">
-                        <span class="icon"> <i class="fa fa-truck"></i> </span>
-                        <span class="text">On the way</span>
-                    </div>
-                {% endif %}
-            
-                {% if orderstatus >= "5" %}
-                    <div class="step active">
-                        <span class="icon">  <i class="fa fa-check"></i> </span>
-                        <span class="text">Ready for pickup</span>
-                    </div>
-                {% else %}
-                    <div class="step">
-                        <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">Ready for pickup</span>
-                    </div>
-                {% endif %}
-                {% else %}
-                <div class="step active">
-                    <span class="icon"> <i class="fa fa-check"></i> </span>
-                    <span class="text">Cancelled</span>
-                </div>
-                {% endif %}
-                </div>
+                    
             
             
             <hr style="margin-top: 7rem;">
