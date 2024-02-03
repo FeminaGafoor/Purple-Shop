@@ -310,11 +310,11 @@ def address(request):
     # Get or create User_profile for the current user
     profile, created = User_Profile.objects.get_or_create(user=request.user)
     user_profile_image_url = profile.image.url if profile.image else None
-    user_address = Address.objects.filter(user=request.user)
+    # user_address = Address.objects.filter(user=request.user)
 
     context = {
         "profile": profile,
-        "user_address": user_address,
+        # "user_address": user_address,
         "user_profile_image_url":user_profile_image_url,
     }
     return render(request, "address.html", context)
@@ -326,12 +326,11 @@ def address(request):
 
 def add_address(request):
     print("|||||||||||||||||||||||||||||||||")
-    # count = request.session.get("address_count", 0)
+    count = Address.objects.filter(user=request.user).count()
 
-    # if count >= 3:
-    #     messages.error(request, "Maximum 3 addresses allowed")
-    #     return redirect("account:address")
-    # else:
+    if count >= 2:
+        messages.error(request, "Maximum of two addresses allowed.")
+        return redirect("account:address")
     if request.method == "POST":
         user_name = request.POST.get("user_name")
         email = request.POST.get("email")
@@ -348,7 +347,7 @@ def add_address(request):
         
         
 
-        user_address = Address.objects.create(user=request.user,new_name=user_name,phone=phone,
+        user_address = Address.objects.create(user=request.user,new_name=user_name,email=email,phone=phone,
             address=address,
             city=city,
             state=state,

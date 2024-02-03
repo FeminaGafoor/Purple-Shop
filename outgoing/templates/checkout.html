@@ -106,7 +106,7 @@
 
                                             <br>
                                             <a href="{% url 'account:address' %}"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
-                                                Add Address
+                                                New Address
                                             </a>
                                             <br>
                                             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
@@ -127,57 +127,64 @@
 
                 <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+
+                       {% comment %} <--default adress--> {% endcomment %}
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                         <div class="mtext-109 cl2 p-b-30">
                            <h4> {{ user_pro.user_name }}</h4>
-
-                            
-                            <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                           {% comment %} <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
                                 <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
                                 text-align: center;margin-left: 75px;">
-                            </div>
-
-
-
+                            </div> {% endcomment %}
                         </div>
 
                         
-                        
-
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            
                             <div class="size-209">
                                 <span class="mtext-110 cl2">
-                                    
                                     {{ user.email }}
                                     {{user_pro.phone}}
-                                    
                                 </span>
-                                {% for address in user_address %}
-                                <span class="mtext-110 cl2">
+                                {% comment %} {% for address in user_address %} {% endcomment %}
+                                {% comment %} <span class="mtext-110 cl2">
                                     
                                     {{ address.address}}
                                 </span>
                                 <br>
                                  <span class="mtext-110 cl2">
                                     {{address.city}},{{address.state}},{{address.country}}
-                                    
-                                </span>  
-                                 {% endfor %}
-                            </div>
-                           
-                        </div>
-
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            <div class="size-209">
+                                </span>   {% endcomment %}
                                 
                             </div>
                         </div>
+                     {% comment %} <--default adress--> {% endcomment %}
 
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            <div class="size-209">
-                                
-                            </div>
+                        
+                       {% for address in user_address %}
+                       <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                        <div class="mtext-109 cl2 p-b-30">
+                            <h4> {{ address.new_name }}</h4>
                         </div>
+                        <div class="size-209">
+                             <span class="mtext-110 cl2">
+                                 {{ address.email }}
+                                 {{address.phone}}
+                             </span>
+                             {% comment %} {% for address in user_address %} {% endcomment %}
+                             <span class="mtext-110 cl2">
+                                 
+                                 {{ address.address}}
+                             </span>
+                             <br>
+                              <span class="mtext-110 cl2">
+                                 {{address.city}},{{address.state}},{{address.country}}
+                             </span>  
+                             
+                         </div>
+                     </div>
+                     {% endfor %}
+
+
+
                         <div class="p-t-40">
                             <button type="button" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;" id="deliverButton">
                                 Deliver to this Address

@@ -14,8 +14,10 @@
     document.addEventListener('DOMContentLoaded', function() {
       {% for message in messages %}
         {% if message.tags %}
+        console.log("halooooooooooooooooooooo")
           {% if 'error' in message.tags %}
             Swal.fire({
+              console.log("haiiiiiiiiiiiiiiiiiiiiiiii")
               icon: "error",   
               toast: true,
               position: "top-end",
