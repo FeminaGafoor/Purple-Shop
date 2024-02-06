@@ -224,6 +224,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
             tax = round(tax,2)
             grand_total = total+tax+shipping
             grand_total = round(grand_total, 2)
+            print(grand_total,"grandtotal form cart+++++++++++++++++++++++++++")
     except ObjectDoesNotExist:
         pass
 

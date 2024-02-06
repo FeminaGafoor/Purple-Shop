@@ -125,94 +125,85 @@
 
                 <!--  Customer Address Right starts -->
 
+
                 <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-
-                       {% comment %} <--default adress--> {% endcomment %}
+                        <!-- Default address -->
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="mtext-109 cl2 p-b-30">
-                           <h4> {{ user_pro.user_name }}</h4>
-                           {% comment %} <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
-                                <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
-                                text-align: center;margin-left: 75px;">
-                            </div> {% endcomment %}
-                        </div>
-
-                        
+                            <div class="mtext-109 cl2 p-b-30">
+                                <h6> {{ user_pro.user_name }}</h6>
+                            </div>
                             <div class="size-209">
-                                <span class="mtext-110 cl2">
+                                <span class="mtext-110 cl2" style="font-size: 15px;">
                                     {{ user.email }}
                                     {{user_pro.phone}}
                                 </span>
-                                {% comment %} {% for address in user_address %} {% endcomment %}
-                                {% comment %} <span class="mtext-110 cl2">
-                                    
-                                    {{ address.address}}
-                                </span>
-                                <br>
-                                 <span class="mtext-110 cl2">
-                                    {{address.city}},{{address.state}},{{address.country}}
-                                </span>   {% endcomment %}
-                                
                             </div>
                         </div>
-                     {% comment %} <--default adress--> {% endcomment %}
+                
+                        <!-- Address options with radio buttons -->
+                        {% for address in user_address %}
+                            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                                 <!-- Checkbox for selecting the address -->
+                                {% comment %} <input type="checkbox" name="selected_addresses" value="{{ address.id }}" data-address="{{ address.address }}" data-city="{{ address.city }}" data-state="{{ address.state }}" data-country="{{ address.country }}"> {% endcomment %}
+                                <input type="checkbox" name="selected_addresses" value="{{ address.id }}" data-user-name="{{ address.new_name }}" data-email="{{ address.email }}" data-phone="{{ address.phone }}" data-address="{{ address.address }}" data-city="{{ address.city }}" data-state="{{ address.state }}" data-country="{{ address.country }}">
 
-                        
-                       {% for address in user_address %}
-                       <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="mtext-109 cl2 p-b-30">
-                            <h4> {{ address.new_name }}</h4>
-                        </div>
-                        <div class="size-209">
-                             <span class="mtext-110 cl2">
-                                 {{ address.email }}
-                                 {{address.phone}}
-                             </span>
-                             {% comment %} {% for address in user_address %} {% endcomment %}
-                             <span class="mtext-110 cl2">
-                                 
-                                 {{ address.address}}
-                             </span>
-                             <br>
-                              <span class="mtext-110 cl2">
-                                 {{address.city}},{{address.state}},{{address.country}}
-                             </span>  
-                             
-                         </div>
-                     </div>
-                     {% endfor %}
-
+                                {% comment %} <!-- Radio button for selecting the address -->
+                                <input type="radio" name="selected_address" value="{{ address.id }}"> {% endcomment %}
+                                <div class="mtext-109 cl2 p-b-30"  >
+                                    <h6> {{ address.new_name }}</h6>
+                                </div>
+                                
+                                <div class="size-209">
+                                    <span class="mtext-110 cl2" style="font-size: 15px;">
+                                        {{ address.email }}
+                                        {{address.phone}},
+                                        {{ address.address}}
+                                        {{address.city}},{{address.state}},{{address.country}}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
 
 
                         <div class="p-t-40">
                             <button type="button" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;" id="deliverButton">
                                 Deliver to this Address
                             </button>
+                           
                         </div>
                     </div>
                 </div>
-
                 <!--  Customer Address Right ends -->
             </div>
         </div>
     </form>
-     <script>
-        document.getElementById('deliverButton').addEventListener('click', function() {
-            // Fetch user data and populate the form fields
+ 
+
+
+<script>
+    document.getElementById('deliverButton').addEventListener('click', function() {
+        // Find all selected checkboxes
+        var selectedAddresses = document.querySelectorAll('input[name="selected_addresses"]:checked');
+    
+        // Check if at least one address is selected
+        if (selectedAddresses.length > 0) {
+            // Use the first selected address
+            var selectedAddress = selectedAddresses[0];
+            updateFormFields(selectedAddress);
+        } else {
+            // Fetch user data and populate the form fields with default address from user_pro
             var userPro = {
                 user_name: "{{ user_pro.user_name }}",
-                
-                email:   "{{ user_pro.user.email }}",
+                email: "{{ user_pro.user.email }}",
                 phone: "{{ user_pro.phone }}",
-                address: "{{ address.address }}",
-               
-                city: "{{ address.city }}",
-                state: "{{ address.state }}",
-                country: "{{ address.country }}",
+                address: "{{ user_pro.address }}",
+                city: "{{ user_pro.city }}",
+                state: "{{ user_pro.state }}",
+                country: "{{ user_pro.country }}",
                 // Add other user-related fields as needed
             };
-        
+    
             // Populate the form fields
             document.getElementById('user_name').value = userPro.user_name;
             document.getElementById('email').value = userPro.email;
@@ -221,16 +212,26 @@
             document.getElementById('city').value = userPro.city;
             document.getElementById('state').value = userPro.state;
             document.getElementById('country').value = userPro.country;
-        
+    
             // Add any additional logic or adjustments based on your requirements
-        
+    
             // Optionally, you can submit the form programmatically
             // document.getElementById('yourFormId').submit();
-        });
-        </script>
+        }
+    });
+    
+    function updateFormFields(address) {
+        // Populate the form fields with the selected address data
+        document.getElementById('user_name').value = address.dataset.userName;
+        document.getElementById('email').value = address.dataset.email;
+        document.getElementById('phone').value = address.dataset.phone;
+        document.getElementById('address').value = address.dataset.address;
+        document.getElementById('city').value = address.dataset.city;
+        document.getElementById('state').value = address.dataset.state;
+        document.getElementById('country').value = address.dataset.country;
+    }
+</script>
 
 
-
-
-        {% endblock %}
+{% endblock %}
 {% include 'footer.html' %}

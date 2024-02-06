@@ -179,8 +179,8 @@ def user_login(request):
                 user_pro.email = email
                 # user_pro.user_name
                 print(user_pro.email,"___________________________")
-                coupon = Coupon.objects.first()  # Get the first coupon, you may adjust this based on your logic
-                user_pro.coupon = coupon
+                # coupon = Coupon.objects.first()
+                # user_pro.coupon = coupon
                 user_pro.save()
                 
             login(request, user)
@@ -278,7 +278,8 @@ def edit_profile(request):
         # profile.address = address
         if image:
             profile.image = image
-        coupon = Coupon.objects.first()  # Get the first coupon, you may adjust this based on your logic
+        
+        coupon = Coupon.objects.first()  
         profile.coupon = coupon
         profile.save()
         
