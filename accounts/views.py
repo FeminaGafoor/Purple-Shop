@@ -306,19 +306,19 @@ def edit_profile(request):
  
 # -------------------------ADD ADDRESS-------------------------  
 
-def address(request):
+# def address(request):
     
-    # Get or create User_profile for the current user
-    profile, created = User_Profile.objects.get_or_create(user=request.user)
-    user_profile_image_url = profile.image.url if profile.image else None
-    # user_address = Address.objects.filter(user=request.user)
-
-    context = {
-        "profile": profile,
-        # "user_address": user_address,
-        "user_profile_image_url":user_profile_image_url,
-    }
-    return render(request, "address.html", context)
+#     # Get or create User_profile for the current user
+#     profile, created = User_Profile.objects.get_or_create(user=request.user)
+#     user_profile_image_url = profile.image.url if profile.image else None
+#     user_address = Address.objects.filter(user=request.user)
+#     print("from address++++++++++++++++++++++")
+#     context = {
+#         "profile": profile,
+#         "user_address": user_address,
+#         "user_profile_image_url":user_profile_image_url,
+#     }
+#     return render(request, "checkout.html", context)
 
 
 
@@ -331,7 +331,7 @@ def add_address(request):
 
     if count >= 2:
         messages.error(request, "Maximum of two addresses allowed.")
-        return redirect("account:address")
+        return redirect("outgoing_app:checkout")
     if request.method == "POST":
         user_name = request.POST.get("user_name")
         email = request.POST.get("email")
@@ -347,7 +347,7 @@ def add_address(request):
         # user_form.save()
         
         
-
+        print("from add_address___________________________________")
         user_address = Address.objects.create(user=request.user,new_name=user_name,email=email,phone=phone,
             address=address,
             city=city,
@@ -363,31 +363,34 @@ def add_address(request):
         messages.success(request, "Successfully added")
         return redirect("outgoing_app:checkout")
 
-    return redirect("account:address")
+    return redirect("outgoing_app:checkout")
 
         
         
 
     
-# def update_address(request, id):
-#     # Retrieve the existing address object
-#     user_address = get_object_or_404(Address, id=id)
+def edit_address(request):
+    # Retrieve the existing address object
+    user_address = get_object_or_404(Address, id=id)
 
-#     if request.method == "POST":
-#         # Update the fields based on the form data
-#         user_address.address = request.POST["address"]
-#         user_address.city = request.POST["city"]
-#         user_address.state = request.POST["state"]
-#         user_address.country = request.POST["country"]
+    if request.method == "POST":
+        # Update the fields based on the form data
+        user_address.new_name = request.POST["user_name"]
+        user_address.email = request.POST["email"]
+        user_address.phone = request.POST["address"]
+        user_address.address = request.POST["address"]
+        user_address.city = request.POST["city"]
+        user_address.state = request.POST["state"]
+        user_address.country = request.POST["country"]
 
-#         # Save the updated address
-#         user_address.save()
+        # Save the updated address
+        user_address.save()
 
-#         messages.success(request, 'Address updated successfully')
-#         return redirect('account:add_address')
+        messages.success(request, 'Address updated successfully')
+        return redirect('account:add_address')
 
-#     # If the request method is not POST, render the template
-#     return render(request, "checkout.html")    
+    # If the request method is not POST, render the template
+    return render(request, "checkout.html")    
     
    
 # -------------------------ADD ADDRESS ENDED-------------------------  

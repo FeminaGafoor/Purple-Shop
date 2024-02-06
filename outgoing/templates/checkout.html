@@ -105,9 +105,12 @@
                                             </div> {% endcomment %}
 
                                             <br>
-                                            <a href="{% url 'account:address' %}"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                                            {% comment %} <a href="{% url 'account:address' %}"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 New Address
-                                            </a>
+                                            </a> {% endcomment %}
+                                            <button type="button" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;" data-toggle="modal" data-target="#newAddressModal">
+                                                New Address
+                                            </button>
                                             <br>
                                             <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
                                                 Save and Deliver Here
@@ -188,8 +191,107 @@
         </div>
     </form>
  
+<!--Add New Address Modal -->
+<div class="modal fade" id="newAddressModal" tabindex="-1" role="dialog" aria-labelledby="newAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="font-family: 'Poppins-Regular'; justify-content: center; text-align: center;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newAddressModalLabel">
+                    <!-- Your modal title goes here -->
+                    Add New Address
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
+                <!-- Include the content of the modal here -->
+                <div class="col-lg-11">
+                  
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+                        <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+                      </svg>
+                      <i class="bi bi-house-fill"></i> Add Address</h4>
+                   <br>
+                        <br>
+                        <form method="POST" action="{% url 'account:add_address' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                        
+                        <div class="form-group row">
+                            <label for="user_name" class="col-sm-4 col-form-label">Full Name:</label>
+                            <div class="col-sm-8">
+                             <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter Your Full Name" required>
+                            </div> 
+                            
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                            <div class="col-sm-8">
+                            <input type="email" class="form-control" id="email" name="email"  placeholder="Enter Your Email" >
+                            </div>
+                            
+                        </div>
+                      
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">Phone:</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone Number" >
+                            </div>
+                        </div>
+                    
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">Address</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="address" name="address"  placeholder="Enter Your Address" >
+                            </div>
+                        </div>
+                      
+                       
+                   
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">City:</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="city" name="city"  placeholder="Enter Your City" >
+                            </div>
+                        </div>
+                    
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">State:</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="state" name="state"  placeholder="Enter Your State" >
+                            </div>
+                        </div>
+                     
+                        <div class="form-group row">
+                            <label for="phone" class="col-sm-4 col-form-label">Country:</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="country" name="country"  placeholder="Enter Your Country" >
+                        </div>
+                        
+                        </div>
+                      
 
+                        <br>
+                        
+                        <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">
+                            Add Address
+                        </button>
+                       
+                        <br>
+                        
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New Address Modal Ends Here-->
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -218,6 +320,10 @@
                       <i class="bi bi-house-fill"></i> Edit Address</h4>
                    <br>
                         <br>
+                        {% for address in user_address %}
+                        <form method="POST" action="#" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ address.id }}">
                         
                         <div class="form-group row">
                             <label for="user_name" class="col-sm-4 col-form-label">Full Name:</label>
@@ -281,7 +387,8 @@
                         </button>
                        
                         <br>
-                        
+                        {% endfor %}
+                    </form>
                     </div>
             </div>
         </div>

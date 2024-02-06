@@ -305,7 +305,7 @@ def edit_product(request):
             
             update = get_object_or_404(Product,id=product_id)
             print(update, 'product')
-            update.name = name
+            update.product_name = name
             update.description = description
             
             if images:
