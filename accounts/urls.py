@@ -11,9 +11,10 @@ urlpatterns = [
     path('user_logout', views.user_logout, name='user_logout'),
     path('profile', views.profile, name='profile'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
-    # path('address', views.address, name='address'),
+    path('address', views.address, name='address'),
     path('add_address', views.add_address, name='add_address'),
     path('edit_address', views.edit_address, name='edit_address'),
+    path('delete_address/<int:id>/', views.delete_address, name='delete_address'),
     path('change_password', views.change_password, name='change_password'),
 
 ]

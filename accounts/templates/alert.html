@@ -14,22 +14,23 @@
     document.addEventListener('DOMContentLoaded', function() {
       {% for message in messages %}
         {% if message.tags %}
-        console.log("halooooooooooooooooooooo")
-          {% if 'error' in message.tags %}
+          {% if 'danger' in message.tags %}
+            console.log("Error message detected");
             Swal.fire({
-              console.log("haiiiiiiiiiiiiiiiiiiiiiiii")
-              icon: "error",   
+              icon: "error",
               toast: true,
               position: "top-end",
               showConfirmButton: false,
               timer: 4000,
               timerProgressBar: true,
-              html: '<span style="color: red;">😢</span> {{ message }}', 
+              html: '<span style="color: red;">😢</span> {{ message|safe }}',
               didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  toast.style.zIndex = 99999;
+                  console.log("Message tags:", '{{ message.tags }}');  // Note the quotes around message.tags
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
               }
-            });
+          });
           {% elif 'success' in message.tags %}
             Swal.fire({
               icon: "success",
