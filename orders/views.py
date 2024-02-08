@@ -254,13 +254,14 @@ def apply_coupon(request,total=0, quantity=0):
 
                 # Check if the order total meets the minimum amount requirement
                 if total >= coupon.minimum_amount:
-                    print(coupon.discount_price,"coupon.discount_price")
-                    
+                    print(total,"total")
+                    print(coupon.discount_price,"coupon.discount_price___________________________")
+                    coupon_amount=coupon.discount_price
                     # Apply the discount to the total
-                    discount_amount = total - coupon.discount_price
-                    
-                    grand_total = discount_amount + tax
-                    print(grand_total,"grand_total+++++++++++++++++++++++++++++++++")
+                    amount_payable = grand_total - coupon_amount
+                    # print(discount_amount,"discount_amount")
+                    # amount_payable = grand_total - discount_amount
+                    print(amount_payable,"amount_payable+++++++++++++++++++++++++++++++++")
                     order.coupon = coupon
                     order.save()
                     
@@ -269,10 +270,10 @@ def apply_coupon(request,total=0, quantity=0):
                     print("inside cart")    
                     response_data = {
                         'total': total,
-                        'coupon': discount_amount,
+                        'coupon': coupon_amount,
                         'tax': tax,
                         'shipping': shipping,
-                        'grand_total': grand_total,
+                        'grand_total': amount_payable,
                         'success': f"Coupon '{coupon.offer_name}' applied successfully! You saved ₹{coupon.discount_price:.2f}",
                     }
                     return JsonResponse(response_data)
