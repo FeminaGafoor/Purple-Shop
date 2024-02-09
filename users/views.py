@@ -135,7 +135,7 @@ class Invoice(View):
         coupon_discount = order_products.order.coupon.discount_price if order_products.order.coupon else 0   
         
         tax = (2 * subtotal) / 100
-        grand_total = subtotal + tax - coupon_discount
+        grand_total = subtotal + tax + shipping - coupon_discount
         
         context={
             "order_products":order_products,

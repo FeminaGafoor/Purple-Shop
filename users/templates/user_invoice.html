@@ -220,7 +220,7 @@
     <div class="receipt-content">
         <div class="container bootstrap snippets bootdey">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" id='tablePrint'>
                     <div class="invoice-wrapper">
                         <div class="intro">
                             Hi <strong>{{order_products.user}}</strong>, 
@@ -323,10 +323,11 @@
                             </div>
     
                             <div class="print">
-                                <a href="#">
-                                    <i class="fa fa-print"></i>
+                                
+                                <a class="btn btn-outline-secondary mb-75" id="sales-report-submit" onclick="pdf()">
+                                  <i class="fa fa-print"></i>
                                     Print this receipt
-                                </a>
+                              </a>
                             </div>
                         </div>
                     </div>
@@ -339,10 +340,9 @@
         </div>
     </div>  
    
-{% endblock %}
-{% include 'footer.html' %}    
+   
 
-{% comment %} 
+
 <script>
   function pdf() {
       const x = document.body.innerHTML;
@@ -352,4 +352,7 @@
       document.body.innerHTML = x; // Restore the original content
   }
 </script>
-</body> {% endcomment %}
+
+
+{% endblock %}
+{% include 'footer.html' %} 
