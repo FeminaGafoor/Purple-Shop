@@ -36,11 +36,24 @@
                         {% for order in order_product %}
                         {% comment %} {% if order.order.status != "Return" %} {% endcomment %}
                         {% if order.order.status != 6 and order.order.status != 7 %}
+                        
                         <tr>
                           <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
                           <td>{{ order.user.user_name}}</td>
                           <td>{{order.created_at}}</td>
-                          <td>{{ order.status }}</td>
+                          <td>
+                            <span class="badge badge-sm badge-dot has-bg 
+                            {% if order.order.status == 1 %}bg-success
+                            {% elif order.order.status == 2 %}bg-info
+                            {% elif order.order.status == 3 %}bg-warning
+                            {% elif order.order.status == 4 %}bg-primary
+                            {% elif order.order.status == 5 %}bg-secondary
+                            {% elif order.order.status == 6 %}bg-danger
+                            {% else %}bg-secondary
+                            {% endif %} d-none d-sm-inline-flex">
+                            {{ order.order.get_status_display }}
+                            </span>
+                          </td>
                           <td>
                             <span class="badge badge-sm badge-dot has-bg
                                 {% if order.status == 'New' %}bg-success
@@ -54,7 +67,7 @@
                           <td>{{order.order.email }}</td>
                           <td>{{order.product.product_name }}</td>
                           <td>{{order.order.payment.payment_method }}</td>
-                          <td>{{order.order.order_total}}</td>
+                          <td>{{order.payment.amount_paid}}</td>
                          
                           
                           <td><span class="badge bg-label-success me-1"></span>
@@ -83,8 +96,9 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                        
+                                    
                                     <input type="hidden" name="orderId" value="{{ order.order.id }}">
+                                    <input type="hidden" name="variantId" value="{{ order.product_variant.id }}">
                         
                                     <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
                                 </form>

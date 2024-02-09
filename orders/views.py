@@ -86,7 +86,7 @@ def place_order(request, total=0, quantity=0):
         data.user_name = user_name
         data.phone = phone                                               
         data.email = email
-        data.address_1 = address
+        data.address = address
         data.city = city
         data.state = state
         data.country = country
@@ -113,7 +113,7 @@ def place_order(request, total=0, quantity=0):
         
         
         order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
-        print(order.user_name, order.order_number,order.status, order.phone, order.address_1, order.city, order.state, order.country)
+        print(order.user_name, order.order_number,order.status, order.phone, order.address, order.city, order.state, order.country)
         print("_________________________________")
         context = {
             'order_id':order_id,
@@ -142,75 +142,78 @@ def cash_on_delivery(request,number):
     user_profile = get_object_or_404(User_Profile, user=request.user)
 
     
-    
+    print("inside cash on delivery|||||||||||||||||||||||||||||||||")
     if orders.exists():
         order = (
             orders.last()
         ) 
         
-       
+        coupon_discount = 0 
+        print("if order exist|||||||||||||||||||||||||||||||||")
+        if order.coupon:
+            coupon_discount = order.coupon.discount_price
+            
+        payment = Payment(
+            user=user_profile,
+            payment_id=number,
+            payment_method="COD",
+            amount_paid=order.order_total - coupon_discount,
+            status="Completed",
+        )
+        print("if no coupon|||||||||||||||||||||||")
+        payment.save()
         
-        if order:
-            payment = Payment(
-                user=user_profile,
-                payment_id=number,
-                payment_method="COD",
-                amount_paid=order.order_total, 
-                status="Completed",
-            )
+        order.payment = payment
+        order.is_ordered = True
+        order.save()
+        
+        cart_item = CartItem.objects.filter(user=request.user)
+        
+        for item in cart_item:
+            order_product = OrderProduct()
+            order_product.order = order
+            order_product.payment = payment
+            order_product.user = user_profile
+            order_product.product = item.product
+            order_product.price = item.product.price
+            order_product.quantity = item.quantity
+            order_product.save()
             
-            payment.save()
-            order.payment = payment
-            order.is_ordered = True
-            order.save()
             
-            cart_item = CartItem.objects.filter(user=request.user)
-            
-            for item in cart_item:
-                order_product = OrderProduct()
-                order_product.order = order
-                order_product.payment = payment
-                order_product.user = user_profile
-                order_product.product = item.product
-                order_product.price = item.product.price
-                order_product.quantity = item.quantity
-                order_product.save()
-                
-                
-                cart_item = CartItem.objects.get(id=item.id)
-                product_variation = cart_item.product_variant.all()
-                order_product = OrderProduct.objects.get(id=order_product.id)
-                order_product.product_variant.set((product_variation))
-                order_product.save()
+            cart_item = CartItem.objects.get(id=item.id)
+            product_variation = cart_item.product_variant.all()
+            order_product = OrderProduct.objects.get(id=order_product.id)
+            order_product.product_variant.set((product_variation))
+            order_product.save()
 
-                # Reduce the quantity of sold product
-                product = Product.objects.get(id=item.product_id)
-                product.stock -= item.quantity
-                product.save()
-                
-                
-            # Clear cart    
-            CartItem.objects.filter(user=request.user).delete()
+            # Reduce the quantity of sold product
+            product = Product.objects.get(id=item.product_id)
+            product.stock -= item.quantity
+            product.save()
             
             
-            # order recieved email
-            mail_subject = "Thank you for your order"
-            message = render_to_string(
-                "order_recieved_email.html", {"user": request.user, "order": order}
-            )
-            to_email = request.user.email
+        # Clear cart    
+        CartItem.objects.filter(user=request.user).delete()
+        
+        
+        # order recieved email
+        mail_subject = "Thank you for your order"
+        message = render_to_string(
+            "order_recieved_email.html", {"user": request.user, "order": order}
+        )
+        to_email = request.user.email
 
-            send_mail = EmailMessage(mail_subject, message, to=[to_email])
-            send_mail.send()
-            
-            order_products = OrderProduct.objects.filter(order=order, user=user_profile)
-            
-            context = {
-                    "order_products": order_products,
-                }
-            return render(request, "success.html",context)
-        else:
-            return HttpResponseRedirect('/')
+        send_mail = EmailMessage(mail_subject, message, to=[to_email])
+        send_mail.send()
+        
+        order_products = OrderProduct.objects.filter(order=order, user=user_profile)
+        
+        context = {
+                "order_products": order_products,
+            }
+        return render(request, "success.html",context)
+    else:
+        return HttpResponseRedirect('/')
 
 
 def apply_coupon(request,total=0, quantity=0):
@@ -291,7 +294,7 @@ def apply_coupon(request,total=0, quantity=0):
 
 def payments(request):
     body = json.loads(request.body)
-    
+    print("from payments||||||||||||||||||||||||||||||||||")
     orders = Order.objects.filter(
         user=request.user, is_ordered=False, order_number=body["orderID"]
     )

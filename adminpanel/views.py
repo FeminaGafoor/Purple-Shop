@@ -340,23 +340,7 @@ def delete_product(request, product_id):
     
 # Coupon Management-----------------------------------------  
 
-
-
-# def coupon_manage(request):
-    
-#     coupon = Coupon.objects.all() 
-#     print(coupon,"coupon")
-#     profile = User_Profile.objects.get(user=request.user)
-#     print(profile)
-#     user_profile_image_url = profile.image.url if profile.image else None
-    
-    
-#     context = {
-#         'profile': profile,
-#         'coupon': coupon,
-#         'user_profile_image_url':user_profile_image_url,
-#     }
-#     return render(request,"coupon.html",context)   
+ 
 
 def coupon_manage(request):
     if request.user.is_superuser:
@@ -445,13 +429,13 @@ def delete_coupon(request, id):
     else:
         return redirect('admin_panel:admin_login') 
     
-    
+# <!---------------COUPON ENDS HERE------------>    
 
 def order_list(request):
     order_product = OrderProduct.objects.all().order_by('created_at')
-    print(order_product,"order_product+++++++++++++++")
+    
     order_status = Order.ORDER_STATUS
-    print(order_status,"order_status_________________")
+    
 
     context = {
         'order_product': order_product,
@@ -459,13 +443,13 @@ def order_list(request):
     }
 
     if request.method == 'POST':
-        print("pooooooooooooooost")
+       
         selected_status = request.POST['orderStatus']
-        print(selected_status,"selected_status")
+        print(selected_status,"selected_status|||||||||")
         selected_order_id = request.POST['orderId']
-        print(selected_order_id,"selected_order_id")
+        print(selected_order_id,"selected_order_id|||||||")
         selected_order = Order.objects.get(pk=selected_order_id)
-        print(selected_order,"selected_order")
+        print(selected_order,"selected_order||||||")
         selected_order.status = selected_status
         selected_order.save()
         return HttpResponseRedirect(reverse('admin_panel:order_list'))
@@ -475,46 +459,47 @@ def order_list(request):
     
     
 
-def order_details(request, id):
-    print("Order ID:", id)
-    print("|||||||||||||||||||||||||||")
+# def order_details(request, id):
+#     print("Order ID:", id)
+#     print("|||||||||||||||||||||||||||")
    
-    orders = get_object_or_404(OrderProduct, id=id)
-    print(orders,"+++++++++++++++++++++++++")
+#     orders = get_object_or_404(OrderProduct, id=id)
+#     print(orders,"+++++++++++++++++++++++++")
  
-    orderstatus = orders.order.status
-    print(orderstatus,"orderstatus-----------")
-    # accepted_timestamp = orders.updated_at if orders.updated_at else orders.created_at
-    # seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
-    # time = timezone.now()
+#     orderstatus = orders.order.status
+#     print(orderstatus,"orderstatus-----------")
+#     # accepted_timestamp = orders.updated_at if orders.updated_at else orders.created_at
+#     # seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
+#     # time = timezone.now()
 
-    context = {
-        "orders": orders,
-        # "colo": colo,
-        "orderstatus": orderstatus,
-        # "seven": seven_days_ago,
-        # "time": time
-    }
+#     context = {
+#         "orders": orders,
+#         # "colo": colo,
+#         "orderstatus": orderstatus,
+#         # "seven": seven_days_ago,
+#         # "time": time
+#     }
 
-    return render(request, "customer_order_details.html", context)
+#     return render(request, "customer_order_details.html", context)
 
 
 
     
     
-def cancel_order(request, id):
+# def cancel_order(request, id):
 
 
-    if request.method == 'POST':
-        reason = request.POST.get('cancel_reason')
-        if not reason:
-            messages.error(request, "Cancel reason is required.")
-            return render(request, "customer_order_details.html")
+#     if request.method == 'POST':
+#         reason = request.POST.get('cancel_reason')
+#         if not reason:
+#             messages.error(request, "Cancel reason is required.")
+#             return render(request, "customer_order_details.html")
 
-        orders = get_object_or_404(OrderProduct, id=id)
-        orders.user_note = reason
-        orders.status = "Canceled"
-        orders.save()
+#         orders = get_object_or_404(OrderProduct, id=id)
+#         orders.user_note = reason
+#         print(orders,"orders||||||||||||||||||||")
+#         orders.status = "Cancelled"
+#         orders.save()
 
-    return render(request, "order_details.html")
+#     return render(request, "order_details.html")
 

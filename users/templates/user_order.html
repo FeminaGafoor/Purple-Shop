@@ -29,6 +29,7 @@
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    {% if order_products %}
                     {% for item in order_products %}
                     <div class="wrap-table-shopping-cart">
                         
@@ -81,36 +82,26 @@
                                         <h6>Order ID:{{ item.order.order_number }}</h>
                                 </td>
                                 <td class="column-2">
-                                    
-                                </td>
+                                     </td>
                                 <td class="column-3">
                                     {{ user_profile.user_name }}
                                 </td>
-                               
-                                
-
-                              <!-- Your table row -->
+                                <!-- Your table row -->
                               <td class="column-2">
-                                    
                               </td>
                               <td class="column-5">
-                                
-                                 ${{ item.order.order_total }}
+                                ${{ item.product.price }}
                             </td>
                             <td class="column-5">
                                 {{ item.created_at }}
                             </td>
-                          
-                          </tr>
-                        
-                            
-                        </table>
-                      
+                        </tr>
+                    </table>
                     </div>
                     
                    
                     <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                        {% if item.status != 'Canceled' %}
+                        {% if item.status != 'Cancelled' %}
                         <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
                             Tracking Order
                         </a>
@@ -122,6 +113,11 @@
                         
                     </div>  
                 {% endfor %}
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        No orders available at the moment.
+                    </div>
+                {% endif %}
                 </div>
                
                

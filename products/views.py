@@ -65,6 +65,12 @@ def search(request):
     
     if 'search_product' in request.GET:
         search_product = request.GET['search_product']
+        # if search_product:
+        #     category_filter = request.GET.get('category', '')  # Add this line
+        #     products = Product.objects.order_by('-created_date').filter(
+        #         Q(description__icontains=search_product) | Q(product_name__icontains=search_product),
+        #         category__name=category_filter  # Modify this line based on your actual model structure
+        #     )
         if search_product:
             products = Product.objects.order_by('-created_date').filter(Q(description__icontains=search_product) | Q(product_name__icontains=search_product))
         

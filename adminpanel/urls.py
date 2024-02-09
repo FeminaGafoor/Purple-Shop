@@ -48,7 +48,7 @@ urlpatterns = [
     # Order Management
     
     path('order_list/',views.order_list,name='order_list'),
-    path('order_details/<int:id>/', views.order_details, name="order_details"),
-    path('cancel_order/',views.cancel_order,name='cancel_order'),
+    # path('order_details/<int:id>/', views.order_details, name="order_details"),
+    # path('cancel_order/',views.cancel_order,name='cancel_order'),
  
 ]

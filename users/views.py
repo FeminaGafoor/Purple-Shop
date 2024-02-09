@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib import messages
 from outgoing.models import CartItem
@@ -52,12 +52,14 @@ class OrderTrackView(View):
 
     def get(self, request, id):
         order_detail = get_object_or_404(OrderProduct, id=id)
-        print(order_detail,"order_detail+++++++++++++++++")
+        
         
         orderstatus = order_detail.order.status
-        print(orderstatus,"orderstatus+++++++++++++++++")
-        accepted_timestamp = order_detail.updated_at if order_detail.updated_at else order_detail.create_at
+       
+        accepted_timestamp = order_detail.updated_at if order_detail.updated_at else order_detail.created_at
+        
         seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
+        
         time = timezone.now()
         context = {
             "order_detail": order_detail,
@@ -69,22 +71,90 @@ class OrderTrackView(View):
 
 
 
-class CancelOrder(View):
 
-    template_name = "track_order.html" 
+#Cancel order                 
+class CancelOrder(View):
+    
+    template_name = 'order_track.html'
 
     def post(self, request, id):
+        print("||||||||||||||halooooooooooooooo")
+        url = request.META.get("HTTP_REFERER")
         if request.method == 'POST':
             reason = request.POST.get('cancel_reason')
             if not reason:
-                messages.error(request,"Cancel reason is required.")
-                return render(request, self.template_name)
-                
+                messages.error(request, "Cancel reason is required.")
+                return redirect(url)
+
             orders = get_object_or_404(OrderProduct, id=id)
             orders.user_note = reason
-            orders.status = "Canceled"
+            orders.status = "Cancelled"
             orders.save()
-            return render(request, self.template_name)
+
+            return redirect(url)
+
+# class CancelOrder(View):
+#     print("from cancel order|||||||||||||")
+#     template_name = "order_track.html" 
+
+#     def post(self, request, id):
+        
+#         if request.method == 'POST':
+#             reason = request.POST.get('cancel_reason')
+            
+#             if not reason:
+                
+#                 messages.error(request,"Cancel reason is required.")
+#                 return render(request, self.template_name)
+#             else:
+                
+#                 order_detail = get_object_or_404(OrderProduct, id=id)
+                
+#                 print(order_detail.id,"order_detail.id")
+#                 order_detail.user_note = reason
+#                 order_detail.status = "Cancelled"
+#                 print(order_detail.status,"order_detail.status")
+#                 order_detail.save()
+                
+#                 return render(request, self.template_name)
+    
+
+class Invoice(View):
+    template_name = "user_invoice.html"
+    def get(self, request,id):
+        user_profile = get_object_or_404(User_Profile, user=request.user)
+        order_products = get_object_or_404(OrderProduct ,id=id,user=user_profile)
+        subtotal=0
+        quantity=0
+        shipping = 40
+        
+        quantity += order_products.quantity
+        subtotal += order_products.price * order_products.quantity
+            
+        coupon_code = order_products.order.coupon.code if order_products.order.coupon else None
+        coupon_discount = order_products.order.coupon.discount_price if order_products.order.coupon else 0   
+        
+        tax = (2 * subtotal) / 100
+        grand_total = subtotal + tax - coupon_discount
+        
+        context={
+            "order_products":order_products,
+            "subtotal": subtotal,
+            "quantity": quantity,
+            "tax": tax,
+            "shipping": shipping,
+            "coupon_code": coupon_code,
+            "coupon_discount": coupon_discount,
+            "grand_total": grand_total,
+            
+        }
+        
+        return render(request, self.template_name,context)
+        
+    
+    
+    
+    
     
 #    class OrderReturn(View):
     

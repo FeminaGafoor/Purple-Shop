@@ -142,100 +142,96 @@
         border-color: #ff2b00;
         border-radius: 1px;
     }
-</style>
+</style> 
 
 
-   <div class="container" style="margin-top:14rem;">
-
-    <article class="card">
-
-        <header class="card-header" style="background-color: #1e1e27;" > My Orders / Tracking </header>
-
-        <div class="card-body">
+   <div class="container" >
+    <article class="card" >
+        <header class="card-header" style="background-color: #1e1e27; margin-top:14rem;" > My Orders / Tracking </header>
+        <div class="card-body" >
             <h6 style="font-family: Poppins-Regular;">Order ID:{{ order_detail.order.order_number }}</h6>
             <article class="card">
-                <div class="card-body row">
+                <div class="card-body row" >
                     <div class="col"     style="font-family: Poppins-Regular";> <strong>Estimated Delivery time:</strong> <br>29 nov 2023 </div>
                     {% comment %} <div class="col"> <strong>Shipping BY:</strong> <br> {{ colo.title }}, | <i class="fa fa-phone"></i> {{ colo.phone }}</div> {% endcomment %}
-                    <div class="col"> <strong>Status:</strong> <br> {{ order_detail.status }}
+                    <div class="col"> <strong>Status:</strong> <br> {{ order_detail.order.get_status_display }}{{order_detail.status}}
                     </div>
                     <div class="col"> <strong>Trasaction ID#:</strong> <br> {{ order_detail.payment.payment_id }} </div>
-
                 </div>
-                
-            </article>
+            </article> 
 
             
-
-
-                <div class="track">
-                    {% if orders.status != "Canceled"%}    
-                        {% if orderstatus >= "1" %}
-                            <div class="step active">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Order confirmed</span>
-                            </div>
-                        {% else %}
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Order confirmed</span>
-                            </div>
-                        {% endif %}
-                    
-                        {% if orderstatus >= "2" %}
-                            <div class="step active">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Picked by courier</span>
-                            </div>
-                        {% else %}
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Picked by courier</span>
-                            </div>
-                        {% endif %}
-                    
-                        {% if orderstatus >= "3" %}
-                            <div class="step active">
-                                <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                                <span class="text">Preparing</span>
-                            </div>
-                        {% else %}
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                                <span class="text">Preparing</span>
-                            </div>
-                        {% endif %}
-                    
-                        {% if orderstatus >= "4" %}
-                            <div class="step active">
-                                <span class="icon"> <i class="fa fa-truck"></i> </span>
-                                <span class="text">On the way</span>
-                            </div>
-                        {% else %}
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-truck"></i> </span>
-                                <span class="text">On the way</span>
-                            </div>
-                        {% endif %}
-                    
-                        {% if orderstatus >= "5" %}
-                            <div class="step active">
-                                <span class="icon"> <i class="fa fa-box"></i> </span>
-                                <span class="text">Ready for pickup</span>
-                            </div>
-                        {% else %}
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Ready for pickup</span>
-                            </div>
-                        {% endif %}
+            <div class="track">
+                {% if order_detail.status != "Cancelled"%} 
+                
+                    {% if orderstatus >= 1 %}
+                        <div class="step active">
+                            <span class="icon"> <i class="fa fa-check"></i> </span>
+                            <span class="text">Order confirmed</span>
+                        </div>
                     {% else %}
-                    <div class="step active">
-                        <span class="icon"> <i class="fa fa-check"></i> </span>
-                        <span class="text">canceled</span>
-                    </div>
+                        <div class="step">
+                            <span class="icon"> <i class="fa fa-check"></i> </span>
+                            <span class="text">Order confirmed</span>
+                        </div>
                     {% endif %}
-                    </div>
+                
+                    {% if orderstatus >= 2 %}
+                        <div class="step active">
+                            <span class="icon"> <i class="fa fa-check"></i> </span>
+                            <span class="text">Picked by courier</span>
+                        </div>
+                    {% else %}
+                        <div class="step">
+                            <span class="icon"> <i class="fa fa-check"></i> </span>
+                            <span class="text">Picked by courier</span>
+                        </div>
+                    {% endif %}
+                
+                    {% if orderstatus >= 3 %}
+                        <div class="step active">
+                            <span class="icon"> <i class="fa fa-cogs"></i> </span>
+                            <span class="text">Preparing</span>
+                        </div>
+                    {% else %}
+                        <div class="step">
+                            <span class="icon"> <i class="fa fa-cogs"></i> </span>
+                            <span class="text">Preparing</span>
+                        </div>
+                    {% endif %}
+                
+                    {% if orderstatus >= 4 %}
+                        <div class="step active">
+                            <span class="icon"> <i class="fa fa-truck"></i> </span>
+                            <span class="text">On the way</span>
+                        </div>
+                    {% else %}
+                        <div class="step">
+                            <span class="icon"> <i class="fa fa-truck"></i> </span>
+                            <span class="text">On the way</span>
+                        </div>
+                    {% endif %}
+                
+                    {% if orderstatus >= 5 %}
+                        <div class="step active">
+                            <span class="icon"> <i class="fa fa-check"></i></span>
+                            <span class="text">Ready for pickup</span>
+                        </div>
+                    {% else %}
+                        <div class="step">
+                            <span class="icon"> <i class="fa fa-check"></i> </span>
+                            <span class="text">Ready for pickup</span>
+                        </div>
+                    {% endif %}
+                {% else %}
+               
+                <div class="step active">
+                    <span class="icon"> <i class="fa fa-check"></i> </span>
+                    <span class="text">Cancelled</span>
+                </div> 
+                {% endif %}
+            </div>
+                
                     
             
             
@@ -261,7 +257,7 @@
                         
                     </figure>
                    
-                    <a href="#" class="btn btn-success" data-abc="true" style="font-family: Poppins-Regular;">
+                    <a href="{% url 'user_app:invoice' order_detail.id %}" class="btn btn-success" data-abc="true" style="font-family: Poppins-Regular;">
                         <i class="fa fa-download"></i> Download Invoice
                     </a>
                 </li>
@@ -270,19 +266,21 @@
 
             <hr>
 
+
+            {% if order_detail.order.status == 5 %}
             <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
-            {% if  time > seven %} 
-            <button class="btn btn-danger" disabled>
+            {% comment %} {% if  time > seven %}  {% endcomment %}
+            {% comment %} <button class="btn btn-danger" disabled>
                 <i></i> Order Return (Expired)
             </button>
-            {%else%}
+            {%else%} {% endcomment %}
             <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#returnModal">
                 <i></i> Order Return
             </a>
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
 
 
-        <!-- return modal body -->
+         <!-- return modal body -->
             <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -293,7 +291,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                        <form action="#" method="post">
+                        <form action="#" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="returnReason">Reason for Return:</label>
@@ -310,7 +308,8 @@
                 </div>
             </div>
 
-        {% if order_detail.status == "Return"%}
+         {% else %}
+         {% if order_detail.status == "Return"%}
             {% if order_detail.order.status != 7 %}
             <p>Note:<span style="color:green">  Your return request is processing.</span></p>
             {%else%}
@@ -319,31 +318,30 @@
             <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
             {%else%}
                 </li>
-         
             </ul>
-
-            <hr>
+            <hr> 
             
            
-
-
-
-
-            
             <a href="{% url 'shop_app:shop' %}" class="btn btn-info" data-abc="true" style="font-family: Poppins-Regular;"> <i class="fa fa-chevron-left"></i> Back to Shop</a>
-            {% if order_detail.status != "Canceled"%}  
-            <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" style="font-family: Poppins-Regular;">
+            {% if order_detail.status != "Cancelled"%}  
+            <a href="#" class="btn btn-danger cancel-btn" data-order-id="{{ order_detail.id }}" data-toggle="modal" data-target="#cancelModal" style="font-family: Poppins-Regular;">
                 <i class=""></i> Cancel Order
             </a>
             {% endif %}
-        {% endif %}
+          {% endif %}
+          {% endif %}
             
             
 
 
 
 <!-- Cancel order modal -->
-            <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+
+
+
+
+
+            {% comment %} <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -354,33 +352,118 @@
                         </div>
                         <div class="modal-body" style="font-family: Poppins-Regular;">
                             <p>Are you sure you want to cancel your order? This action cannot be undone.</p>
-                            
+                             {% endcomment %}
                             <!-- Add a reason input box -->
-                            <form action="#" method="post">
+                            {% comment %} <form action="" >
                                 {% csrf_token %}
                             <div class="form-group" style="font-family: Poppins-Regular;">
                                 <label for="cancellationReason">Cancellation Reason:</label>
+                                
                                 <textarea class="form-control" name="cancel_reason" id="cancellationReason" rows="3" placeholder="Enter your reason" required></textarea>
                             </div>
                         
-                        </div>
-                        <div class="modal-footer" style="font-family: Poppins-Regular;">
-                            <button type="" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- Add your logic to cancel the order when the user clicks "Cancel Order" -->
-                            
-                            <a href="" class="btn btn-danger" onclick="cancelOrder()">Submit</a>
-                        </div>
-                    </form>
+                            </div>
+                            <div class="modal-footer" style="font-family: Poppins-Regular;">
+                                <button type="" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
+                                <!-- Add your logic to cancel the order when the user clicks "Cancel Order" -->
+                                
+                                 {% comment %} <a href="" class="btn btn-danger" onclick="cancelOrder()">Submit</a> 
+                            </div>
+                          </form>
                     </div>
                 </div>
+            </div> {% endcomment %}
+
+
+            <div
+            class="modal fade"
+            id="cancelModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="cancelModalLabel"
+            aria-hidden="true"
+             >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="cancelModalLabel">
+                    Cancel Order
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form
+                    action="{% url 'user_app:cancel_order' id=order_detail.id %}"
+                    method="post"
+                  >
+                    {% csrf_token %}
+                    <!-- Cancel Reason Input Field -->
+                    <div class="form-group">
+                      <label for="cancel_reason"
+                        >Reason for Cancelation:</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="cancel_reason"
+                        placeholder="Enter your reason"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      data-text="Cancel"
+                      class="button-one submit-button"
+                    >
+                      Cancel Order
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
-<!-- ... (your template code) ... -->
+          </div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 <script>
+   //Handle the click event for the cancel button
+  $(".cancel-btn").on("click", function () {
+    var orderId = $(this).data("order-id");
+    $("#cancelModal form").attr(
+      "action",
+      '{% url "user_app:cancel_order" id=0 %}'.replace("0", orderId)
+    );
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <script>
     function cancelOrder() {
         // Retrieve the reason entered by the user
         var reason = document.getElementById('cancellationReason').value;
         
+        console.log(reason)
         // AJAX request to send the cancellation reason to the server
         $.ajax({
             type: 'POST',
@@ -389,22 +472,26 @@
                 'cancel_reason': reason,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',  // Include the CSRF token
             },
+   
             success: function(data) {
                 // Handle the success response, if needed
                 console.log('Order canceled successfully');
             },
             error: function(error) {
                 // Handle the error response, if needed
-                console.error('Error canceling order', error);
+                console.error('Error cancelling order', error);
             }
         });
     
         // Close the modal after processing the cancellation
         $('#cancelModal').modal('hide');
     }
-</script>
+</script>  {% endcomment %}
 
-<!-- ... (your template code) ... -->
+
+
+
+
 
 
 
