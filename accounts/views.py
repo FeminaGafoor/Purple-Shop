@@ -254,10 +254,6 @@ def edit_profile(request):
         firstname = request.POST["first_name"]
         lastname = request.POST["last_name"]
         phone = request.POST["phone"]
-        # country = request.POST["country"]
-        # state = request.POST["state"]
-        # city = request.POST["city"]
-        # address = request.POST["address"]
         image = request.FILES.get("image")
         
         print("|||||||||||||||||from")
@@ -272,10 +268,8 @@ def edit_profile(request):
         # Get or create the UserProfile instance associated with the User
         profile, created = User_Profile.objects.get_or_create(user=user_form)
         profile.phone = phone
-        # profile.country = country
-        # profile.city = city
-        # profile.state = state
-        # profile.address = address
+        
+        
         if image:
             profile.image = image
         
@@ -408,7 +402,7 @@ def delete_address(request,id):
   
 @login_required(login_url='/accounts/user_login/')    
 def change_password(request):
-    
+ 
     if request.method == "POST":
         current_password = request.POST['current_password']
         new_password = request.POST['new_password']
@@ -416,16 +410,19 @@ def change_password(request):
         
         user_profile = request.user.user_profile  # Access the User_Profile instance
         user = user_profile.user  # Access the associated User instance
-        
+       
         if new_password == confirm_password:
             # Use check_password on the User instance
             success = user.check_password(current_password)
+           
             if success:
                 user.set_password(new_password)
                 user.save()
-             
+                
+                logout(request)
+                
                 messages.success(request,"Password updated successfully")
-                return redirect('account:change_password')
+                return redirect('home_app:home')
             else:
                 messages.error(request,"Please enter valid current password")
                 return redirect('account:change_password')

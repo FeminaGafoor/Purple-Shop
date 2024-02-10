@@ -12,7 +12,3 @@ class SignUpForm(UserCreationForm):
         fields = ('first_name', 'last_name', 'username', 'email', 'password1','password2')
 
 
-# class UserProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = User_Profile
-#         fields = ['phone', 'address', 'city', 'state', 'country', 'image']

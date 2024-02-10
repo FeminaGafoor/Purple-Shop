@@ -45,14 +45,7 @@
                                     <th class="column-6">Date</th>
                                    
                                 </tr>
-                               
-                               
                             </tr>
-
-                           
-
-                           
-
                             <tr class="table_row">
                                 
                                 <td class="column-1">
@@ -80,6 +73,15 @@
                                     </p>
                                    
                                         <h6>Order ID:{{ item.order.order_number }}</h>
+                                            {% if item.status != 'Cancelled' %}
+                                <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-115 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
+                                    Track Order
+                                </a>
+                                {% else %}
+                                <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
+                                    Cancel Order
+                                </a>
+                                {% endif %}
                                 </td>
                                 <td class="column-2">
                                      </td>
@@ -95,23 +97,17 @@
                             <td class="column-5">
                                 {{ item.created_at }}
                             </td>
+                            <td></td>
                         </tr>
                     </table>
-                    </div>
+                    
                     
                    
-                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                        {% if item.status != 'Cancelled' %}
-                        <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
-                            Tracking Order
-                        </a>
-                        {% else %}
-                        <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
-                            Cancel Order
-                        </a>
-                        {% endif %}
+                    {% comment %} <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm"> {% endcomment %}
                         
-                    </div>  
+                        
+                    {% comment %} </div>   {% endcomment %}
+                </div>
                 {% endfor %}
                 {% else %}
                     <div class="alert alert-info" role="alert">

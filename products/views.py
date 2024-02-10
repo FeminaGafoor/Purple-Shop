@@ -59,42 +59,29 @@ def single_product(request,category_slug,product_slug):
     }
     return render(request, "single_product.html",context)
     
-    
+
+
 def search(request):
-    products = []  # Initialize products list
-    
+    products = []
+
     if 'search_product' in request.GET:
         search_product = request.GET['search_product']
-        # if search_product:
-        #     category_filter = request.GET.get('category', '')  # Add this line
-        #     products = Product.objects.order_by('-created_date').filter(
-        #         Q(description__icontains=search_product) | Q(product_name__icontains=search_product),
-        #         category__name=category_filter  # Modify this line based on your actual model structure
-        #     )
+
         if search_product:
-            products = Product.objects.order_by('-created_date').filter(Q(description__icontains=search_product) | Q(product_name__icontains=search_product))
-        
-    
+            category_slug = request.GET.get('category', '')
+            
+            # Filter products based on search query
+            products = Product.objects.order_by('-created_date').filter(
+                Q(description__icontains=search_product) | Q(product_name__icontains=search_product)
+            )
+            
+            # If category_slug is provided, filter products by category
+            if category_slug:
+                # Filter by category field and then by slug
+                products = products.filter(category__slug=category_slug)
+
     context = {
         'product': products
     }
     return render(request, "shop.html", context)
 
-
-# def get_price_range(price_range):
-    
-#     if price_range == '$0.00 - $50.00':
-        
-#         print("|||||||||||||||||||")
-#         return 0.00, 50.00
-    
-#     elif price_range == '$50.00 - $100.00':
-#         return 50.00, 100.00
-#     elif price_range == '$100.00 - $150.00':
-#         return 100.00, 150.00
-#     elif price_range == '$150.00 - $200.00':
-#         return 150.00, 200.00
-#     elif price_range == '$200.00+':
-#         return 200.00, float('inf')
-#     else:
-#         return 0.00, float('inf')
