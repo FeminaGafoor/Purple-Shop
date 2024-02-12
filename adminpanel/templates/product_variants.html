@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+       
+  
+<!-- Content wrapper -->
+<div class="content-wrapper">
+              <!-- Content -->
+  
+              <div class="container-xxl flex-grow-1 container-p-y">
+                <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Product Variant Management</h4>
+               <hr class="my-5" />
+                <!--Add button to trigger the add modal-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                    Add Product Variant
+                </button>
+                
+                <!-- Hoverable Table rows -->
+                <div class="card">
+                  <h5 class="card-header">Product Variant List</h5>
+                  <div class="table-responsive text-nowrap">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Id</th>
+                          <th>Product</th>
+                          <th>Variant Types</th>
+                          <th>Variant Value</th>
+                          <th>Quantity</th>
+                          <th>Created_at</th>
+                          <th>Actions</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody class="table-border-bottom-0">
+                        {% for item in product_variant %}
+                        <tr>
+                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
+                          <td>{{item.product}}</td>
+                          <td>{{item.variant_types}}</td>
+                          
+                          <td>{{item.variant_value }}</td>
+                          <td>{{item.quantity }}</td>
+                          <td>{{item.created_at}}</td>
+                         
+                          
+                          <td><span class="badge bg-label-success me-1"></span>
+                            <div class="dropdown">
+                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                              </button>
+      
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                  <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+      
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ forloop.counter }}">
+                                  <i class="bx bx-trash me-1"></i> Delete
+                                </a>
+      
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %} 
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
+              <!--/ Hoverable Table rows -->
+             </div>
+              <!-- / Content -->
+  
+  <!--  Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addModalLabel">Add Product Variant</h5>
+              
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <!-- Your form goes here -->
+              <form method="POST" action="{% url 'admin_panel:add_product_variant' %}" enctype="multipart/form-data">
+                  {% csrf_token %}
+
+                  <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Product Name</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" name="product_name" placeholder="product name" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="variant_types" class="form-label">Variant Types</label>
+                    <select name="variant_types" id="variant_types" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Choose a variant type</option>
+                        {% for choice in variant_types_choice %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                
+
+                  <div>
+                      <label for="exampleFormControlTextarea1" class="form-label">Variant Value</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" name="variant_value" placeholder="variant_value" />
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" name="quantity" placeholder="quantity">
+                  </div>
+
+                  <button type="submit" class="btn btn-primary" id="addProductButton">
+                      Add Product
+                  </button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+  {% for item in product_variant %}
+<!-- Edit Modal for {{ item.name }} -->
+<div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="editModalLabel{{ forloop.counter }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel{{ forloop.counter }}">Edit Product Variant - {{ item.product }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      <!-- Your edit form goes here -->
+        <form method="POST" action="{% url 'admin_panel:edit_product_variant' %}" enctype="multipart/form-data">
+         {% csrf_token %}
+          <input type="hidden" name="product_variant_id" value="{{ item.id }}">
+
+          <!-- Include form fields for editing -->
+          <div class="mb-3">
+            <label for="edit_name{{ forloop.counter }}" class="form-label">Product</label>
+            <input type="text" class="form-control" id="edit_product{{ forloop.counter }}" name="edit_product" value="{{ item.product }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleFormControlSelect1" class="form-label">Variant Type</label>
+            <select name="category" class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+                {% for c in category %}
+                    <option {% if c.id == item.category.id %} selected {% endif %} value="{{ c.id }}">{{ c.category_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+          <div class="mb-3">
+            <label for="edit_variant_value{{ forloop.counter }}" class="form-label">Variant Value</label>
+            <input type="text" class="form-control" id="edit_variant_value{{ forloop.counter }}" name="edit_variant_value" value= "{{ item.variant_value }}" required>
+          </div>
+
+          
+
+    
+          <div class="mb-3">
+            <label for="edit_quantity{{ forloop.counter }}" class="form-label">Quantity</label>
+            <input type="text" class="form-control" id="edit_quantity{{ forloop.counter }}" name="edit_quantity" value="{{ item.quantity }}" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+{% for item in product_variant %}
+  <!-- Delete Modal for {{ item.name }} -->
+  <div class="modal fade" id="deleteModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ forloop.counter }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel{{ forloop.counter }}">Delete Product - {{ item.product }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this product?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a href="{% url 'admin_panel:delete_product_variant' item.id %}" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+
+{% endblock %}       
+
+
+
+
+
+  
+  

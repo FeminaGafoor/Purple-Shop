@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Color, Product, ProductVariant, Size
+from .models import Category, Product, ProductVariant
 
 # Register your models here.
 
@@ -31,13 +31,11 @@ class ProductAdmin(admin.ModelAdmin):
 
     display_image.short_description = 'Product Image'
     
-    
-# class ColorAdmin(admin.ModelAdmin):
-#     list_display=['name','code','color_tag']      
+      
     
     
 class ProductVariantAdmin(admin.ModelAdmin):
-    list_display = ('product', 'variant_types','variant_value','is_active')
+    list_display = ('product', 'variant_types','variant_value','quantity','created_at','is_active')
     
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product,ProductAdmin)

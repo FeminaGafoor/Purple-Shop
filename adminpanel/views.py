@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login,logout
 from django.urls import reverse
 from django.views import View
-from products.models import Category, Color, Product, Size
+from products.models import Category, Product, ProductVariant
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
 from accounts.models import  User_Profile
@@ -74,18 +74,21 @@ def user_manage(request):
 
 
 def user_block(request,user_id):
+    if request.user.is_superuser:
+        
+        #user is block
+        user=User_Profile.objects.get(id = user_id)
+        
+        if user.is_active:
+            user.is_active = False
+            user.save()
+        else:
+            user.is_active = True
+            user.save()
+        return redirect('admin_panel:user_manage')
     
-    #user is block
-    user=User_Profile.objects.get(id = user_id)
-    
-    if user.is_active:
-        user.is_active = False
-        user.save()
-    else:
-        user.is_active = True
-        user.save()
-    return redirect('admin_panel:user_manage')
-    
+    return render(request, "admin_login.html")
+        
     
 # Category Management------------------------------
 
@@ -336,6 +339,121 @@ def delete_product(request, product_id):
         return redirect('admin_panel:product_manage')
     else:
         return redirect('admin_panel:admin_login')
+    
+
+# Product Variant Management-----------------------------------------
+def product_variant_manage(request):
+    if request.user.is_superuser:
+        product_variant = ProductVariant.objects.all()
+        
+        
+        context = {
+            'product_variant': product_variant,
+           
+            
+        }
+
+        return render(request, "product_variants.html", context)
+    
+    return redirect('admin_panel:admin_login')
+
+    
+
+# Add Product Variant -----------------------------------------
+    
+
+def add_product_variant(request):
+    print("||||||||||||||||||||")
+    
+    variant_types_choice = (
+        ('color', 'Color'),
+        ('size', 'Size'),
+    )
+
+    if request.user.is_superuser:
+        if request.method == "POST":
+            product_name = request.POST.get('product_name')
+            variant_types = request.POST.get('variant_types') # Ensure that this matches the name attribute in the HTML form
+            variant_value = request.POST.get('variant_value')
+            quantity = request.POST.get('quantity')
+        
+            print(variant_types, "|||||||||||||||")
+
+            # Get the Product instance
+            product = Product.objects.filter(product_name=product_name).first()
+
+            # Create ProductVariant instance with the selected variant type
+            product_variant = ProductVariant.objects.create(
+                product=product,
+                variant_types=variant_types,
+                variant_value=variant_value,
+                quantity=quantity,
+            )
+            product_variant.save()
+
+            messages.success(request, "Product Variant added successfully")
+            return redirect('admin_panel:product_manage')
+
+        context = {
+            'products': Product.objects.all(),
+            'variant_types_choice': variant_types_choice,
+        }
+        print(context) 
+        return render(request, 'product_variant.html', context)
+
+    return redirect('admin_panel:admin_login')
+
+
+    
+# Edit Product Variant -----------------------------------------   
+
+
+def edit_product_variant(request):
+    if request.user.is_superuser:
+        if request.method == "POST":
+            product_variant_id = request.POST.get('product_variant_id')
+            product = request.POST.get('edit_product')
+            variant_types = request.POST.get('edit_variant_types')
+        
+            variant_value = request.POST.get('edit_variant_value')
+            quantity = request.POST.get('edit_quantity')
+           
+            
+            product_instance = Product.objects.get(id=product)
+            
+            update = get_object_or_404(ProductVariant,id=product_variant_id)
+            print(update, 'product')
+            update.product = product
+            update.variant_types = variant_types
+            
+           
+                
+            update.variant_value = variant_value
+            update.quantity = quantity
+       
+        
+            update.save()
+            
+            messages.success(request, 'Product updated successfully')
+            return redirect('admin_panel:product_manage')
+        
+        return render(request, 'product_variant_manage.html')
+    
+    return redirect('admin_panel:admin_login')
+    
+    
+# Delete Product Variant ----------------------------------------- 
+
+    
+def delete_product_variant(request,product_variant_id):
+    if request.user.is_authenticated:
+        product_variant=ProductVariant.objects.get(id=product_variant_id)
+        product_variant.delete()
+        return redirect('admin_panel:product_variant_manage')
+    else:
+        return redirect('admin_panel:admin_login')
+        
+           
     
     
 # Coupon Management-----------------------------------------  

@@ -24,34 +24,6 @@ class Category(models.Model):
         return self.category_name
 
 
-# color model---------
-
-class Color(models.Model):
-    name = models.CharField(max_length= 50)
-    code= models.CharField(max_length=10,blank=True,null=True)
-    
-    
-    def __str__(self):
-        return self.name
-    
-    def color_tag(self):
-        if self.code is not None:
-            return mark_safe('<p style="background-color:{}">Color </p>'.format(self.code))
-        else:
-            return ""
-
-
-
-# size model---------
-
-class Size(models.Model):
-    name = models.CharField(max_length= 10)   
-    
-    def __str__(self):
-        return self.name
-
-
-
   
     
 # product model---------

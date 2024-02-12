@@ -34,6 +34,14 @@ urlpatterns = [
     path('edit_product/',views.edit_product,name='edit_product'),
     path('delete_product/<int:product_id>/',views.delete_product,name='delete_product'),
     
+      # Product Variant Management
+    
+    path('product_variant_manage/',views.product_variant_manage,name='product_variant_manage'),
+    path('add_product_variant/',views.add_product_variant,name='add_product_variant'),
+    path('edit_product_variant/',views.edit_product_variant,name='edit_product_variant'),
+    path('delete_product_variant/<int:product_variant_id>/',views.delete_product_variant,name='delete_product_variant'),
+    
+    
     
     # Coupon Management
     
