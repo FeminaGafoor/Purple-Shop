@@ -18,133 +18,96 @@
     </div>
 </div>
     
-
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85" action= "{% url 'order_app:place_order' %}" method="POST">
+<form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
     <div class="container">
-       
+
         <div class="row">
-            
+
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                
-                <div class="m-l-25 m-r--38 m-lr-0-xl">
+
+                <div class="m-l-25 m-r--38 m-lr-0-xl" style="font-family: Poppins-Medium;">
+
                     {% if order_products %}
-                    {% for item in order_products %}
-                    <div class="wrap-table-shopping-cart">
-                        
-                        <table class="table-shopping-cart">
-                            <tr class="table_head">
-                                <tr class="table_head">
-                                    <th class="column-1">Product</th>
-                                    <th class="column-2"></th>
-                                    <th class="column-3">Billing Name</th>
-                                    
-                                    <th class="column-2"></th>
-                                    <th class="column-5">Order Total</th>
-                                    <th class="column-6">Date</th>
-                                   
-                                </tr>
-                            </tr>
-                            <tr class="table_row">
-                                
-                                <td class="column-1">
-                                    <div class="how-itemcart1">
-                                        <img src="{{ item.product.images.url }}" alt="IMG" style="width: 70px; height: 70px;">
+                        {% for item in order_products %}
+                            <div class="card mb-3" >
+                                <div class="row no-gutters" >
+                                    <div class="col-md-4">
+                                        <img src="{{ item.product.images.url }}" alt="Product Image" class="card-img">
                                     </div>
-                                    <a href="{{ item.product }}" style="color: black;">
-                                        {{ item.product }}
-                                    </a>
-                                    
-                                    <p style="font-size: 12px;">
-                                        {% if item.product_variant.all %}
-                                            {% for i in item.product_variant.all %}
-                                                {% if i.variant_types == 'color' %}
-                                                    {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ item.product }}</h5>
+                                            <p class="card-text">
+                                                {% if item.product_variant.all %}
+                                                    {% for i in item.product_variant.all %}
+                                                        {% if i.variant_types == 'color' %}
+                                                            {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for i in item.product_variant.all %}
+                                                        {% if i.variant_types == 'size' %}
+                                                            {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 {% endif %}
-                                            {% endfor %}
-                                            {% for i in item.product_variant.all %}
-                                                {% if i.variant_types == 'size' %}
-                                                    {{ i.variant_types | capfirst }}: {{ i.variant_value }}<br>
+                                                Quantity: {{ item.quantity }}
+                                            </p>
+                                            <p class="card-text">
+                                                <small class="text-muted">Order ID: {{ item.order.order_number }}</small>
+                                            </p>
+                                            <p class="card-text">
+                                                <strong>Order Total:</strong> ${{ item.product.price }}
+                                            </p>
+                                            <p class="card-text">
+                                                <strong>Date:</strong> {{ item.created_at }}
+                                            </p>
+                                            <a href="{% url 'user_app:order_track' item.id %}" class="btn btn-primary">
+                                                {% if item.status != 'Cancelled' %}
+                                                    Track Order
+                                                {% else %}
+                                                    Cancel Order
                                                 {% endif %}
-                                            {% endfor %}
-                                        {% endif %}
-                                        Quantity:{{ item.quantity }}
-                                    </p>
-                                   
-                                        <h6>Order ID:{{ item.order.order_number }}</h>
-                                            {% if item.status != 'Cancelled' %}
-                                <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-115 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
-                                    Track Order
-                                </a>
-                                {% else %}
-                                <a href="{% url 'user_app:order_track' item.id %}" class="flex-c-m stext-101 cl2 size-119 bg8 bor13 p-lr-15 trans-04 pointer m-tb-10" >
-                                    Cancel Order
-                                </a>
-                                {% endif %}
-                                </td>
-                                <td class="column-2">
-                                     </td>
-                                <td class="column-3">
-                                    {{ user_profile.user_name }}
-                                </td>
-                                <!-- Your table row -->
-                              <td class="column-2">
-                              </td>
-                              <td class="column-5">
-                                ${{ item.product.price }}
-                            </td>
-                            <td class="column-5">
-                                {{ item.created_at }}
-                            </td>
-                            <td></td>
-                        </tr>
-                    </table>
-                    
-                    
-                   
-                    {% comment %} <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm"> {% endcomment %}
-                        
-                        
-                    {% comment %} </div>   {% endcomment %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            No orders available at the moment.
+                        </div>
+                    {% endif %}
                 </div>
-                {% endfor %}
-                {% else %}
-                    <div class="alert alert-info" role="alert">
-                        No orders available at the moment.
-                    </div>
-                {% endif %}
-                </div>
-               
-               
             </div>
 
-            <!--  Customer Address Right starts -->
+            
 
+            <!--  Customer Address Right starts -->
             <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                 <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                     <div class="mtext-109 cl2 p-b-30">
                         <h4> {{ user_profile.user_name }}</h4>
 
-                         {% comment %} {{ user_pro.first_name }}
-                         {{ user_pro.last_name }} {% endcomment %}
-                         <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
-                             <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
-                             text-align: center;margin-left: 75px;">
-                         </div>
-                     </div>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
+                            <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
+                            text-align: center;margin-left: 75px;">
+                        </div>
+                    </div>
 
-                     
-                     
+                    
+                    
 
-                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                         <div class="size-209">
-                             <span class="mtext-110 cl2">
-                                 {{ user_profile.email }}
-                                 {{ user_profile.address_1 }}
-                             </span>
-                         </div>
-                     </div>
+                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                        <div class="size-209">
+                            <span class="mtext-110 cl2">
+                                {{ user_profile.email }}
+                                {{ user_profile.address_1 }}
+                            </span>
+                        </div>
+                    </div>
                     <a href="{% url 'account:profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
                         My Profile
                     </a>
@@ -159,14 +122,19 @@
                     <a href="{% url 'coupon_app:coupon' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
                         My Coupon
                     </a>
-                    
+                            
+                        </div>
+                    </div> 
+                    </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-       
-    </div>
-</form>
-    
+            </form>
+
+
+
+
 
 {% endblock %}
 {% include 'footer.html' %}
+
+
