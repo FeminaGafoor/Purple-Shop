@@ -247,7 +247,7 @@
                                     {{ variant.variant_types | capfirst }}: {{ variant.variant_value }} <br>
                                 {% endfor %}
                                 
-                                Price: {{ order_detail.order.order_total }}<br>
+                                Price: {{ order_detail.price }}<br>
                                 Quantity: {{ order_detail.quantity }} 
                             </span>
         
@@ -257,10 +257,7 @@
                         
                     </figure>
                    
-                    <a href="{% url 'user_app:invoice' order_detail.id %}" class="btn btn-success" data-abc="true" style="font-family: Poppins-Regular;">
-                        <i class="fa fa-download"></i> Download Invoice
-                    </a>
-                </li>
+                </li> 
          
             </ul>
 
@@ -410,53 +407,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-{% comment %} <script>
-    function cancelOrder() {
-        // Retrieve the reason entered by the user
-        var reason = document.getElementById('cancellationReason').value;
-        
-        console.log(reason)
-        // AJAX request to send the cancellation reason to the server
-        $.ajax({
-            type: 'POST',
-            url: '{% url "user_app:cancel_order" order_detail.id %}',  // Replace with the correct URL name
-            data: {
-                'cancel_reason': reason,
-                'csrfmiddlewaretoken': '{{ csrf_token }}',  // Include the CSRF token
-            },
-   
-            success: function(data) {
-                // Handle the success response, if needed
-                console.log('Order canceled successfully');
-            },
-            error: function(error) {
-                // Handle the error response, if needed
-                console.error('Error cancelling order', error);
-            }
-        });
-    
-        // Close the modal after processing the cancellation
-        $('#cancelModal').modal('hide');
-    }
-</script>  {% endcomment %}
-
-
-
-
-
-
-
-
-    </article>
+   </article>
 
 
 </div>

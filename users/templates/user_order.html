@@ -19,26 +19,29 @@
 </div>
     
 <!-- Shoping Cart -->
+<div class="container mt-3">
 <form class="bg0 p-t-75 p-b-85" action="{% url 'order_app:place_order' %}" method="POST">
     {% csrf_token %}
-    <div class="container">
+    
 
         <div class="row">
 
-            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+            <div class="col-md-7">
+            <div class="m-l-25 m-r--38 m-lr-0-xl" style="font-family: Poppins-Medium; font-size: 13px;">
 
-                <div class="m-l-25 m-r--38 m-lr-0-xl" style="font-family: Poppins-Medium;">
-
-                    {% if order_products %}
-                        {% for item in order_products %}
-                            <div class="card mb-3" >
-                                <div class="row no-gutters" >
-                                    <div class="col-md-4">
-                                        <img src="{{ item.product.images.url }}" alt="Product Image" class="card-img">
+                {% for order_entry in order_data %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            {% for item in order_entry.order_products %}
+                                <div class="row no-gutters">
+                                    <div class="col-md-4" style="height:200px">
+                                        <img src="{{ item.product.images.url }}" alt="Product Image" class="card-img" style="height: 200px;">
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" >
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ item.product }}</h5>
+                                            <!-- Product details for each item go here -->
+                                            <h5 class="card-title" style="font-size: 18px;">{{ item.product }}</h5>
+                                            <!-- Add other product details here -->
                                             <p class="card-text">
                                                 {% if item.product_variant.all %}
                                                     {% for i in item.product_variant.all %}
@@ -55,15 +58,10 @@
                                                 Quantity: {{ item.quantity }}
                                             </p>
                                             <p class="card-text">
-                                                <small class="text-muted">Order ID: {{ item.order.order_number }}</small>
-                                            </p>
-                                            <p class="card-text">
                                                 <strong>Order Total:</strong> ${{ item.product.price }}
                                             </p>
-                                            <p class="card-text">
-                                                <strong>Date:</strong> {{ item.created_at }}
-                                            </p>
-                                            <a href="{% url 'user_app:order_track' item.id %}" class="btn btn-primary">
+                                            <br>
+                                            <a href="{% url 'user_app:order_track' item.id %}" class="btn btn-primary" style="background-color: #222; border-color: #222;">
                                                 {% if item.status != 'Cancelled' %}
                                                     Track Order
                                                 {% else %}
@@ -73,64 +71,81 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-info" role="alert">
-                            No orders available at the moment.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            
-
-            <!--  Customer Address Right starts -->
-            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                    <div class="mtext-109 cl2 p-b-30">
-                        <h4> {{ user_profile.user_name }}</h4>
-
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto ">
-                            <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center;
-                            text-align: center;margin-left: 75px;">
-                        </div>
-                    </div>
-
-                    
-                    
-
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                {{ user_profile.email }}
-                                {{ user_profile.address_1 }}
-                            </span>
-                        </div>
-                    </div>
-                    <a href="{% url 'account:profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
-                        My Profile
-                    </a>
-                    
-                    <br>
-                    <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
-                        My Wishlist
-                    </button>
-                    
-                    
-                    <br>
-                    <a href="{% url 'coupon_app:coupon' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
-                        My Coupon
-                    </a>
+                                <hr>  <!-- Add a horizontal line between products -->
+                            {% endfor %}
+                            <!-- Display common order details here -->
+                            <p class="card-text">
+                                <small class="text-muted">Order ID: {{ order_entry.order.order_number }}</small>
+                            </p>
+                            <p class="card-text">
+                                <strong>Subtotal:</strong> ${{ order_entry.sub_total }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Grand Total:</strong> ${{ order_entry.grand_total }}
+                            </p>
+                            <a href="{% url 'user_app:invoice' order_entry.order_id %}" class="btn btn-success ml-auto" data-abc="true" style="font-family: Poppins-Regular; background-color:#28375f;">
+                                <i class="fa fa-download"></i> Download Invoice
+                            </a>
                             
                         </div>
-                    </div> 
                     </div>
+                {% endfor %}
+            
+                {% if order_data|length == 0 %}
+                    <div class="alert alert-info" role="alert">
+                        No orders available at the moment.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+           
+
+            
+        <!--  Customer Details Right starts -->
+            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                <div class="card bor10 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                    <div class="card-body p-lr-40 p-t-30 p-b-40">
+                        <div class="mtext-109 cl2 p-b-30">
+                            <h4>{{ user_profile.user_name }}</h4>
+            
+                            <div class="flex-w flex-t bor12 p-t-15 p-b-30 mx-auto">
+                                <img src="{{ user_profile_image_url }}" alt="Profile Image" class="img-fluid" style="width: 120px; height: 120px; display: flex; justify-content: center; text-align: center; margin-left: 75px;">
+                            </div>
+                        </div>
+            
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                            <div class="size-209">
+                                <span class="mtext-110 cl2">
+                                    {{ user_profile.email }}
+                                    {{ user_profile.address_1 }}
+                                </span>
+                            </div>
+                        </div>
+            
+                        <a href="{% url 'account:profile' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                            My Profile
+                        </a>
+            
+                        <br>
+            
+                        <button class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm">
+                            My Wishlist
+                        </button>
+            
+                        <br>
+            
+                        <a href="{% url 'coupon_app:coupon' %}" class="flex-c-m stext-101 cl0 size-111 bg3 bor14 p-lr-15 trans-04 pointer btn-sm" style="text-decoration: none; color: white;">
+                            My Coupon
+                        </a>
                     </div>
                 </div>
-            </form>
-
-
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+            
 
 
 

@@ -577,26 +577,26 @@ def order_list(request):
     
     
 
-# def order_details(request, id):
-#     print(id,"id")
-#     order_details = Order.objects.get(id=id)
-#     print(order_details,"order_details")
-#     full_name = order_details.user_name
-#     order_product = OrderProduct.objects.filter(order=order_details).last()
-#     tax = (2 * order_product.price) / 100
-#     grand_total = order_product.quantity * (order_product.price + tax)
+def order_details(request, id):
+    print(id,"id")
+    order_details = Order.objects.get(id=id)
+    print(order_details,"order_details")
+    full_name = order_details.user_name
+    order_product = OrderProduct.objects.filter(order=order_details).last()
+    tax = (2 * order_product.price) / 100
+    grand_total = order_product.quantity * (order_product.price + tax)
 
 
     
 
-#     context={
-#         'order_details':order_details,
-#         'order_status':Order.ORDERSTATUS,
-#         'full_name':full_name,
-#         'order_product':order_product,
-#         'grand_total':grand_total
-#     }
-#     return render(request,'order_details.html',context)
+    context={
+        'order_details':order_details,
+        'order_status':Order.ORDERSTATUS,
+        'full_name':full_name,
+        'order_product':order_product,
+        'grand_total':grand_total
+    }
+    return render(request,'order_details.html',context)
     
 
 

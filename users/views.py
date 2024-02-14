@@ -10,42 +10,89 @@ from orders.models import Order, OrderProduct
 
 
 
-class UserOrderView(View):
+# class UserOrderView(View):
     
-    template_name="user_order.html"
+#     template_name="user_order.html"
     
-    def get(self,request):    
+#     def get(self,request):    
         
-        user_profile = get_object_or_404(User_Profile, user=request.user)
-        orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
-        order_products = OrderProduct.objects.filter(order__in=orders, user=user_profile).order_by("-id")
-        user_profile_image_url = user_profile.image.url if user_profile.image else None
+#         user_profile = get_object_or_404(User_Profile, user=request.user)
+#         orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
+#         order_products = OrderProduct.objects.filter(order__in=orders, user=user_profile).order_by("-id")
+#         user_profile_image_url = user_profile.image.url if user_profile.image else None
         
-        sub_total = 0
-        for order_product in order_products:
-            # Calculate the subtotal for each ordered product
-            product_subtotal = order_product.price * order_product.quantity
-            sub_total += product_subtotal
-            tax = (2 * product_subtotal)/100
+#         sub_total = 0
+#         for order_product in order_products:
+#             # Calculate the subtotal for each ordered product
+#             product_total = order_product.price * order_product.quantity
+#             sub_total += product_total
+#             tax = (2 * product_total)/100
 
-        # Add additional charges (tax, shipping, etc.) to the subtotal
-        additional_charges = 40 + tax # Example: You can replace this with your actual additional charges
-        total = sub_total + additional_charges
+#         # Add additional charges (tax, shipping, etc.) to the subtotal
+#         additional_charges = 40 + tax # Example: You can replace this with your actual additional charges
+#         grand_total = sub_total + additional_charges
             
         
         
+#         context = {
+#             "orders": orders,
+#             "order_products": order_products,
+#             'sub_total': sub_total,
+#             'grand_total': grand_total,
+#             'user_profile':user_profile,
+#             'user_profile_image_url':user_profile_image_url
+#         }
+
+#         return render(request,self.template_name,context)
+
+
+class UserOrderView(View):
+    template_name = "user_order.html"
+
+    def get(self, request):
+        user_profile = get_object_or_404(User_Profile, user=request.user)
+        orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
+        user_profile_image_url = user_profile.image.url if user_profile.image else None
+        
+        print("order_detail||||||||||||||")
+        order_data = []  # List to store order details and associated products
+        
+        for order in orders:
+            order_products = OrderProduct.objects.filter(order=order, user=user_profile).order_by("-id")
+            
+            sub_total = 0
+            for order_product in order_products:
+                product_total = order_product.price * order_product.quantity
+                sub_total += product_total
+                tax = (2 * sub_total) / 100
+                
+                coupon_discount = order.coupon.discount_price if order.coupon else 0
+                
+            additional_charges = 40 + tax
+            grand_total = sub_total + additional_charges-coupon_discount
+            
+            order_data.append({
+                'order': order,
+                'order_products': order_products,
+                'sub_total': sub_total,
+                'grand_total': grand_total,
+                'user_profile':user_profile,
+                'user_profile_image_url':user_profile_image_url,
+                'order_id': order.id,  # Ensure that you have the correct attribute for the order ID
+            })
+
         context = {
-            "orders": orders,
-            "order_products": order_products,
-            'sub_total': sub_total,
-            'total': total,
-            'user_profile':user_profile,
-            'user_profile_image_url':user_profile_image_url
+            
+            "order_data": order_data,
+            'user_profile': user_profile,
+            'user_profile_image_url': user_profile_image_url
         }
 
-        return render(request,self.template_name,context)
-
-
+        return render(request, self.template_name, context)
+    
+    
+    
+    
 
 class OrderTrackView(View):
     template_name = "order_track.html"
@@ -119,40 +166,36 @@ class CancelOrder(View):
 #                 return render(request, self.template_name)
     
 
+    
+
 class Invoice(View):
     template_name = "user_invoice.html"
-    def get(self, request,id):
+
+    def get(self, request, id):
         user_profile = get_object_or_404(User_Profile, user=request.user)
-        order_products = get_object_or_404(OrderProduct ,id=id,user=user_profile)
-        subtotal=0
-        quantity=0
-        shipping = 40
+        order = get_object_or_404(Order, id=id, user=user_profile.user)
+        print(order.user,"order||||||||||||||||||||||||")
+        order_products = OrderProduct.objects.filter(order=order, user=user_profile).order_by("-id")
+        print(order_products,"order_products||||||||||||||")
         
-        quantity += order_products.quantity
-        subtotal += order_products.price * order_products.quantity
-            
-        coupon_code = order_products.order.coupon.code if order_products.order.coupon else None
-        coupon_discount = order_products.order.coupon.discount_price if order_products.order.coupon else 0   
-        
+        subtotal = sum(order_product.price * order_product.quantity for order_product in order_products)
         tax = (2 * subtotal) / 100
+        shipping = 40
+        coupon_discount = order.coupon.discount_price if order.coupon else 0
         grand_total = subtotal + tax + shipping - coupon_discount
-        
-        context={
-            "order_products":order_products,
-            "subtotal": subtotal,
-            "quantity": quantity,
-            "tax": tax,
-            "shipping": shipping,
-            "coupon_code": coupon_code,
-            "coupon_discount": coupon_discount,
-            "grand_total": grand_total,
-            
+
+        context = {
+            'order': order,
+            'order_products': order_products,
+            'subtotal': subtotal,
+            'tax': tax,
+            'shipping': shipping,
+            'coupon_discount': coupon_discount,
+            'grand_total': grand_total,
         }
-        
-        return render(request, self.template_name,context)
-        
-    
-    
+
+        return render(request, self.template_name, context)
+
     
     
     
