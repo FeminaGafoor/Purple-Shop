@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'adminpanel',
+    'adminpanel.templatetags',
     'outgoing',
     'orders',
     'users',

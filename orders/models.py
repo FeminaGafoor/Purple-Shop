@@ -89,3 +89,4 @@ class OrderProduct(models.Model):
     
     def subtotal(self):
         return self.price * self.quantity 
+    

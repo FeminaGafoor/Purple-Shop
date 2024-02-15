@@ -1,7 +1,7 @@
 
 from django.db.models import Q 
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login,logout
 from django.urls import reverse
@@ -9,7 +9,7 @@ from django.views import View
 from products.models import Category, Product, ProductVariant
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
-from accounts.models import  User_Profile
+from accounts.models import  Address, User_Profile
 from orders.models import Order, OrderProduct
 from coupon.models import Coupon
 
@@ -550,18 +550,10 @@ def delete_coupon(request, id):
 # <!---------------COUPON ENDS HERE------------>    
 
 def order_list(request):
-    order_product = OrderProduct.objects.all().order_by('created_at')
     
-    order_status = Order.ORDER_STATUS
-    
-
-    context = {
-        'order_product': order_product,
-        'order_status': order_status,
-    }
-
+    print("order_list||||||||||||||||||||||||||||||||||||")
     if request.method == 'POST':
-       
+        print("||||||||||||||||||||||||||||||||||+++++++++++++")
         selected_status = request.POST['orderStatus']
         print(selected_status,"selected_status|||||||||")
         selected_order_id = request.POST['orderId']
@@ -571,6 +563,18 @@ def order_list(request):
         selected_order.status = selected_status
         selected_order.save()
         return HttpResponseRedirect(reverse('admin_panel:order_list'))
+    
+    order_product = OrderProduct.objects.all().order_by('created_at')
+    print(order_product,"order_product|||||||")
+    
+    order_status = Order.ORDER_STATUS
+    
+
+    context = {
+        'order_product': order_product,
+        'order_status': order_status,
+        
+    }
 
     return render(request, 'order_list.html', context)
     
@@ -578,23 +582,42 @@ def order_list(request):
     
 
 def order_details(request, id):
-    print(id,"id")
-    order_details = Order.objects.get(id=id)
-    print(order_details,"order_details")
-    full_name = order_details.user_name
-    order_product = OrderProduct.objects.filter(order=order_details).last()
-    tax = (2 * order_product.price) / 100
-    grand_total = order_product.quantity * (order_product.price + tax)
+    print(id,"id|||||||||||||||||||||||||||")
 
+    order_details = Order.objects.get(id=id)
+    
+    address = Address.objects.filter(user=order_details.user).last()
+  
+    payment_method = order_details.payment.payment_method if order_details.payment else None
+
+    order_product = OrderProduct.objects.filter(order=order_details)
+    
+    for product in order_product:
+        product_total = product.price*product.quantity
+        
+    sub_total = sum(product.subtotal() for product in order_product)
+ 
+
+    tax = (2 * sub_total) / 100
+    shipping = 40
+    coupon_discount = order_details.coupon.discount_price if order_details.coupon else 0
+    grand_total = sub_total + tax + shipping - coupon_discount
 
     
 
     context={
         'order_details':order_details,
-        'order_status':Order.ORDERSTATUS,
-        'full_name':full_name,
+        'order_status':Order.ORDER_STATUS,
+        'sub_total':sub_total,
         'order_product':order_product,
-        'grand_total':grand_total
+        'tax':tax,
+        'product_total':product_total,
+        'address':address,
+        'shipping': shipping,
+        'coupon_discount': coupon_discount,
+        'grand_total':grand_total,
+        'payment_method':payment_method,
+        
     }
     return render(request,'order_details.html',context)
     

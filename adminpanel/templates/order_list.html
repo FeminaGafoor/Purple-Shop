@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_tags %}
 {% block content %}
 {% include "alert.html" %}
+
 
 
        
@@ -24,23 +26,27 @@
                           <th>User Name</th>
                           <th>Date</th>
                           <th>Status</th>
-                          <th>User Status</th>
+                          
+                          
                           <th>Customer Email</th>
-                          <th>Orderd Product</th>
+                          <th>Ordered Product</th>
+                       
                           <th>Payment Method</th>
                           <th>Total</th>
-                          <th>Order Status</th>
+                          
                         </tr>
                       </thead>
                       <tbody class="table-border-bottom-0">
                         {% for order in order_product %}
                         {% comment %} {% if order.order.status != "Return" %} {% endcomment %}
                         {% if order.order.status != 6 and order.order.status != 7 %}
-                        
+                        {% if order.order.id|changed %}
                         <tr>
-                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
+                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ order.order.id }}</strong></td>
                           <td>{{ order.user.user_name}}</td>
                           <td>{{order.created_at}}</td>
+                         
+                          
                           <td>
                             <span class="badge badge-sm badge-dot has-bg 
                             {% if order.order.status == 1 %}bg-success
@@ -54,20 +60,31 @@
                             {{ order.order.get_status_display }}
                             </span>
                           </td>
-                          <td>
-                            <span class="badge badge-sm badge-dot has-bg
-                                {% if order.status == 'New' %}bg-success
-                                {% elif order.status == 'Accepted' %}bg-info
-                                {% elif order.status == 'Cancelled' %}bg-danger
-                                {% else %}bg-secondary
-                                {% endif %} d-none d-sm-inline-flex">
-                                {{ order.status }}
-                            </span>
-                        </td>
+                        
                           <td>{{order.order.email }}</td>
-                          <td>{{order.product.product_name }}</td>
+                          <td>
+                            {% for product in order.order.orderproduct_set.all %}
+                                <div>
+                                    {{ product.product.product_name }} - 
+                                    <span class="badge badge-sm badge-dot has-bg
+                                        {% if product.status == 'New' %}bg-success
+                                        {% elif product.status == 'Accepted' %}bg-info
+                                        {% elif product.status == 'Cancelled' %}bg-danger
+                                        {% else %}bg-secondary
+                                        {% endif %} d-none d-sm-inline-flex">
+                                        {{ product.status }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </td>
                           <td>{{order.order.payment.payment_method }}</td>
-                          <td>{{order.product.price}}</td>
+                          <td>
+                            {% for product in order.order.orderproduct_set.all %}
+                                {{ product.subtotal }}
+                                <br>
+                            {% endfor %}
+                        </td>
+                          
                          
                           
                           <td><span class="badge bg-label-success me-1"></span>
@@ -75,7 +92,7 @@
                               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                 <i class="bx bx-dots-vertical-rounded"></i>
                               </button>
-                              <a href="{% url 'admin_panel:order_details' order.id %}">  
+                              <a href="{% url 'admin_panel:order_details' order.order.id %}">  
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                 <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                 <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
@@ -108,6 +125,7 @@
                           </td>
                         </tr>
                       
+                      {% endif %}
                       {% endif %}
                       {% endfor %}
                       

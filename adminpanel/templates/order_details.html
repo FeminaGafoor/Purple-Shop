@@ -16,12 +16,32 @@
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
           
             <div class="d-flex flex-column justify-content-center">
-              <h5 class="mb-1 mt-3">Order #32543 <span class="badge bg-label-success me-2 ms-2">Paid</span> <span class="badge bg-label-info">Ready to Pickup</span></h5>
-              <p class="text-body">Aug 17, <span id="orderYear"></span>, 5:48 (ET)</p>
+              <h5 class="mb-1 mt-3">OrderId {{order_details.id}}
+              <span class="badge bg-label-success me-2 ms-2"></span>
+              <div>
+                
+              </div>
+                <span class="badge bg-label-info">
+                  {% for status, status_label in order_status %}
+                      {% if order_details.status == status %}
+                          <span class="badge badge-sm badge-dot has-bg 
+                              {% if status == 1 %}bg-success
+                              {% elif status == 2 %}bg-info
+                              {% elif status == 3 %}bg-warning
+                              {% elif status == 4 %}bg-primary
+                              {% elif status == 5 %}bg-secondary
+                              {% elif status == 6 %}bg-danger
+                              {% else %}bg-secondary
+                              {% endif %} d-none d-sm-inline-flex">
+                              {{ status_label }}
+                          </span>
+                      {% endif %}
+                  {% endfor %}
+              </span>
+                </h5>
+              <p class="text-body">{{order_details.created_at}} <span id="orderYear"></span></p>
             </div>
-            <div class="d-flex align-content-center flex-wrap gap-2">
-              <button class="btn btn-label-danger delete-order">Delete Order</button>
-            </div>
+            
           </div>
 
      <div class="row">
@@ -29,120 +49,118 @@
           <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
               <h5 class="card-title m-0">Order details</h5>
-              <h6 class="m-0"><a href=" javascript:void(0)">Edit</a></h6>
+   
             </div>
+            
             <div class="card-datatable table-responsive">
               <table class="datatables-order-details table">
                 <thead>
                   <tr>
-                    {% comment %} <th></th>
-                    <th></th> {% endcomment %}
+                    
+                    <th class="w-50">product image</th>
                     <th class="w-50">products</th>
                     <th class="w-25">price</th>
                     <th class="w-25">qty</th>
+                    <th class="w-25">User Status</th>
                     <th>total</th>
                   </tr>
-                  <td><div class="avatar me-2">
-                    <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle">
-                  </div></td>
-                    <td>{{order_product.product.product_name}}</td>
-                    <td>hai</td>
-                    <td>hai</td>
-                  
                 </thead>
+                <tbody>
+                 <tr>
+                  
+                  {% for product in order_product %}
+                  <td><div class="avatar me-2">
+                    <img src="{{ product.product.images.url }}" alt="Avatar" class="rounded-circle">
+                  </div></td>
+                    <td>{{product.product.product_name}}</td>
+                    <td>{{product.product.price}}</td>
+                    <td>{{product.quantity}}</td>
+                    <td>
+                      <div>
+                        {% comment %} {% if product.status == 'Cancelled' %} {% endcomment %}
+                          <span class="badge badge-sm badge-dot has-bg
+                              {% if product.status == 'New' %}bg-success
+                              {% elif product.status == 'Accepted' %}bg-info
+                              {% elif product.status == 'Cancelled' %}bg-danger
+                              {% else %}bg-secondary
+                              {% endif %} d-none d-sm-inline-flex">
+                              {{product.status}}
+                          </span>
+                        </div>
+                    </td>
+
+                    <td>{{ product.subtotal }}</td>
+                  </tr>
+                {%endfor%}
                 
               </table>
               <div class="d-flex justify-content-end align-items-center m-3 mb-2 p-1">
                 <div class="order-calculations">
                   <div class="d-flex justify-content-between mb-2">
                     <span class="w-px-100">Subtotal:</span>
-                    <span class="text-heading">$6398</span>
+                    <span class="text-heading">${{sub_total}}</span>
                   </div>
                   <div class="d-flex justify-content-between mb-2">
                     <span class="w-px-100">Discount:</span>
-                    <span class="text-heading mb-0">$22</span>
+                    <span class="text-heading mb-0">$-{{coupon_discount}}</span>
                   </div>
                   <div class="d-flex justify-content-between mb-2">
                     <span class="w-px-100">Tax:</span>
-                    <span class="text-heading">$30</span>
+                    <span class="text-heading">${{tax}}</span>
                   </div>
                   <div class="d-flex justify-content-between">
                     <h6 class="w-px-100 mb-0">Total:</h6>
-                    <h6 class="mb-0">$6450</h6>
+                    <h6 class="mb-0">${{grand_total}}</h6>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card mb-4">
+     
+
+
+
+
+
+          {% comment %} <div class="card mb-4">
             <div class="card-header">
-              <h5 class="card-title m-0">Shipping activity</h5>
+              <h5 class="card-title m-0">Order Products</h5>
             </div>
             <div class="card-body">
-              <ul class="timeline pb-0 mb-0">
-                <li class="timeline-item timeline-item-transparent border-primary">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-primary"></span></span>
-                  <div class="timeline-event">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Order was placed (Order ID: #32543)</h6>
-                      <span class="text-muted">Tuesday 11:29 AM</span>
-                    </div>
-                    <p class="mt-2">Your order has been placed successfully</p>
+              {% if product.status == 'Cancelled' %}
+              
+              <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (This item was canceled)</h5>
+              <div class="profile-ud-item">
+                  
+                  <div class="profile-ud wider">
+                      <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning"
+                              style="color: #fff; background-color: #f0ad4e; border-color: #eea236; display: block; margin-top: 5px;">
+                          Approve Refund
+                      </button>
                   </div>
-                </li>
-                <li class="timeline-item timeline-item-transparent border-primary">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-primary"></span></span>
-                  <div class="timeline-event">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Pick-up</h6>
-                      <span class="text-muted">Wednesday 11:29 AM</span>
-                    </div>
-                    <p class="mt-2">Pick-up scheduled with courier</p>
-                  </div>
-                </li>
-                <li class="timeline-item timeline-item-transparent border-primary">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-primary"></span></span>
-                  <div class="timeline-event">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Dispatched</h6>
-                      <span class="text-muted">Thursday 11:29 AM</span>
-                    </div>
-                    <p class="mt-2">Item has been picked up by courier</p>
-                  </div>
-                </li>
-                <li class="timeline-item timeline-item-transparent border-primary">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-primary"></span></span>
-                  <div class="timeline-event">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Package arrived</h6>
-                      <span class="text-muted">Saturday 15:20 AM</span>
-                    </div>
-                    <p class="mt-2">Package arrived at an Amazon facility, NY</p>
-                  </div>
-                </li>
-                <li class="timeline-item timeline-item-transparent border-left-dashed">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-primary"></span></span>
-                  <div class="timeline-event">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Dispatched for delivery</h6>
-                      <span class="text-muted">Today 14:12 PM</span>
-                    </div>
-                    <p class="mt-2">Package has left an Amazon facility, NY</p>
-                  </div>
-                </li>
-                <li class="timeline-item timeline-item-transparent border-transparent pb-0">
-                  <span class="timeline-point-wrapper"><span class="timeline-point timeline-point-secondary"></span></span>
-                  <div class="timeline-event pb-0">
-                    <div class="timeline-header">
-                      <h6 class="mb-0">Delivery</h6>
-                    </div>
-                    <p class="mt-2 mb-0">Package will be delivered by tomorrow</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
+              </div>
+          {% elif product.status == 'Return' %} 
+          <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (Item Returned)</h5>
+
+          <div class="profile-ud-item">
+              
+              <div class="profile-ud wider">
+                  <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning"
+                          style="color: #fff; background-color: #f0ad4e; border-color: #eea236; display: block; margin-top: 5px;">
+                      Approve Refund
+                  </button>
+              </div>
           </div>
+          {% else %}
+              <h5 class="title">Order Products</h5>
+          {% endif %}
+            </div>
+          </div> {% endcomment %}
         </div>
+
+
+
+
         <div class="col-12 col-lg-4">
           <div class="card mb-4">
             <div class="card-header">
@@ -150,25 +168,22 @@
             </div>
             <div class="card-body">
               <div class="d-flex justify-content-start align-items-center mb-4">
-                <div class="avatar me-2">
-                  <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle">
-                </div>
+                {% comment %} <div class="avatar me-2">
+                  <img src={{user_profile_image_url}} alt="Avatar" class="rounded-circle">
+                </div> {% endcomment %}
                 <div class="d-flex flex-column">
                   <a href="app-user-view-account.html" class="text-body text-nowrap">
-                    <h6 class="mb-0">Shamus Tuttle</h6>
+                    <h6 class="mb-0">{{order_details.user}}</h6>
                   </a>
-                  <small class="text-muted">Customer ID: #58909</small></div>
+                  <small class="text-muted"></small></div>
               </div>
               <div class="d-flex justify-content-start align-items-center mb-4">
                 <span class="avatar rounded-circle bg-label-success me-2 d-flex align-items-center justify-content-center"><i class="bx bx-cart-alt bx-sm lh-sm"></i></span>
-                <h6 class="text-body text-nowrap mb-0">12 Orders</h6>
+                <h6 class="text-body text-nowrap mb-0">{{order_product.quantity}} Orders</h6>
               </div>
-              <div class="d-flex justify-content-between">
-                <h6>Contact info</h6>
-                <h6><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editUser">Edit</a></h6>
-              </div>
-              <p class=" mb-1">Email: Shamus889@yahoo.com</p>
-              <p class=" mb-0">Mobile: +1 (609) 972-22-22</p>
+              
+              <p class=" mb-1">{{order_details.email}}</p>
+              <p class=" mb-0">{{order_details.phone}}</p>
             </div>
           </div>
       
@@ -176,38 +191,21 @@
       
             <div class="card-header d-flex justify-content-between">
               <h6 class="card-title m-0">Shipping address</h6>
-              <h6 class="m-0"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addNewAddress">Edit</a></h6>
+
             </div>
             <div class="card-body">
-              <p class="mb-0">45 Roker Terrace <br>Latheronwheel <br>KW5 8NW,London <br>UK</p>
+              <p class="mb-0">{{address.new_name}}<br>{{address.email}} <br>{{address.phone}} <br>{{address.city}}<br>{{address.state}}<br>{{address.country}}</p>
             </div>
-      
-          </div>
-          <div class="card mb-4">
             <div class="card-header d-flex justify-content-between">
-              <h6 class="card-title m-0">Billing address</h6>
-              <h6 class="m-0"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addNewAddress">Edit</a></h6>
+              <h6 class="card-title m-0">Payment Details</h6>
             </div>
-            <div class="card-body">
-              <p class="mb-4">45 Roker Terrace <br>Latheronwheel <br>KW5 8NW,London <br>UK</p>
-              <h6 class="mb-0 pb-2">Mastercard</h6>
-              <p class="mb-0">Card Number: ******4291</p>
+              <div class="card-body">
+              <p class="mb-0">{{payment_method}}
             </div>
-      
           </div>
+       
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -216,4 +214,45 @@
     </div>
     <!-- / Content -->
     
+
+
+
+    <script>
+      function confirmRefund(productId) {
+          // Display a confirmation dialog
+          var isConfirmed = confirm("Are you sure you want to approve the refund for this product?");
+    
+          // If the user confirms, you can perform further actions
+          if (isConfirmed) {
+              // You may want to perform an AJAX request to your server to handle the refund approval
+              // Example using Fetch API:
+              fetch('/path/to/refund/endpoint/' + productId, {
+                  method: 'POST',  // Adjust the HTTP method as needed
+                  headers: {
+                      'Content-Type': 'application/json',
+                      // Add any additional headers if required
+                  },
+                  // You can include a request body if needed
+                  // body: JSON.stringify({}),
+              })
+              .then(response => {
+                  // Handle the response from the server
+                  if (response.ok) {
+                      alert("Refund approved successfully!");
+                      // You may want to update the UI or perform additional actions
+                  } else {
+                      alert("Failed to approve refund. Please try again.");
+                      // Handle the failure scenario
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  alert("An error occurred. Please try again later.");
+                  // Handle the error scenario
+              });
+          }
+      }
+    </script>
 {% endblock %}  
+
+
