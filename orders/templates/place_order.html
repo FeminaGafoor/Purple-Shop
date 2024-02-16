@@ -33,7 +33,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-        <div class="card m-l-25 m-r--38 m-lr-0-xl">
+        <div class="card m-l-25 m-r--38 m-lr-0-xl" style="font-family: Poppins-Medium">
           <div class="card-body">
             <h4 class="card-title">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-credit-card-2-front-fill" viewBox="0 0 16 16">
@@ -134,7 +134,10 @@
                       <span class="align-middle">Pay with your Wallet Amount</span>
                     </p>
                     <br />
-                    <a href="{% url 'order_app:cash_on_delivery' order.order_number %}" class="flex-c-m stext-101 cl0 size-112 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Wallet Payment</a>
+                    {% comment %} <a href="" class="flex-c-m stext-101 cl0 size-112 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;">Wallet Payment</a> {% endcomment %}
+                    <button id="wallet-payment-btn" type="button" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 p-lr-15 trans-04 pointer" style="color: white;     margin-left: 0px;
+                    height: 42px;">Wallet Payment</button>
+
                   </div>
                 </div>
               </div>
@@ -393,7 +396,58 @@
 </script>
 
 
+<script>
+  $(document).ready(function () {
+      // Handle Wallet Payment button click
+      $("#wallet-payment-btn").on("click", function () {
+          // Perform AJAX request for wallet payment
+          $.ajax({
+              type: "POST",
+              url: "{% url 'order_app:wallet_payment' order.order_number %}",
+              dataType: "json",
+              headers: { "X-CSRFToken": getCookie("csrftoken") },
+              success: function (response) {
+                  console.log("successResponse:", response);
+                  
+                  if ('success' in response) {
+                      console.log("Success:", response.success);
+                      // Display a success message to the user
+                      Swal.fire({
+                          icon: "success",
+                          title: "Success",
+                          text: response.message,
+                      });
+                      window.location.href = "{% url 'order_app:success'  %}";
+                      // Update the relevant parts of the page with the response
+                      // Add logic to update the UI based on the wallet payment response
+                      // (e.g., show a success message, update order status, etc.)
+                  }
+                  
+                  if ('error' in response) {
+                      console.log("Error:", response.error);
+                      // Display an error message to the user
+                      Swal.fire({
+                          icon: "error",
+                          title: "Error",
+                          text: response.error,
+                      });
+                  }
+  
 
+              },
+              error: function (xhr, status, error) {
+                  console.log("AJAX Error:", status, error);
+                  // Provide a generic error message to the user
+                  Swal.fire({
+                      icon: "error",
+                      title: "AJAX Error",
+                      text: 'An error occurred while processing your request. Please try again.',
+                  });
+              }
+          });
+      });
+  });
+</script>
 
  
 {% endblock %}

@@ -51,14 +51,37 @@
                               </span>
                           </td>
                           <td>
-                            {% if product.status == 'Cancelled' %}
+                            {% comment %} {% if product.status == 'Cancelled' %}
                             <form method="POST" action="{% url 'admin_panel:refund' product.id %}">
                               {% csrf_token %}
                               <button  class="btn btn-warning btn-sm">
                                 APPROVE REFUND
                               </button>
                             </form>
+                            {% endif %} {% endcomment %}
+                            {% if product.status == 'Cancelled' %}
+                              <form id="refundForm" method="POST" action="{% url 'admin_panel:refund' product.id %}">
+                                {% csrf_token %}
+                                <button id="refundButton" class="btn btn-warning btn-sm" onclick="approveRefund()">
+                                  APPROVE REFUND
+                                </button>
+                                <input type="hidden" id="refundStatus" name="refund_status" value="{{ product.status }}">
+                              </form>
                             {% endif %}
+
+                            <script>
+                              function approveRefund() {
+                                // Update the button text to "Refunded"
+                                document.getElementById('refundButton').innerText = 'REFUNDED';
+                            
+                                // Update the hidden input value to "Refunded"
+                                document.getElementById('refundStatus').value = 'Refunded';
+                            
+                                // Submit the form
+                                document.getElementById('refundForm').submit();
+                              }
+                            </script>
+
                           </td>
                           <td>{{product.order.email }}</td>
                           <td>{{product.product.product_name }}</td>

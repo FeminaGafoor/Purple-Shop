@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Address, User_Profile
+from .models import  Address, PaymentWallet, User_Profile
 
 
 
@@ -11,3 +11,4 @@ class User_ProfileAdmin(admin.ModelAdmin):
 admin.site.register(User_Profile,User_ProfileAdmin)
 
 admin.site.register(Address)
+admin.site.register(PaymentWallet)

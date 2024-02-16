@@ -11,6 +11,7 @@ urlpatterns = [
     path('apply_coupon/',views.apply_coupon,name='apply_coupon'),
     path('payments/',views.payments,name='payments'),
     path('order_complete/',views.order_complete,name='order_complete'),
+    path('wallet_payment/<int:number>',views.wallet_payment,name='wallet_payment'),
     path('success/',views.success,name='success'),
     
     

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-# import razorpay
+from decimal import Decimal
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from outgoing.models import CartItem
 from products.models import Product, ProductVariant
-from accounts.models import User_Profile
+from accounts.models import PaymentWallet, User_Profile
 from django.template.loader import render_to_string
 from django.utils import timezone
 from coupon.models import Coupon
@@ -388,6 +388,89 @@ def order_complete(request):
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return HttpResponseRedirect("/")
 
+
+def wallet_payment(request, number):
+    user_wallet = User_Profile.objects.get(user=request.user)
+    orders = Order.objects.filter(user=request.user, is_ordered=False, order_number=number).last()
+
+    if orders and user_wallet.wallet >= orders.order_total:
+        coupon_discount = 0 
+
+    #     # Check if the order has a coupon applied
+        if orders.coupon:
+            coupon_discount = orders.coupon.discount_price
+
+        payment = Payment(
+            user=request.user,
+            payment_id=number,
+            payment_method="Wallet",
+            amount_paid=orders.order_total - coupon_discount,
+            status="Completed",
+        )
+        payment.save()
+
+        orders.payment = payment
+        orders.is_ordered = True
+        orders.save()
+
+        cart_items = CartItem.objects.filter(user=request.user)
+        for item in cart_items:
+            order_product = OrderProduct(
+                order=orders,
+                payment=payment,
+                user=request.user,
+                product=item.product,
+                quantity=item.quantity,
+                # variant=item.variant,
+                price=item.product.price,
+                grand_total = orders.order_total - coupon_discount,
+                ordered=True,
+            )
+            order_product.save()
+
+    #         variant = Variants.objects.get(id=item.variant.id)
+    #         variant.quantity -= item.quantity
+    #         variant.save()
+
+        order_total_decimal = Decimal(str(orders.order_total))    
+        user_wallet.wallet -= order_total_decimal
+        user_wallet.save()
+
+        wallet_history = PaymentWallet(
+            user=request.user,
+            wallet=orders.order_total,
+            paymenttype="Debit",
+        )
+        wallet_history.save()
+
+        cart_items.delete()
+
+    #     # Send order confirmation email
+        mail_subject = "Thank you for your order"
+        message = render_to_string(
+            "order_recieved_email.html", {"user": request.user, "order": orders}
+        )
+        to_email = request.user.email
+        send_mail = EmailMessage(mail_subject, message, to=[to_email])
+        send_mail.send()
+
+        order_products = OrderProduct.objects.filter(order=orders, user=request.user)
+        context = {
+            "order_products": order_products,
+        }
+        success_message = "your payment was success"
+        return JsonResponse({"success": success_message, "message": success_message})
+
+       
+  
+    else:
+        error_message = "Your wallet balance is insufficient for this transaction."
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({"error": error_message, "message": error_message})
+        else:
+            messages.error(request, error_message)
+            return render(request, "payment.html", {"order": orders})
 
 
 

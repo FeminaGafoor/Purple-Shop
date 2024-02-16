@@ -680,6 +680,7 @@ def refund(request,id):
     else:
         order_product.status = 7
         
+        
     if order_product.order.coupon:
         print(order_product.order.order_total,"***************************")
         total = order_product.order.order_total - order_product.order.coupon.discount_price
