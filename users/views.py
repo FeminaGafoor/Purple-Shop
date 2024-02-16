@@ -1,9 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib import messages
 from outgoing.models import CartItem
-from accounts.models import User_Profile
+from accounts.models import PaymentWallet, User_Profile
 from orders.models import Order, OrderProduct
 
 # Create your views here.
@@ -140,30 +141,6 @@ class CancelOrder(View):
 
             return redirect(url)
 
-# class CancelOrder(View):
-#     print("from cancel order|||||||||||||")
-#     template_name = "order_track.html" 
-
-#     def post(self, request, id):
-        
-#         if request.method == 'POST':
-#             reason = request.POST.get('cancel_reason')
-            
-#             if not reason:
-                
-#                 messages.error(request,"Cancel reason is required.")
-#                 return render(request, self.template_name)
-#             else:
-                
-#                 order_detail = get_object_or_404(OrderProduct, id=id)
-                
-#                 print(order_detail.id,"order_detail.id")
-#                 order_detail.user_note = reason
-#                 order_detail.status = "Cancelled"
-#                 print(order_detail.status,"order_detail.status")
-#                 order_detail.save()
-                
-#                 return render(request, self.template_name)
     
 
     
@@ -223,3 +200,24 @@ class Invoice(View):
 #                 orders.status = "Return"
 #                 orders.save()
 #                 return HttpResponseRedirect(url)
+
+
+
+def wallet(request):
+    user = request.user
+    if user.is_authenticated:
+        user_profile = get_object_or_404(User_Profile, user=request.user)
+        # orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
+        user_profile_image_url = user_profile.image.url if user_profile.image else None
+        
+        wallet_history = PaymentWallet.objects.filter(user=user).order_by('-created_at')
+        print(wallet_history,"wallet_history|||||||||||||||||||||||||||||")
+        context={
+            'user_profile': user_profile,
+            'user_profile_image_url': user_profile_image_url,
+            'wallet_history':wallet_history,
+        }
+        return render(request, "wallet.html",context)
+    else:
+            messages.error(request, "Please login first")
+            return HttpResponseRedirect("/user_login/")

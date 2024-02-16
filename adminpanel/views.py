@@ -1,4 +1,6 @@
 
+from decimal import Decimal
+
 from django.db.models import Q 
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -9,9 +11,11 @@ from django.views import View
 from products.models import Category, Product, ProductVariant
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
-from accounts.models import  Address, User_Profile
+from accounts.models import  Address, PaymentWallet, User_Profile
 from orders.models import Order, OrderProduct
 from coupon.models import Coupon
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -547,7 +551,11 @@ def delete_coupon(request, id):
     else:
         return redirect('admin_panel:admin_login') 
     
+    
+    
 # <!---------------COUPON ENDS HERE------------>    
+
+
 
 def order_list(request):
     
@@ -562,23 +570,22 @@ def order_list(request):
         print(selected_order,"selected_order||||||")
         selected_order.status = selected_status
         selected_order.save()
-        return HttpResponseRedirect(reverse('admin_panel:order_list'))
-    
+        # return HttpResponseRedirect(reverse('admin_panel:order_list'))
+        
     order_product = OrderProduct.objects.all().order_by('created_at')
-    print(order_product,"order_product|||||||")
+    print(order_product,"order_product||||||||||||||||||||||||||||||||||||||||||||||||||||")
     
     order_status = Order.ORDER_STATUS
     
 
     context = {
-        'order_product': order_product,
+        'order_product': order_product, 
         'order_status': order_status,
-        
     }
 
     return render(request, 'order_list.html', context)
-    
-    
+
+
     
 
 def order_details(request, id):
@@ -620,15 +627,34 @@ def order_details(request, id):
         
     }
     return render(request,'order_details.html',context)
+
+
+
+
+
+
+def cancel_product(request, order_id, product_id):
+    if order_id and product_id:
+        order = get_object_or_404(Order, id=order_id)
+        print(order,"order from cancel_product|||||||||||||||||||||||||||||")
+        product = get_object_or_404(OrderProduct, id=product_id, order=order)
+        print(product,"product from cancel_product|||||||||||||||||||||||||||||||||||")
+      
+        product.status = 'Cancelled'
+        product.save()
+
+       
+        return redirect('admin_panel:cancel_list')
+    
     
 
+def cancel_list(request):
+    canceled_products = OrderProduct.objects.filter(status='Cancelled')
+    print(canceled_products,"canceled_products")
 
-
-    
-def cancel_order(request):
-        
     orders = OrderProduct.objects.all().order_by('created_at')
     context={
+        'canceled_products': canceled_products,
         'orders':orders,
         'order_status':Order.ORDER_STATUS,
 
@@ -636,3 +662,53 @@ def cancel_order(request):
 
     return render(request,'cancel_list.html',context)
 
+
+
+
+def refund(request,id):
+    
+    
+    url = request.META.get('HTTP_REFERER')
+    order_product = OrderProduct.objects.get(id=id)
+   
+    
+    print(order_product,"from refund|||||||||||||||||||||||||||||")
+    user_wallet = User_Profile.objects.get(user=order_product.order.user)
+    print(user_wallet,"user_wallet|||||||||||||||||")
+    if order_product.status == 'Cancelled':
+        order_product.status = 6
+    else:
+        order_product.status = 7
+        
+    if order_product.order.coupon:
+        print(order_product.order.order_total,"***************************")
+        total = order_product.order.order_total - order_product.order.coupon.discount_price
+        print(total,"total|||||||||")
+        user_wallet.wallet += Decimal(str(total))
+    else:
+        user_wallet.wallet += Decimal(str(order_product.order.order_total))
+    
+    
+    wallet_details = PaymentWallet(user=order_product.order.user)
+    print(wallet_details,"wallet_details||||||||||||||||||||")
+    wallet_details.payment_type = "Credit"
+    wallet_details.wallet_balance = Decimal(str(order_product.price))
+    print(wallet_details.wallet_balance ,"wallet_details.wallet_balance ************************")
+    mail_subject = "Your refund has been successfully approved."
+    message = render_to_string(
+            "refund_recieved_email.html", {"user": order_product.order.user, "wallet": wallet_details.wallet_balance}
+        )
+    to_email = order_product.order.user.email
+    send_mail = EmailMessage(mail_subject, message, to=[to_email])
+    send_mail.send()
+    print("success |||||||||||||||||||||||||||||||||||||||||||||")
+    wallet_details.save()
+    user_wallet.save()
+    order_product.order.save()
+    return HttpResponseRedirect(url)
+        
+        
+        
+        
+        
+  

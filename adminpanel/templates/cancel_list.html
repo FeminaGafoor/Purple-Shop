@@ -23,93 +23,53 @@
                           <th>Order Id</th>
                           <th>User Name</th>
                           <th>Date</th>
-                          <th>Status</th>
                           <th>User Status</th>
+                          <th> Status</th>
                           <th>Customer Email</th>
                           <th>Orderd Product</th>
                           <th>Payment Method</th>
                           <th>Total</th>
-                          <th>Order Status</th>
+                          
                         </tr>
                       </thead>
                       <tbody class="table-border-bottom-0">
-                        {% for order in order_product %}
+                        {% comment %} {% for product in canceled_products %} {% endcomment %}
+                       
                         {% comment %} {% if order.order.status != "Return" %} {% endcomment %}
-                        {% if order.order.status != 6 and order.order.status != 7 %}
-                        
+                        {% comment %} {% if order.order.status == 6 %} {% endcomment %}
+                
+                          {% for product in canceled_products %}
+                  
                         <tr>
-                          <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
-                          <td>{{ order.user.user_name}}</td>
-                          <td>{{order.created_at}}</td>
-                          <td>
-                            <span class="badge badge-sm badge-dot has-bg 
-                            {% if order.order.status == 1 %}bg-success
-                            {% elif order.order.status == 2 %}bg-info
-                            {% elif order.order.status == 3 %}bg-warning
-                            {% elif order.order.status == 4 %}bg-primary
-                            {% elif order.order.status == 5 %}bg-secondary
-                            {% elif order.order.status == 6 %}bg-danger
-                            {% else %}bg-secondary
-                            {% endif %} d-none d-sm-inline-flex">
-                            {{ order.order.get_status_display }}
-                            </span>
+                            <td>{{ product.order.id }}</td>
+                            <td>{{ product.user}}</td>
+                            <td>{{ product.order.created_at }}</td>
+                          
+                            <td>
+                              <span class="badge badge-sm badge-dot has-bg bg-danger d-none d-sm-inline-flex">
+                                  {{ product.status }}
+                              </span>
                           </td>
                           <td>
-                            <span class="badge badge-sm badge-dot has-bg
-                                {% if order.status == 'New' %}bg-success
-                                {% elif order.status == 'Accepted' %}bg-info
-                                {% elif order.status == 'Cancelled' %}bg-danger
-                                {% else %}bg-secondary
-                                {% endif %} d-none d-sm-inline-flex">
-                                {{ order.status }}
-                            </span>
-                        </td>
-                          <td>{{order.order.email }}</td>
-                          <td>{{order.product.product_name }}</td>
-                          <td>{{order.order.payment.payment_method }}</td>
-                          <td>{{order.payment.amount_paid}}</td>
+                            {% if product.status == 'Cancelled' %}
+                            <form method="POST" action="{% url 'admin_panel:refund' product.id %}">
+                              {% csrf_token %}
+                              <button  class="btn btn-warning btn-sm">
+                                APPROVE REFUND
+                              </button>
+                            </form>
+                            {% endif %}
+                          </td>
+                          <td>{{product.order.email }}</td>
+                          <td>{{product.product.product_name }}</td>
+                          <td>{{product.order.payment.payment_method }}</td>
+                          <td>{{product.subtotal}}</td>
+                         
                          
                           
-                          <td><span class="badge bg-label-success me-1"></span>
-                            <div class="dropdown">
-                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                              </button>
-                                <a href="{% url 'admin_panel:order_details' order.id %}">  
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                              </svg><i class="bi bi-eye-fill"></i>
-                            </a>  
-                             
-      
-                              <div class="dropdown-menu dropdown-menu-end" style="min-width: 200px; padding: 10px;">
-                                        
-                                <form action="{% url 'admin_panel:order_list' %}" method="POST" >
-                                    {% csrf_token %}
-                        
-                                    <div style="margin-bottom: 10px;">
-                                        <select class="form-control" id="variant" name="orderStatus" style="width: 100%;">
-                                            <option value="" disabled selected>Order Status</option>
-                                            {% for order_choice in order_status %}
-                                                <option value="{{ order_choice.0 }}">{{ order_choice.1 }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <input type="hidden" name="orderId" value="{{ order.order.id }}">
-                                    <input type="hidden" name="variantId" value="{{ order.product_variant.id }}">
-                        
-                                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
-                                </form>
-                              
-                            </div>
-                            </div>
-                          </td>
                         </tr>
-                      
-                      {% endif %}
-                      {% endfor %}
+                      {% endfor %} 
+                      {% comment %} {%endif%} {% endcomment %}
                       
                     </tbody>
                     </table>

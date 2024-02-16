@@ -57,6 +57,9 @@ urlpatterns = [
     
     path('order_list/',views.order_list,name='order_list'),
     path('order_details/<int:id>/', views.order_details, name="order_details"),
-    path('cancel_order/',views.cancel_order,name='cancel_order'),
+    path('cancel_product/<int:order_id>/<int:product_id>/',views.cancel_product,name='cancel_product'),
+    path('cancel_list/',views.cancel_list,name='cancel_list'),
+    path('refund/<int:id>/',views.refund,name='refund'),
+    
  
 ]

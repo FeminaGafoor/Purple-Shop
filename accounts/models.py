@@ -16,6 +16,7 @@ class User_Profile(models.Model):
 
     image = models.ImageField( upload_to='images/',blank=True,null=True)
     is_active = models.BooleanField(default=True) 
+    wallet = models.DecimalField(default=0, decimal_places=2, max_digits=10,null=True,blank=True)
 
     def __str__(self):
         print(f"User instance: {self.user}")
@@ -41,3 +42,14 @@ class Address(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+    
+    
+class PaymentWallet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_type = models.CharField(max_length=150, blank=True, null=True)
+    wallet_balance = models.DecimalField(default=0, decimal_places=2, max_digits=10, null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"PaymentWallet for User: {self.user}, Payment Type: {self.payment_type}, Created on: {self.created_at}"

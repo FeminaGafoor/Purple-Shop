@@ -76,17 +76,46 @@
                     <td>{{product.product.price}}</td>
                     <td>{{product.quantity}}</td>
                     <td>
-                      <div>
-                        {% comment %} {% if product.status == 'Cancelled' %} {% endcomment %}
-                          <span class="badge badge-sm badge-dot has-bg
-                              {% if product.status == 'New' %}bg-success
-                              {% elif product.status == 'Accepted' %}bg-info
-                              {% elif product.status == 'Cancelled' %}bg-danger
-                              {% else %}bg-secondary
-                              {% endif %} d-none d-sm-inline-flex">
-                              {{product.status}}
+                      {% comment %} <div> {% endcomment %}
+                       
+                        <span class="badge badge-sm badge-dot has-bg
+                            {% if product.status == 'New' %}bg-success
+                            {% elif product.status == 'Accepted' %}bg-info
+                            {% elif product.status == 'Cancelled' %}bg-danger
+                            {% else %}bg-secondary
+                            {% endif %} d-none d-sm-inline-flex">
+                            {{ product.status }}
+                        </span>
+                        
+                        {% if product.status == 'Cancelled' %}
+                            <p class="badge" style="color: #FF0000;">(This item was canceled)</p>
+                            {% comment %} {% for product in order_product %} {% endcomment %}
+                            {% comment %} {{product.product.product_name}} {% endcomment %}
+                                {% comment %} <div class="profile-ud wider"> {% endcomment %}
+                                  <form method="post" action="{% url 'admin_panel:cancel_product' order_details.id product.id %}">
+                                    {% csrf_token %}
+                                    <button  class="btn btn-warning btn-sm">
+                                      APPROVE CANCEL
+                                    </button>
+                                  </form>
+                                    
+                                {% comment %} </div> {% endcomment %}
+                          {% comment %} {% endfor %} {% endcomment %}
                           </span>
-                        </div>
+                        {% elif product.status == 'Return' %} 
+                            <p class="badge" style="color: #FF0000;">(Item Returned)</h5>
+                            {% comment %} <div class="profile-ud-item"> {% endcomment %}
+                               {% comment %} <div class="profile-ud wider" style="font-size: 0.8125em; color: #fff;"> {% endcomment %}
+                                    <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning btn-sm" >
+                                      APPROVE REFUND
+                                    </button>
+                                {% comment %} </div> {% endcomment %}
+                               {% comment %} </div>  {% endcomment %}
+                        {% else %}
+                            <span class="badge badge-sm badge-dot has-bg">{{product.status}}</span>
+                        {% endif %}
+                        {% comment %} </span> {% endcomment %}
+                        {% comment %} </div> {% endcomment %}
                     </td>
 
                     <td>{{ product.subtotal }}</td>
@@ -122,15 +151,15 @@
 
 
 
-          {% comment %} <div class="card mb-4">
-            <div class="card-header">
-              <h5 class="card-title m-0">Order Products</h5>
-            </div>
-            <div class="card-body">
+           <div class="card mb-4">
+             
+            {% comment %} {% for product in order_product %} {% endcomment %}
+            {% comment %} <div class="card-body"> {% endcomment %}
+              {% comment %} {{product.product.product_name}}
               {% if product.status == 'Cancelled' %}
               
-              <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (This item was canceled)</h5>
-              <div class="profile-ud-item">
+              <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (This item was canceled)</h5> {% endcomment %}
+              {% comment %} <div class="profile-ud-item">
                   
                   <div class="profile-ud wider">
                       <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning"
@@ -138,25 +167,27 @@
                           Approve Refund
                       </button>
                   </div>
-              </div>
-          {% elif product.status == 'Return' %} 
-          <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (Item Returned)</h5>
+              </div> {% endcomment %}
+              {% comment %} {% elif product.status == 'Return' %} 
+              <h5 class="title" style="color: #d9534f; font-size: 20px; margin-bottom: 10px;">Order Products (Item Returned)</h5> {% endcomment %}
 
-          <div class="profile-ud-item">
-              
-              <div class="profile-ud wider">
-                  <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning"
-                          style="color: #fff; background-color: #f0ad4e; border-color: #eea236; display: block; margin-top: 5px;">
-                      Approve Refund
-                  </button>
-              </div>
-          </div>
-          {% else %}
-              <h5 class="title">Order Products</h5>
-          {% endif %}
+              {% comment %} <div class="profile-ud-item">
+                  
+                  <div class="profile-ud wider">
+                      <button onclick="confirmRefund({{ product.id }})" class="btn btn-warning"
+                              style="color: #fff; background-color: #f0ad4e; border-color: #eea236; display: block; margin-top: 5px;">
+                          Approve Refund
+                      </button>
+                  </div>
+              </div> {% endcomment %}
+            {% comment %} {% else %}
+                  <h5 class="title">Order Products</h5>
+              {% endif %} {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+                {% comment %} {% endfor%} {% endcomment %}
+              </div> 
             </div>
-          </div> {% endcomment %}
-        </div>
+           
 
 
 
