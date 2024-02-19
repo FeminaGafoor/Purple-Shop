@@ -65,11 +65,11 @@
                                 <button id="refundButton" class="btn btn-warning btn-sm" onclick="approveRefund()">
                                   APPROVE REFUND
                                 </button>
-                                <input type="hidden" id="refundStatus" name="refund_status" value="{{ product.status }}">
+                                {% comment %} <input type="hidden" id="refundStatus" name="refund_status" value="{{ product.status }}"> {% endcomment %}
                               </form>
                             {% endif %}
 
-                            <script>
+                            {% comment %} <script>
                               function approveRefund() {
                                 // Update the button text to "Refunded"
                                 document.getElementById('refundButton').innerText = 'REFUNDED';
@@ -80,7 +80,7 @@
                                 // Submit the form
                                 document.getElementById('refundForm').submit();
                               }
-                            </script>
+                            </script> {% endcomment %}
 
                           </td>
                           <td>{{product.order.email }}</td>

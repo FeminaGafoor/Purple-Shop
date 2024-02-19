@@ -65,15 +65,15 @@
                           <td>
                             {% for product in order.order.orderproduct_set.all %}
                                 <div>
-                                    {{ product.product.product_name }} - 
-                                    <span class="badge badge-sm badge-dot has-bg
+                                    {{ product.product.product_name }}
+                                    {% comment %} <span class="badge badge-sm badge-dot has-bg
                                         {% if product.status == 'New' %}bg-success
                                         {% elif product.status == 'Accepted' %}bg-info
                                         {% elif product.status == 'Cancelled' %}bg-danger
                                         {% else %}bg-secondary
                                         {% endif %} d-none d-sm-inline-flex">
-                                        {{ product.status }}
-                                    </span>
+                                        {% comment %} {{ product.status }} {% endcomment %}
+                                    {% comment %} </span> {% endcomment %}
                                 </div>
                             {% endfor %}
                         </td>

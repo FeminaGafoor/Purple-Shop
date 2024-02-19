@@ -1,6 +1,6 @@
 
 from decimal import Decimal
-
+from django.contrib.auth.models import User
 from django.db.models import Q 
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -12,14 +12,122 @@ from products.models import Category, Product, ProductVariant
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
 from accounts.models import  Address, PaymentWallet, User_Profile
-from orders.models import Order, OrderProduct
+from orders.models import Order, OrderProduct, Payment
 from coupon.models import Coupon
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.db.models import Count, Sum ,FloatField
+from django.db.models import Sum, DecimalField, F
+from django.db.models.functions import Cast
 
 # Create your views here.
 
 
+
+
+   
+# Admin Dashboard---------------------------------
+
+@login_required
+def admin_dashboard(request):
+    
+    if request.user.is_authenticated and request.user.is_superuser:
+        super_user = User.objects.filter(is_superuser=True)
+        if super_user.exists():
+            super_user = super_user[0]
+        
+        product_counts = Product.objects.count()
+        user_counts = User.objects.count()
+        orders_count = Order.objects.filter(status=5).count()
+        print(orders_count,"orders_count||||||||||||")
+        
+        
+        payment_counts = (
+            Payment.objects.values("payment_method")
+            .annotate(count=Count("payment_method"))
+            .order_by("-count")
+        )
+        total_payment_count = payment_counts.aggregate(Sum('count'))['count__sum']
+        
+        total_transaction_count = Payment.objects.count()
+        
+        
+        all_payments = Payment.objects.all()
+        total_revenue = sum(Decimal(payment.amount_paid) for payment in all_payments)
+        total_sales = Decimal('10000.00')
+        revenue_percentage = (total_revenue / total_sales) * 100
+
+        print(f'Total Revenue: {total_revenue}')
+        print(f'Revenue Percentage: {revenue_percentage:.2f}%')
+        print(revenue_percentage)
+        
+        
+        category_wise_order_count = OrderProduct.objects.values('product__category__category_name').annotate(order_count=Count('id'))
+        print(category_wise_order_count,"category_wise_order_count||||||||||")
+        
+        
+        
+        total_income = Order.objects.aggregate(total_income=Sum('order_total'))['total_income'] or 0
+        print(total_income)
+        total_sales = Order.objects.aggregate(total_sales=Sum('order_total'))['total_sales'] or 0
+        print(total_sales)
+        # Calculate total income percentage
+        income_percentage = (total_income / total_sales) * 100 if total_sales > 0 else 0
+        print(income_percentage)
+
+        
+        total_refund_amount = PaymentWallet.objects.aggregate(total_refund=Sum('wallet_balance'))['total_refund']
+        total_refund_amount = total_refund_amount or Decimal('0')
+        print(total_refund_amount)
+        
+        
+        paypal_total_amount = Payment.objects.filter(
+        payment_method='PayPal'
+        ).annotate(
+            amount_paid_float=Cast('amount_paid', FloatField())
+        ).aggregate(
+            total_amount=Sum('amount_paid_float')
+        )['total_amount'] or 0
+
+        print(paypal_total_amount)
+                
+                
+        cod_total_amount = Payment.objects.filter(
+        payment_method='COD'
+        ).annotate(
+            amount_paid_float=Cast('amount_paid', FloatField())
+        ).aggregate(
+            total_amount=Sum('amount_paid_float')
+        )['total_amount'] or 0
+        cod_total_amount_rounded = round(cod_total_amount, 2)
+        print(cod_total_amount_rounded)
+            
+        
+        context={
+            "super_user":super_user,
+            "product_counts":product_counts,
+            "user_counts":user_counts,
+            "orders_count":orders_count,
+            "total_payment_count":total_payment_count,
+            "total_transaction_count":total_transaction_count,
+            "revenue_percentage":revenue_percentage,
+            "category_wise_order_count":category_wise_order_count,
+            "total_income":total_income,
+            "income_percentage":income_percentage,
+            "total_refund_amount":total_refund_amount,
+            "paypal_total_amount": paypal_total_amount,
+            "cod_total_amount_rounded": cod_total_amount_rounded,
+        }
+        
+        return render(request, 'admin_index.html',context)
+    else:
+        return HttpResponseRedirect('/admin_login/')
+    
+    
+    
+    
+    
+    
 # Admin authentiction----------------------------------
 
 def admin_login(request):
@@ -43,15 +151,7 @@ def admin_login(request):
 
 
 
-# Admin Dashboard---------------------------------
 
-@login_required
-def admin_dashboard(request):
-      
-    if not request.user.is_superuser:
-        return render(request,'admin_login.html')
-    
-    return render(request, "admin_index.html")
 
 
 # Admin logout-------------------------------------
@@ -702,14 +802,129 @@ def refund(request,id):
     to_email = order_product.order.user.email
     send_mail = EmailMessage(mail_subject, message, to=[to_email])
     send_mail.send()
+    
     print("success |||||||||||||||||||||||||||||||||||||||||||||")
     wallet_details.save()
     user_wallet.save()
     order_product.order.save()
+    
     return HttpResponseRedirect(url)
         
         
         
         
+def sales_report(request):
+    order_instance = Order()
+    print(order_instance.ORDER_STATUS,"order_instance||||||||||||||||")
+
+    context = {
+        'order_status_choices': order_instance.ORDER_STATUS
+    }
+
+    return render(request, 'sales_report.html', context)      
+
+
+
+def generate_report(request):
+    try:
+        order_instance = Order()
+        start_date = request.GET.get("start_date")
+        print(start_date)
+        end_date = request.GET.get("end_date")
+        status = request.GET.get("status")
+        print(status)
+
+        request.session["start_date"] = start_date
+        request.session["end_date"] = end_date
+        request.session["status"] = status
+
+        filtered_orders = Order.objects.filter(
+            created_at__range=[start_date, end_date],
+            status=status if status else None,
+        ).order_by("created_at")
+        print(filtered_orders,"filtered_orders||||||||||")
+
+        context = {
+            "sales": filtered_orders,
+            'order_status_choices':order_instance.ORDER_STATUS
+        }
+
+        return render(request, "sales_report.html", context)
+    except Exception as e:
+        print(e)
+        return render(request, "404.html")
+    
+
+# def sales_report_pdf(request):
+#     try:
+#         start_date = request.session["start_date"]
+#         end_date = request.session["end_date"]
+#         status = request.session["status"]
         
-  
+
+
+#         filtered_orders = Order.objects.filter(
+#             created_at__range=[start_date, end_date],
+#             status=status if status else None,
+#         ).order_by("created_at")
+
+#         data = [
+#             [
+#                 "ID",
+#                 "User",
+#                 "Order Number",
+#                 "Order Date",
+#                 "Status",
+#                 "Tax",
+#                 "Shipping",
+#                 "Grand Total",
+#             ]
+#         ]
+        
+#         for sale in filtered_orders:
+#             data.append(
+#                 [
+#                     sale.id,
+#                     sale.user.username,
+#                     sale.order_number,
+#                     sale.created_at,
+#                     sale.get_status_display(),
+#                     sale.tax,
+#                     40,
+#                     sale.order_total,
+#                 ]
+#             )
+
+#         # Create PDF
+#         response = HttpResponse(content_type="application/pdf")
+#         response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
+
+#         # doc = SimpleDocTemplate(response, pagesize=letter)
+#         # table = Table(data)
+
+#         # # Apply table styles
+#         # style = TableStyle(
+#         #     [
+#         #         ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+#         #         ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#         #         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+#         #         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#         #         ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+#         #         ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+#         #         ("GRID", (0, 0), (-1, -1), 1, colors.black),
+#         #     ]
+#         # )
+
+#         # table.setStyle(style)
+#         # doc.build([table])
+
+#         request.session.pop("start_date", None)
+#         request.session.pop("end_date", None)
+#         request.session.pop("status", None)
+
+#         return response
+#     except Exception as e:
+#         print(e)
+#         return render(request, "404.html")
+
+

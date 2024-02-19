@@ -31,7 +31,7 @@
               <tr class="table-default">
                 <td><i class="fab fa-sketch fa-lg text-warning me-3"></i> <strong>{{forloop.counter}} </strong></td>
                 <td>{{user.user_name}} </td>
-                <td>{{user.email}} </td>
+                <td>{{user.user.email}} </td>
                 <td>
                   {% if user.is_active %}
                   <ul class="list-styled users-list m-0 avatar-group d-flex rounded-pill alert-success text-align-centre ">
