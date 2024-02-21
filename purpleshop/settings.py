@@ -126,8 +126,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -138,13 +136,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-# STATIC_URL = 'static/'
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static",
-# ]
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -166,22 +157,16 @@ MESSAGE_TAGS = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # Use the appropriate port for your SMTP server
+EMAIL_PORT = 587 
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'femitest.111@gmail.com'
-EMAIL_HOST_PASSWORD = 'wocl hexs mlpo noue'
+EMAIL_HOST_USER = 'purpleshop366@gmail.com'
+EMAIL_HOST_PASSWORD = 'xjzf ckja spxe tldx'
 
-
-
-RAZORPAY_API_KEY = 'rzp_test_LWWhai0NPTkmG5 '
-RAZORPAY_API_SECRET = 'vwsl0W1q0vH1DudQbwHoaviy'
 
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

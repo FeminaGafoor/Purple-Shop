@@ -1,7 +1,5 @@
 import random
-import re
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -11,10 +9,8 @@ from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control
 from coupon.models import Coupon
 from .models import  Address, User_Profile
-from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import check_password
 from accounts.forms import SignUpForm
 
 
@@ -41,8 +37,11 @@ def sign_up(request):
   
             subject = 'OTP Verification Code'
             message = f'Your OTP code for signup is: {otp}'
-            from_email = 'femitest.111@gmail.com'
+            from_email = settings.EMAIL_HOST_USER
             recipient_list = [email]
+            print(from_email,"||||||||")
+            print(recipient_list,"|||||||||||||")
+            
             
             send_mail(subject, message, from_email, recipient_list)
             
@@ -70,7 +69,7 @@ def otp_func(request):
             # OTP is valid; remove it from the session
             del request.session['signup_otp']
 
-            # Save the user
+          
             username=request.session['signup_username']
             user = User.objects.get(username=username)
             user.is_active = True
@@ -115,7 +114,6 @@ def new_otp(request):
 # -------------------------USER LOGIN ---------------------------------
 
 def user_login(request):
-    print("+++++++++++++++++++++")
     
     if request.method == "POST":
         email = request.POST.get('email')
@@ -124,7 +122,7 @@ def user_login(request):
         print(password,"password")
         user = authenticate(request, email=email, password=password)
 
-        print(user,"from login")
+        
         if user is not None:
             print("not none")
             if user.email != email:
@@ -138,13 +136,13 @@ def user_login(request):
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
                     
-                    # product variants by cart id
+                    #----------- product variants by cart id---------
                     product_variants = []
                     for item in cart_item:
                         variants = item.product_variant.all()
                         product_variants.append(list(variants))
                 
-                    #  get cart_items from user to access product_variation   
+                    #  ---------get cart_items from user to access product_variation  --------- 
                     cart_item = CartItem.objects.filter(user=user)
                     ex_var_list=[]
                     id = []
@@ -177,10 +175,10 @@ def user_login(request):
             if user:
                 user_pro, created = User_Profile.objects.get_or_create(user=user)
                 user_pro.email = email
-                # user_pro.user_name
+                user_pro.user_name
                 print(user_pro.email,"___________________________")
-                # coupon = Coupon.objects.first()
-                # user_pro.coupon = coupon
+                coupon = Coupon.objects.first()
+                user_pro.coupon = coupon
                 user_pro.save()
                 
             login(request, user)
