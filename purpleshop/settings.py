@@ -91,7 +91,7 @@ DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'purpleshop',
-        'USER': 'postgres',
+        'USER': 'fem',
         'PASSWORD' : 'tiger',
         'HOST' : 'localhost',
         'PORT' : '5432'
