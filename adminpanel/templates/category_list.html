@@ -39,6 +39,7 @@
                           </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
+                      {% if category%}
                        {% for item in category %}
                           <tr>
                             <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ forloop.counter }}</strong></td>
@@ -67,6 +68,7 @@
                             </td>
                           </tr>
                           {% endfor %}
+                          {% endif %}
                         </tbody>
                       </table>
                     </div>
