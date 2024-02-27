@@ -1,5 +1,8 @@
+from base64 import urlsafe_b64decode
+from email.message import EmailMessage
 import random
 from django.conf import settings
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -12,6 +15,14 @@ from .models import  Address, User_Profile
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from accounts.forms import SignUpForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+
 
 
 # -------------------------SIGN_UP-------------------------
@@ -39,8 +50,7 @@ def sign_up(request):
             message = f'Your OTP code for signup is: {otp}'
             from_email = settings.EMAIL_HOST_USER
             recipient_list = [email]
-            print(from_email,"||||||||")
-            print(recipient_list,"|||||||||||||")
+           
             
             
             send_mail(subject, message, from_email, recipient_list)
@@ -95,7 +105,7 @@ def new_otp(request):
         request.session['signup_otp'] = otp
         subject = 'Resent OTP Verification Code'
         message = f'Your resent OTP code for signup is: {otp}'
-        from_email = 'femitest.111@gmail.com'
+        from_email = 'purpleshop.tech@gmail.com'
         recipient_list = [user.email]
 
         send_mail(subject, message, from_email, recipient_list)
@@ -191,10 +201,12 @@ def user_login(request):
 
     return render(request, 'login.html')
 
+
 # -------------------------USER LOGIN ENDED-------------------------
 
 
 # -------------------------USER LOGOUT -------------------------
+
 
 @cache_control(no_cache=True, no_store=True)
 @login_required(login_url='/user_login/')
@@ -203,11 +215,114 @@ def user_logout(request):
     return redirect('home_app:home')
 
 
+
 # -------------------------USER LOGOUT ENDED-------------------------
 
 
 
+# -------------------------FORGOT PASSWORD-------------------------
+
+
+
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST['email']
+ 
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+     
+
+            current_site = get_current_site(request)
+            mail_subject = "Reset Your Password"
+            message = render_to_string(
+                "reset_password_email.html",
+                {
+                    "user": user,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": default_token_generator.make_token(user),
+                },
+            )
+
+            to_email = email
+            send_mail = EmailMessage(
+                mail_subject,
+                message,
+                to=[to_email],  # 'to' argument should be passed here, not in MIMEPart
+            )
+            send_mail.send()
+
+            messages.success(
+                request, "Password reset email has been sent to your email address"
+            )
+         
+            return redirect('account:user_login')
+        else:
+            messages.error(request, "Account does not exist")
+            return redirect("account:forgot_password")
+
+    return render(request, "forgot_password.html")
+
+
+
+
+
+def reset_password_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_b64decode(uidb64).decode()
+        print(uid,"from reset password validator")
+        user = User._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+  
+        request.session["uid"] = uid
+        messages.success(request, "please reset your password")
+       
+        return redirect("account:reset_password")
+    else:
+       
+        messages.success(request, "this link has been expired!")
+        return redirect("account:user_login")
+    
+    
+    
+    
+    
+def reset_password(request):
+
+    if request.method == "POST":
+  
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
+        if password == confirm_password:
+            uid = request.session.get("uid")
+            
+            if uid is not None:
+                user = User.objects.get(pk=uid)
+                user.set_password(password)
+                user.save() 
+                print("user saved")
+            messages.success(request, "Password Reset Successful")
+            return redirect("account:user_login")
+        else:
+            messages.error(request, "password do not match")
+            return redirect("account:reset_password")
+    return render(request, "reset_password.html")
+
+
+
+
+
+# -------------------------FORGOT PASSWORD ENDED-------------------------
+
+
+
 # -------------------------CREATE USER PROFILE-------------------------
+
 
 
 @login_required(login_url='/user_login/') 
@@ -219,13 +334,6 @@ def profile(request):
         user_profile_image_url = user_pro.image.url if user_pro.image else None
         
         
-        print(user_pro)
-        print(user_pro.user_name,"|||||||||||||||||||||||||||||||||||||||||")
-        print(user_pro.user.first_name)
-        print(user_pro.user.last_name)
-        # Printing for debugging
-        print(user_profile_image_url)
-
         context = {
             
             'user_pro': user_pro,
@@ -245,7 +353,7 @@ def profile(request):
     
 @login_required(login_url='/user_login/')  
 def edit_profile(request):
-    print("|||||||||||||||||from edit")
+    
     if request.method == "POST":
         username = request.POST["user_name"]
         email = request.POST["email"]
@@ -254,7 +362,7 @@ def edit_profile(request):
         phone = request.POST["phone"]
         image = request.FILES.get("image")
         
-        print("|||||||||||||||||from")
+  
 
         # Get or create the User instance based on the username
         user_form, created = User.objects.get_or_create(username=username)
@@ -262,7 +370,7 @@ def edit_profile(request):
         user_form.first_name = firstname
         user_form.last_name = lastname
         user_form.save()
-        print("|||||||||||||||||from|||||||||||||||||||||||")
+        
         # Get or create the UserProfile instance associated with the User
         profile, created = User_Profile.objects.get_or_create(user=user_form)
         profile.phone = phone
@@ -296,7 +404,7 @@ def edit_profile(request):
 
 
  
-# -------------------------ADD ADDRESS-------------------------  
+# ------------------------- ADDRESS-------------------------  
 
 def address(request):
     
@@ -313,7 +421,7 @@ def address(request):
     return render(request, "checkout.html", context)
 
 
-
+# -------------------------ADD ADDRESS------------------------- 
 
 
 def add_address(request):
@@ -357,7 +465,7 @@ def add_address(request):
     return redirect("outgoing_app:checkout")
         
         
-
+# -------------------------EDIT ADDRESS------------------------- 
     
 def edit_address(request):
     print("edit++++++++++++")
@@ -396,9 +504,9 @@ def delete_address(request,id):
 
 
 
-
+# -------------------------CHANGE PASSWORD------------------------- 
   
-@login_required(login_url='/accounts/user_login/')    
+@login_required(login_url='/account/user_login/')    
 def change_password(request):
  
     if request.method == "POST":
@@ -430,3 +538,6 @@ def change_password(request):
     
     return render(request, 'change_password.html')
     
+    
+    
+# -------------------------CHANGE PASSWORD ENDED------------------------- 
