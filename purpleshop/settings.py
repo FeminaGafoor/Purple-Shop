@@ -313,6 +313,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'purpleshop.wsgi.application'
 
+
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
@@ -324,6 +326,8 @@ WSGI_APPLICATION = 'purpleshop.wsgi.application'
 #     }
 # }
 
+
+# database for hosting-----------
 
 DATABASES = {
 
@@ -337,6 +341,7 @@ DATABASES = {
             }
             }
 
+# database for hosting-----------
 
 # Password validation
 
@@ -378,22 +383,23 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
+
+
+
+# static for host-----------
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATIC_ROOT = '/static/'
+
+# static for host-----------
+
+
 
 # STATIC_URL = '/static/'
-#STATICFILES_DIRS = [
+# STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, 'static'),
-#]
+# ]
 
-
-# # media files configurations
-# MEDIA_ROOT = BASE_DIR / "media"
-# MEDIA_URL = '/media/'
 
 
 

@@ -16,15 +16,7 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                     Add Product
                 </button>
-                {% if messages %}
-                <div>
-                    {% for message in messages %}
-                        <div style="color: {% if message.tags == 'success' %}#94c494{% else %}red{% endif %}; padding: 10px; margin: 5px;">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+                
                 <!-- Hoverable Table rows -->
                 <div class="card">
                   <h5 class="card-header">Product List</h5>
