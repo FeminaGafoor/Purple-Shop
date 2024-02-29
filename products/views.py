@@ -70,14 +70,14 @@ def search(request):
         if search_product:
             category_slug = request.GET.get('category', '')
             
-         
+            # Filter products based on search query
             products = Product.objects.order_by('-created_date').filter(
                 Q(description__icontains=search_product) | Q(product_name__icontains=search_product)
             )
             
-   
+            # If category_slug is provided, filter products by category
             if category_slug:
-        
+                # Filter by category field and then by slug
                 products = products.filter(category__slug=category_slug)
 
     context = {
