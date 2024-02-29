@@ -149,12 +149,12 @@
             </li>
 
             <li>
-                <a href="product.html">Shop</a>
+                <a href="{% url 'shop_app:shop' %}">Shop</a>
             </li>
 
-            <li>
+            {% comment %} <li>
                 <a href="{% url 'outgoing_app:cart' %}" class="label1 rs1" data-label1="hot">Features</a>
-            </li>
+            </li> {% endcomment %}
 
             <li>
                 <a href="blog.html">Blog</a>
