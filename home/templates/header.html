@@ -49,17 +49,17 @@
                         </li>
 
                         
-
+{% comment %} 
                         <li>
                             <a href="blog.html">Blog</a>
                         </li>
 
                         <li>
                             <a href="about.html">About</a>
-                        </li>
+                        </li> {% endcomment %}
 
                         <li>
-                            <a href="contact.html">Contact</a>
+                            <a href="{% url 'shop_app:contact' %}">Contact</a>
                         </li>
                     </ul>
                 </div>	
@@ -154,16 +154,16 @@
                 <a href="{% url 'outgoing_app:cart' %}" class="label1 rs1" data-label1="hot">Features</a>
             </li> {% endcomment %}
 
-            <li>
+            {% comment %} <li>
                 <a href="blog.html">Blog</a>
             </li>
 
             <li>
                 <a href="about.html">About</a>
-            </li>
+            </li> {% endcomment %}
 
             <li>
-                <a href="contact.html">Contact</a>
+                <a href="{% url 'shop_app:shop' %}">Contact</a>
             </li>
         </ul>
     </div>

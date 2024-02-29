@@ -108,17 +108,8 @@
                         </li>
 
                         
-
                         <li>
-                            <a href="blog.html">Blog</a>
-                        </li>
-
-                        <li>
-                            <a href="about.html">About</a>
-                        </li>
-
-                        <li>
-                            <a href="contact.html">Contact</a>
+                            <a href="{% url 'shop_app:contact' %}">Contact</a>
                         </li>
                     </ul>
                 </div>	 
@@ -140,7 +131,7 @@
         </div>	
     </div> 
 
-    {% comment %} <!-- Header Mobile -->
+    <!-- Header Mobile -->
     <div class="wrap-header-mobile">
         <!-- Logo moblie -->		
         <div class="logo-mobile">
@@ -212,19 +203,13 @@
                 <a href="product.html">Shop</a>
             </li>
             
-            <li>
-                <a href="blog.html">Blog</a>
-            </li>
+            
 
             <li>
-                <a href="about.html">About</a>
-            </li>
-
-            <li>
-                <a href="contact.html">Contact</a>
+                <a href="{% url 'shop_app:contact' %}">Contact</a>
             </li>
         </ul>
-    </div> {% endcomment %}
+    </div> 
 </header>
 
 </body>

@@ -85,3 +85,11 @@ def search(request):
     }
     return render(request, "shop.html", context)
 
+
+
+
+def contact(request):
+    
+    return render(request, "contact.html")
+    
+
