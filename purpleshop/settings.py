@@ -315,34 +315,6 @@ WSGI_APPLICATION = 'purpleshop.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
-#         'NAME': config('DB_NAME', default=''),
-#         'USER': config('DB_USER', default=''),
-#         'PASSWORD': config('DB_PASSWORD', default=''),
-#         'HOST': config('DB_HOST', default=''),
-#         'PORT': config('DB_PORT', default=''),
-#     }
-# }
-
-
-# database for hosting-----------
-
-DATABASES = {
-
-            'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'myproject',
-            'USER': 'myprojectuser',
-            'PASSWORD': 'password',
-            'HOST': 'localhost',
-            'PORT': '',
-            }
-            }
-
-# database for hosting-----------
-
 # Password validation
 
 
@@ -379,6 +351,38 @@ USE_TZ = True
 
 
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config('DB_NAME', default=''),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default=''),
+        'PORT': config('DB_PORT', default=''),
+    }
+}
+
+
+# database for hosting-----------
+
+# DATABASES = {
+
+#             'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'myproject',
+#             'USER': 'myprojectuser',
+#             'PASSWORD': 'password',
+#             'HOST': 'localhost',
+#             'PORT': '',
+#             }
+#             }
+
+# database for hosting-----------
+
+
+
+
 # media files configurations
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
@@ -388,17 +392,17 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # static for host-----------
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # static for host-----------
 
 
 
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static'),
-# ]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+   os.path.join(BASE_DIR, 'static'),
+]
 
 
 

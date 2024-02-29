@@ -7,7 +7,7 @@ from products.models import Category, Product
 
 def home(request):
     
-    product = Product.objects.all()
+    product = Product.objects.all()[:8]
     categories = Category.objects.all()
     
 
