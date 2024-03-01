@@ -61,39 +61,11 @@
                                             <div class="form-group row">
                                                 <label for="email" class="col-sm-4 col-form-label">Phone:</label>
                                                 <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number" value="{{ profile.phone }}" required>
+                                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number" value="{{ profile.phone }}" pattern="[0-9]+" required>
                                                 </div>
                                             </div>
                                             <br>
-                                            {% comment %} <div class="form-group row">
-                                                <label for="email" class="col-sm-4 col-form-label">Address:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address" value="{{ profile.address}}" required>
-                                                </div>
-                                            </div>
                                             
-                                            
-                                            <div class="form-group row">
-                                                <label for="email" class="col-sm-4 col-form-label">City:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City" value="{{ profile.city }}" required>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="form-group row">
-                                                <label for="email" class="col-sm-4 col-form-label">State:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="state" name="state" placeholder="Enter Your State" value="{{ profile.state }}" required>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="form-group row">
-                                                <label for="phone" class="col-sm-4 col-form-label">Country:</label>
-                                                <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="country" name="country" placeholder="Enter Your Country" value="{{ profile.country }}" required>
-                                            </div> {% endcomment %}
-                                            
-                                            {% comment %} </div> {% endcomment %}
                                             
                                             <!-- Profile Photo -->
 

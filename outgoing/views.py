@@ -1,11 +1,12 @@
-from django.http import HttpResponse
+
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+
 from accounts.models import Address, User_Profile
-from coupon.models import Coupon
 from .models import Cart, CartItem
 from products.models import Product, ProductVariant
-from django.core.exceptions import ObjectDoesNotExist
+
 
 
 # Create your views here.

@@ -3,48 +3,15 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib import messages
+
 from outgoing.models import CartItem
 from accounts.models import PaymentWallet, User_Profile
 from orders.models import Order, OrderProduct
 
+
 # Create your views here.
 
 
-
-# class UserOrderView(View):
-    
-#     template_name="user_order.html"
-    
-#     def get(self,request):    
-        
-#         user_profile = get_object_or_404(User_Profile, user=request.user)
-#         orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
-#         order_products = OrderProduct.objects.filter(order__in=orders, user=user_profile).order_by("-id")
-#         user_profile_image_url = user_profile.image.url if user_profile.image else None
-        
-#         sub_total = 0
-#         for order_product in order_products:
-#             # Calculate the subtotal for each ordered product
-#             product_total = order_product.price * order_product.quantity
-#             sub_total += product_total
-#             tax = (2 * product_total)/100
-
-#         # Add additional charges (tax, shipping, etc.) to the subtotal
-#         additional_charges = 40 + tax # Example: You can replace this with your actual additional charges
-#         grand_total = sub_total + additional_charges
-            
-        
-        
-#         context = {
-#             "orders": orders,
-#             "order_products": order_products,
-#             'sub_total': sub_total,
-#             'grand_total': grand_total,
-#             'user_profile':user_profile,
-#             'user_profile_image_url':user_profile_image_url
-#         }
-
-#         return render(request,self.template_name,context)
 
 
 class UserOrderView(View):

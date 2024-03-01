@@ -179,24 +179,24 @@
                     {% if orderstatus >= 2 %}
                         <div class="step active">
                             <span class="icon"> <i class="fa fa-check"></i> </span>
-                            <span class="text">Picked by courier</span>
+                            <span class="text">Preparing</span>
                         </div>
                     {% else %}
                         <div class="step">
                             <span class="icon"> <i class="fa fa-check"></i> </span>
-                            <span class="text">Picked by courier</span>
+                            <span class="text">Preparing</span>
                         </div>
                     {% endif %}
                 
                     {% if orderstatus >= 3 %}
                         <div class="step active">
                             <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                            <span class="text">Preparing</span>
+                            <span class="text">Picked by courier</span>
                         </div>
                     {% else %}
                         <div class="step">
                             <span class="icon"> <i class="fa fa-cogs"></i> </span>
-                            <span class="text">Preparing</span>
+                            <span class="text">Picked by courier</span>
                         </div>
                     {% endif %}
                 
@@ -215,12 +215,12 @@
                     {% if orderstatus >= 5 %}
                         <div class="step active">
                             <span class="icon"> <i class="fa fa-check"></i></span>
-                            <span class="text">Ready for pickup</span>
+                            <span class="text">Out for delivery</span>
                         </div>
                     {% else %}
                         <div class="step">
                             <span class="icon"> <i class="fa fa-check"></i> </span>
-                            <span class="text">Ready for pickup</span>
+                            <span class="text">Out for delivery</span>
                         </div>
                     {% endif %}
                 {% else %}

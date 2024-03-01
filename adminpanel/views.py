@@ -1,24 +1,24 @@
-
 from decimal import Decimal
 from django.contrib.auth.models import User
-from django.db.models import Q 
+from django.db.models import Q
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-from django.views import View
-from products.models import Category, Product, ProductVariant
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
-from accounts.models import  Address, PaymentWallet, User_Profile
-from orders.models import Order, OrderProduct, Payment
-from coupon.models import Coupon
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.db.models import Count, Sum ,FloatField
-from django.db.models import Sum, DecimalField, F
+from django.db.models import Count, Sum, FloatField
+from django.db.models import Sum
 from django.db.models.functions import Cast
+
+from products.models import Category, Product, ProductVariant
+from accounts.models import Address, PaymentWallet, User_Profile
+from orders.models import Order, OrderProduct, Payment
+from coupon.models import Coupon
+
 
 # Create your views here.
 
@@ -657,33 +657,71 @@ def delete_coupon(request, id):
 
 
 
-def order_list(request):
+# def order_list(request):
     
-    print("order_list||||||||||||||||||||||||||||||||||||")
-    if request.method == 'POST':
-        print("||||||||||||||||||||||||||||||||||+++++++++++++")
-        selected_status = request.POST['orderStatus']
-        print(selected_status,"selected_status|||||||||")
-        selected_order_id = request.POST['orderId']
-        print(selected_order_id,"selected_order_id|||||||")
-        selected_order = Order.objects.get(pk=selected_order_id)
-        print(selected_order,"selected_order||||||")
-        selected_order.status = selected_status
-        selected_order.save()
-        # return HttpResponseRedirect(reverse('admin_panel:order_list'))
-        
-    order_product = OrderProduct.objects.all().order_by('created_at')
-    print(order_product,"order_product||||||||||||||||||||||||||||||||||||||||||||||||||||")
+#     print("order_list||||||||||||||||||||||||||||||||||||")
+#     if request.method == 'POST':
+#         print("||||||||||||||||||||||||||||||||||+++++++++++++")
+#         selected_status = request.POST['orderStatus']
+#         print(selected_status,"selected_status|||||||||")
+#         selected_order_id = request.POST['orderId']
+#         print(selected_order_id,"selected_order_id|||||||")
+#         selected_order = Order.objects.get(pk=selected_order_id)
+#         print(selected_order,"selected_order||||||")
+#         selected_order.status = selected_status
+#         print(selected_order.status,"selected_order.status|||||")
+#         selected_order.save()
+#         return HttpResponseRedirect(reverse('admin_panel:order_list'))
     
-    order_status = Order.ORDER_STATUS
+    
+#     order_product = OrderProduct.objects.filter(order__status='selected_order.status').order_by('created_at')
+    
+#     # order_product = OrderProduct.objects.all().order_by('created_at')
+#     print(order_product,"order_product||||||||||||||||||||||||||||||||||||||||||||||||||||")
+    
+#     order_status = Order.ORDER_STATUS
     
 
+#     context = {
+#         'order_product': order_product, 
+#         'order_status': order_status,
+#     }
+
+#     return render(request, 'order_list.html', context)
+
+
+def order_list(request):
+    print("order_list||||||||||||||||||||||||||||||||||||")
+    
+    order_product = OrderProduct.objects.all().order_by('created_at')  # Move this line up
+
+    if request.method == 'POST':
+        selected_status = request.POST.get('orderStatus')
+        selected_order_id = request.POST.get('orderId')
+        selected_order = Order.objects.get(pk=selected_order_id)
+        selected_order.status = selected_status
+        selected_order.save()
+        return HttpResponseRedirect(reverse('admin_panel:order_list'))
+
+    # Modify the queryset to filter based on the selected status
+    selected_status_filter = request.GET.get('orderStatus', '')  # Get the selected status from the URL parameters
+    if selected_status_filter:
+        order_product = order_product.filter(order__status=selected_status_filter)
+
+    print(order_product, "order_product after status change||||||||||||||||||||||||||||||||||||")
+
+    order_status = Order.ORDER_STATUS
+
     context = {
-        'order_product': order_product, 
+        'order_product': order_product,
         'order_status': order_status,
     }
 
     return render(request, 'order_list.html', context)
+
+
+
+
 
 
     
@@ -692,8 +730,10 @@ def order_details(request, id):
     print(id,"id|||||||||||||||||||||||||||")
 
     order_details = Order.objects.get(id=id)
+    print(order_details.address,"||||||||||address")
     
     address = Address.objects.filter(user=order_details.user).last()
+    print(address,"++++++++")
   
     payment_method = order_details.payment.payment_method if order_details.payment else None
 

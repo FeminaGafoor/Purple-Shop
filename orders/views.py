@@ -1,24 +1,22 @@
-from django.shortcuts import render
 from decimal import Decimal
-from django.conf import settings
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.urls import reverse
-from django.http import HttpResponseRedirect
 import datetime
-from email import message
 import json
+
+from django.conf import settings
+from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils import timezone
+
+from accounts.models import PaymentWallet, User_Profile
+from coupon.models import Coupon
 from outgoing.models import CartItem
 from products.models import Product, ProductVariant
-from accounts.models import PaymentWallet, User_Profile
-from django.template.loader import render_to_string
-from django.utils import timezone
-from coupon.models import Coupon
 from .models import Order, OrderProduct, Payment
+
 
 
 # Create your views here.
