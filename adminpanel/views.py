@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.db.models import Count, Sum, FloatField
 from django.db.models import Sum
 from django.db.models.functions import Cast
+from django.views import View
 
 from products.models import Category, Product, ProductVariant
 from accounts.models import Address, PaymentWallet, User_Profile
@@ -30,28 +31,21 @@ from coupon.models import Coupon
 
 @login_required
 def admin_dashboard(request):
-    
     if request.user.is_authenticated and request.user.is_superuser:
-        super_user = User.objects.filter(is_superuser=True)
-        if super_user.exists():
-            super_user = super_user[0]
-        
+        super_user = User.objects.filter(is_superuser=True).first()
         product_counts = Product.objects.count()
         user_counts = User.objects.count()
         orders_count = Order.objects.filter(status=5).count()
-        print(orders_count,"orders_count||||||||||||")
-        
-        
+
         payment_counts = (
             Payment.objects.values("payment_method")
             .annotate(count=Count("payment_method"))
             .order_by("-count")
         )
         total_payment_count = payment_counts.aggregate(Sum('count'))['count__sum']
-        
+
         total_transaction_count = Payment.objects.count()
-        
-        
+
         all_payments = Payment.objects.all()
         total_revenue = sum(Decimal(payment.amount_paid) for payment in all_payments)
         total_sales = Decimal('10000.00')
@@ -60,29 +54,28 @@ def admin_dashboard(request):
         print(f'Total Revenue: {total_revenue}')
         print(f'Revenue Percentage: {revenue_percentage:.2f}%')
         print(revenue_percentage)
-        
-        
+
         category_wise_order_count = OrderProduct.objects.values('product__category__category_name').annotate(order_count=Count('id'))
-        print(category_wise_order_count,"category_wise_order_count||||||||||")
-        
-        
-        
+        print(category_wise_order_count, "category_wise_order_count||||||||||")
+
         total_income = Order.objects.aggregate(total_income=Sum('order_total'))['total_income'] or 0
+        total_income = round(total_income, 2)
         print(total_income)
+
         total_sales = Order.objects.aggregate(total_sales=Sum('order_total'))['total_sales'] or 0
+        total_sales = round(total_sales, 2)
         print(total_sales)
+
         # Calculate total income percentage
         income_percentage = (total_income / total_sales) * 100 if total_sales > 0 else 0
         print(income_percentage)
 
-        
         total_refund_amount = PaymentWallet.objects.aggregate(total_refund=Sum('wallet_balance'))['total_refund']
         total_refund_amount = total_refund_amount or Decimal('0')
         print(total_refund_amount)
-        
-        
+
         paypal_total_amount = Payment.objects.filter(
-        payment_method='PayPal'
+            payment_method='PayPal'
         ).annotate(
             amount_paid_float=Cast('amount_paid', FloatField())
         ).aggregate(
@@ -90,10 +83,9 @@ def admin_dashboard(request):
         )['total_amount'] or 0
 
         print(paypal_total_amount)
-                
-                
+
         cod_total_amount = Payment.objects.filter(
-        payment_method='COD'
+            payment_method='COD'
         ).annotate(
             amount_paid_float=Cast('amount_paid', FloatField())
         ).aggregate(
@@ -101,25 +93,24 @@ def admin_dashboard(request):
         )['total_amount'] or 0
         cod_total_amount_rounded = round(cod_total_amount, 2)
         print(cod_total_amount_rounded)
-            
-        
-        context={
-            "super_user":super_user,
-            "product_counts":product_counts,
-            "user_counts":user_counts,
-            "orders_count":orders_count,
-            "total_payment_count":total_payment_count,
-            "total_transaction_count":total_transaction_count,
-            "revenue_percentage":revenue_percentage,
-            "category_wise_order_count":category_wise_order_count,
-            "total_income":total_income,
-            "income_percentage":income_percentage,
-            "total_refund_amount":total_refund_amount,
+
+        context = {
+            "super_user": super_user,
+            "product_counts": product_counts,
+            "user_counts": user_counts,
+            "orders_count": orders_count,
+            "total_payment_count": total_payment_count,
+            "total_transaction_count": total_transaction_count,
+            "revenue_percentage": revenue_percentage,
+            "category_wise_order_count": category_wise_order_count,
+            "total_income": total_income,
+            "income_percentage": income_percentage,
+            "total_refund_amount": total_refund_amount,
             "paypal_total_amount": paypal_total_amount,
             "cod_total_amount_rounded": cod_total_amount_rounded,
         }
-        
-        return render(request, 'admin_index.html',context)
+
+        return render(request, 'admin_index.html', context)
     else:
         return HttpResponseRedirect('/admin_login/')
     
@@ -657,70 +648,37 @@ def delete_coupon(request, id):
 
 
 
-# def order_list(request):
-    
-#     print("order_list||||||||||||||||||||||||||||||||||||")
-#     if request.method == 'POST':
-#         print("||||||||||||||||||||||||||||||||||+++++++++++++")
-#         selected_status = request.POST['orderStatus']
-#         print(selected_status,"selected_status|||||||||")
-#         selected_order_id = request.POST['orderId']
-#         print(selected_order_id,"selected_order_id|||||||")
-#         selected_order = Order.objects.get(pk=selected_order_id)
-#         print(selected_order,"selected_order||||||")
-#         selected_order.status = selected_status
-#         print(selected_order.status,"selected_order.status|||||")
-#         selected_order.save()
-#         return HttpResponseRedirect(reverse('admin_panel:order_list'))
-    
-    
-#     order_product = OrderProduct.objects.filter(order__status='selected_order.status').order_by('created_at')
-    
-#     # order_product = OrderProduct.objects.all().order_by('created_at')
-#     print(order_product,"order_product||||||||||||||||||||||||||||||||||||||||||||||||||||")
-    
-#     order_status = Order.ORDER_STATUS
-    
-
-#     context = {
-#         'order_product': order_product, 
-#         'order_status': order_status,
-#     }
-
-#     return render(request, 'order_list.html', context)
-
-
 def order_list(request):
-    print("order_list||||||||||||||||||||||||||||||||||||")
-    
-    order_product = OrderProduct.objects.all().order_by('created_at')  # Move this line up
+    url = request.META.get('HTTP_REFERER')
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        print("|||||||||||")
+        order_status = Order.ORDER_STATUS
+        order_products = OrderProduct.objects.all().order_by('created_at')
+        unique_order_ids = []
+        unique_order_products = []
+
+        for order_product in order_products:
+            if order_product.order_id not in unique_order_ids:
+                unique_order_ids.append(order_product.order_id)
+                unique_order_products.append(order_product)
+
+        context = {
+            'order_product': unique_order_products,
+            'order_status': order_status,
+        }
+
+        return render(request, 'order_list.html', context)
+
+    elif request.method == 'POST':
         selected_status = request.POST.get('orderStatus')
         selected_order_id = request.POST.get('orderId')
-        selected_order = Order.objects.get(pk=selected_order_id)
+        selected_order = get_object_or_404(Order, pk=selected_order_id)
         selected_order.status = selected_status
         selected_order.save()
-        return HttpResponseRedirect(reverse('admin_panel:order_list'))
 
-    # Modify the queryset to filter based on the selected status
-    selected_status_filter = request.GET.get('orderStatus', '')  # Get the selected status from the URL parameters
-    if selected_status_filter:
-        order_product = order_product.filter(order__status=selected_status_filter)
-
-    print(order_product, "order_product after status change||||||||||||||||||||||||||||||||||||")
-
-    order_status = Order.ORDER_STATUS
-
-    context = {
-        'order_product': order_product,
-        'order_status': order_status,
-    }
-
-    return render(request, 'order_list.html', context)
-
-
-
+        return HttpResponseRedirect(url)
+                
 
 
 
@@ -806,8 +764,6 @@ def cancel_list(request):
 
 
 def refund(request,id):
-    
-    
     url = request.META.get('HTTP_REFERER')
     order_product = OrderProduct.objects.get(id=id)
    

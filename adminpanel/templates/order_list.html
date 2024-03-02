@@ -40,7 +40,7 @@
                         {% for order in order_product %}
                         {% comment %} {% if order.order.status != "Return" %} {% endcomment %}
                         {% if order.order.status != 6 and order.order.status != 7 %}
-                        {% if order.order.id|changed %}
+                        
                         <tr>
                           <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>{{ order.order.id }}</strong></td>
                           <td>{{ order.user.user_name}}</td>
@@ -118,7 +118,7 @@
                           </td>
                         </tr>
                       
-                      {% endif %}
+                
                       {% endif %}
                       {% endfor %}
                       

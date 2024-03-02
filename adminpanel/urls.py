@@ -50,12 +50,11 @@ urlpatterns = [
     path("edit_coupon/<int:id>/",views.edit_coupon,name="edit_coupon"),
     path("delete_coupon/<int:id>/",views.delete_coupon,name="delete_coupon"),
     
-    # path("soft_delete_coupon/<int:id>/",views.soft_delete_coupon,name="soft_delete_coupon"),
-    # path("undelete_coupon/<int:id>/",views.undelete_coupon,name="undelete_coupon"),
     
     # Order Management
     
     path('order_list/',views.order_list,name='order_list'),
+   
     path('order_details/<int:id>/', views.order_details, name="order_details"),
     path('cancel_product/<int:order_id>/<int:product_id>/',views.cancel_product,name='cancel_product'),
     path('cancel_list/',views.cancel_list,name='cancel_list'),
