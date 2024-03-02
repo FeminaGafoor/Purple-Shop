@@ -29,11 +29,15 @@ from django.core.mail import EmailMessage
 
 
 def sign_up(request):
+    print("|||||||||||||||||||||||||||||")
     if request.method == 'POST':
+        
         form = SignUpForm(request.POST)
         
         if form.is_valid():
+            print("||||||||||!!!!!!!!!!!!!")
             form.save()
+            
             username = form.cleaned_data.get('username')
             print(username)
             password = form.cleaned_data.get('password1')
@@ -50,7 +54,7 @@ def sign_up(request):
             message = f'Your OTP code for signup is: {otp}'
             from_email = settings.EMAIL_HOST_USER
             recipient_list = [email]
-           
+            
             
             
             send_mail(subject, message, from_email, recipient_list)
