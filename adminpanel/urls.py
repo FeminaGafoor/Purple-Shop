@@ -63,7 +63,7 @@ urlpatterns = [
     # Sales Details
     path('sales_report/',views.sales_report,name='sales_report'),
     path('generate_report/',views.generate_report,name='generate_report'),
-    # path('sales_report_pdf/',views.sales_report_pdf,name='sales_report_pdf'),
+    path('sales_report_pdf/',views.sales_report_pdf,name='sales_report_pdf'),
     
  
 ]

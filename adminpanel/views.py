@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -14,6 +14,13 @@ from django.db.models import Count, Sum, FloatField
 from django.db.models import Sum
 from django.db.models.functions import Cast
 from django.views import View
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.http import HttpResponse
+from django.shortcuts import render
+from orders.models import Order
 
 from products.models import Category, Product, ProductVariant
 from accounts.models import Address, PaymentWallet, User_Profile
@@ -811,7 +818,7 @@ def refund(request,id):
         
 def sales_report(request):
     order_instance = Order()
-    print(order_instance.ORDER_STATUS,"order_instance||||||||||||||||")
+    
 
     context = {
         'order_status_choices': order_instance.ORDER_STATUS
@@ -822,11 +829,14 @@ def sales_report(request):
 
 
 def generate_report(request):
+    
     try:
         order_instance = Order()
+        print(order_instance)
         start_date = request.GET.get("start_date")
-        print(start_date)
+        print(start_date,"!!!!!!!!!!!!!!")
         end_date = request.GET.get("end_date")
+        print(end_date,"!!!!!!!!!!!!!!!")
         status = request.GET.get("status")
         print(status)
 
@@ -851,76 +861,79 @@ def generate_report(request):
         return render(request, "404.html")
     
 
-# def sales_report_pdf(request):
-#     try:
-#         start_date = request.session["start_date"]
-#         end_date = request.session["end_date"]
-#         status = request.session["status"]
+
+
+
+def sales_report_pdf(request):
+    try:
+        start_date = request.session["start_date"]
+        end_date = request.session["end_date"]
+        status = request.session["status"]
+
+        filtered_orders = Order.objects.filter(
+            created_at__range=[start_date, end_date],
+            status=status if status else None,
+        ).order_by("created_at")
+
+        data = [
+            [
+                "ID",
+                "User",
+                "Order Number",
+                "Order Date",
+                "Status",
+                "Tax",
+                "Shipping",
+                "Grand Total",
+            ]
+        ]
         
+        for sale in filtered_orders:
+            data.append(
+                [
+                    sale.id,
+                    sale.user.username,
+                    sale.order_number,
+                    sale.created_at,
+                    sale.get_status_display(),
+                    sale.tax,
+                    40,
+                    sale.order_total,
+                ]
+            )
 
+        # Create PDF
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
 
-#         filtered_orders = Order.objects.filter(
-#             created_at__range=[start_date, end_date],
-#             status=status if status else None,
-#         ).order_by("created_at")
+        # Create PDF document
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        table = Table(data)
 
-#         data = [
-#             [
-#                 "ID",
-#                 "User",
-#                 "Order Number",
-#                 "Order Date",
-#                 "Status",
-#                 "Tax",
-#                 "Shipping",
-#                 "Grand Total",
-#             ]
-#         ]
-        
-#         for sale in filtered_orders:
-#             data.append(
-#                 [
-#                     sale.id,
-#                     sale.user.username,
-#                     sale.order_number,
-#                     sale.created_at,
-#                     sale.get_status_display(),
-#                     sale.tax,
-#                     40,
-#                     sale.order_total,
-#                 ]
-#             )
+        # Apply table styles
+        style = TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+            ]
+        )
 
-#         # Create PDF
-#         response = HttpResponse(content_type="application/pdf")
-#         response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
+        table.setStyle(style)
+        doc.build([table])
 
-#         # doc = SimpleDocTemplate(response, pagesize=letter)
-#         # table = Table(data)
+        request.session.pop("start_date", None)
+        request.session.pop("end_date", None)
+        request.session.pop("status", None)
 
-#         # # Apply table styles
-#         # style = TableStyle(
-#         #     [
-#         #         ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
-#         #         ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-#         #         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-#         #         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-#         #         ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
-#         #         ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-#         #         ("GRID", (0, 0), (-1, -1), 1, colors.black),
-#         #     ]
-#         # )
+        return response
+    except Exception as e:
+        print(e)
+        return render(request, "404.html")
 
-#         # table.setStyle(style)
-#         # doc.build([table])
-
-#         request.session.pop("start_date", None)
-#         request.session.pop("end_date", None)
-#         request.session.pop("status", None)
-
-#         return response
-#     except Exception as e:
-#         print(e)
-#         return render(request, "404.html")
 
 

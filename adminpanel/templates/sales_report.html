@@ -125,7 +125,7 @@
               <form method="get" action="{% url 'admin_panel:generate_report' %}">
               <div class="container-xxl flex-grow-1 container-p-y">
                 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sales Report</h4>
-                <a href="#" class="btn btn-secondary">Download PDF</a>
+                    <a href="{% url 'admin_panel:sales_report_pdf' %}" class="btn btn-secondary">Download PDF</a>
                <hr class="my-5" />
 
 

@@ -1,4 +1,4 @@
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from outgoing.models import Cart, CartItem
 from outgoing.views import _cart_id
@@ -60,26 +60,20 @@ def single_product(request,category_slug,product_slug):
     return render(request, "single_product.html",context)
     
 
+# search--------------------------->
+
 
 def search(request):
     products = []
-
+    print("!!!!!!!!!!!!!!!!!!!!!11")
     if 'search_product' in request.GET:
         search_product = request.GET['search_product']
-
+        print(search_product,"search_product")
         if search_product:
-            category_slug = request.GET.get('category', '')
-            
-            # Filter products based on search query
             products = Product.objects.order_by('-created_date').filter(
                 Q(description__icontains=search_product) | Q(product_name__icontains=search_product)
             )
-            
-            # If category_slug is provided, filter products by category
-            if category_slug:
-                # Filter by category field and then by slug
-                products = products.filter(category__slug=category_slug)
-
+           
     context = {
         'product': products
     }
@@ -87,6 +81,52 @@ def search(request):
 
 
 
+
+from django.http import JsonResponse
+
+def get_product_suggestions(request):
+    search_query = request.GET.get('search_query', '')
+    suggestions = []
+
+    if search_query:
+        products = Product.objects.filter(title__icontains=search_query)
+        suggestions = [product.title for product in products]
+
+    return JsonResponse({'suggestions': suggestions})
+
+
+
+
+# search ends --------------------------->
+
+
+# filter--------------------------->
+
+def filter(request):
+
+    price_range = request.GET.get('price_range', 'All')
+    if price_range == 'All':
+        products = Product.objects.filter(is_available=True).order_by('id')
+    else:
+        min_price, max_price = price_range.split('-')
+        products = Product.objects.filter(price__range=(min_price, max_price), is_available=True).order_by('id')
+        
+
+    serialized_products = [
+        {
+            'product_name': product.product_name,
+            'price': product.price,
+            'images': product.images,
+        } for product in products
+    ]
+    print(serialized_products,"serialized_products!!!!!!!!!!!!!")
+
+    context = {'product': serialized_products}
+
+    return render(request, 'shop.html', context)
+
+
+# filter ends--------------------------->
 
 def contact(request):
     
