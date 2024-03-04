@@ -42,7 +42,7 @@ def admin_dashboard(request):
         super_user = User.objects.filter(is_superuser=True).first()
         product_counts = Product.objects.count()
         user_counts = User.objects.count()
-        orders_count = Order.objects.filter(status=5).count()
+        orders_count = Order.objects.count()
 
         payment_counts = (
             Payment.objects.values("payment_method")
