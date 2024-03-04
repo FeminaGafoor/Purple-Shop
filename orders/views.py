@@ -28,7 +28,7 @@ from .models import Order, OrderProduct, Payment
 
 def place_order(request, total=0, quantity=0):
     
-    print("+++++++++++++++++++placeor")
+
     current_user = request.user
     # if the cart count <= 0 redirect to shop
     cart_items = CartItem.objects.filter(user = current_user)
@@ -55,7 +55,7 @@ def place_order(request, total=0, quantity=0):
         # form = OrderForm(request.POST)
         print("inside form")
         user_name = request.POST.get("user_name")
-        print(user_name,"user_name000000000")
+        print(user_name,"user_name")
         phone = request.POST.get("phone")
         print(phone,"phone")
         email = request.POST.get("email")
@@ -72,14 +72,14 @@ def place_order(request, total=0, quantity=0):
             or not city
             or not country
         ):
-            print("++++++++++++++++++++")
+    
             messages.error(request, "Please fill in all required fields.")
             return redirect("order_app:place_order/")
 
             
-        print("___________________________")
+     
         data = Order()
-        print(data,"data__________________")
+     
         data.user = current_user
         data.user_name = user_name
         data.phone = phone                                               
@@ -92,11 +92,11 @@ def place_order(request, total=0, quantity=0):
         data.tax = tax
         data.shipping = shipping
         data.ip = request.META.get('REMOTE_ADDR')
-        print(data,"dtaa2__________________")
+     
         data.save()
         print(data,"______________")
         order_id = data.id
-        print(order_id,"&&&&&&&&&&&&&&&&&&")
+        
         # generate order number
         
         yr = int(datetime.date.today().strftime('%Y'))  # Use %Y instead of %y
@@ -140,14 +140,14 @@ def cash_on_delivery(request,number):
     user_profile = get_object_or_404(User_Profile, user=request.user)
 
     
-    print("inside cash on delivery|||||||||||||||||||||||||||||||||")
+
     if orders.exists():
         order = (
             orders.last()
         ) 
         
         coupon_discount = 0 
-        print("if order exist|||||||||||||||||||||||||||||||||")
+     
         if order.coupon:
             coupon_discount = order.coupon.discount_price
             
@@ -158,7 +158,7 @@ def cash_on_delivery(request,number):
             amount_paid=order.order_total - coupon_discount,
             status="Completed",
         )
-        print("if no coupon|||||||||||||||||||||||")
+    
         payment.save()
         
         order.payment = payment
@@ -231,10 +231,10 @@ def apply_coupon(request,total=0, quantity=0):
         shipping = 40 
         grand_total = total+tax+shipping
         grand_total = round(grand_total, 2)
-        print(grand_total,"grand_total")
+       
     
         coupon_code = request.POST.get('coupon')
-        print(coupon_code,"coupon||||||||")
+     
         coupon = Coupon.objects.filter(code=coupon_code, active=True).first()
         
         
@@ -256,13 +256,11 @@ def apply_coupon(request,total=0, quantity=0):
                 # Check if the order total meets the minimum amount requirement
                 if total >= coupon.minimum_amount:
                     print(total,"total")
-                    print(coupon.discount_price,"coupon.discount_price___________________________")
+                  
                     coupon_amount=coupon.discount_price
-                    # Apply the discount to the total
+                    
                     amount_payable = grand_total - coupon_amount
-                    # print(discount_amount,"discount_amount")
-                    # amount_payable = grand_total - discount_amount
-                    print(amount_payable,"amount_payable+++++++++++++++++++++++++++++++++")
+                  
                     order.coupon = coupon
                     order.save()
                     
@@ -292,7 +290,7 @@ def apply_coupon(request,total=0, quantity=0):
 
 def payments(request):
     body = json.loads(request.body)
-    print("from payments||||||||||||||||||||||||||||||||||")
+   
     orders = Order.objects.filter(
         user=request.user, is_ordered=False, order_number=body["orderID"]
     )
@@ -394,7 +392,7 @@ def wallet_payment(request, number):
     if orders and user_wallet.wallet >= orders.order_total:
         coupon_discount = 0 
 
-    #     # Check if the order has a coupon applied
+   # Check if the order has a coupon applied
         if orders.coupon:
             coupon_discount = orders.coupon.discount_price
 
@@ -419,16 +417,12 @@ def wallet_payment(request, number):
                 user=request.user,
                 product=item.product,
                 quantity=item.quantity,
-                # variant=item.variant,
+        
                 price=item.product.price,
                 grand_total = orders.order_total - coupon_discount,
                 ordered=True,
             )
             order_product.save()
-
-    #         variant = Variants.objects.get(id=item.variant.id)
-    #         variant.quantity -= item.quantity
-    #         variant.save()
 
         order_total_decimal = Decimal(str(orders.order_total))    
         user_wallet.wallet -= order_total_decimal
@@ -443,7 +437,7 @@ def wallet_payment(request, number):
 
         cart_items.delete()
 
-    #     # Send order confirmation email
+  
         mail_subject = "Thank you for your order"
         message = render_to_string(
             "order_recieved_email.html", {"user": request.user, "order": orders}

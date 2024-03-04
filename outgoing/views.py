@@ -39,8 +39,7 @@ def add_cart(request, product_id):
                 try:
                     variants = ProductVariant.objects.get(product= product,variant_types__iexact=key, variant_value__iexact=value)
                     product_variants.append(variants)
-                    print(variants,"variants_______________________________________")
-                    print(product_variants,"variants++++++++++++++++++++++++++++++++++++++")
+                   
                 except:
                     pass
             
@@ -104,8 +103,7 @@ def add_cart(request, product_id):
                     
                     variants = ProductVariant.objects.get(product= product,variant_types__iexact=key, variant_value__iexact=value)
                     product_variants.append(variants)
-                    print(variants,"variants|||||||||||||||||||||||||||||")
-                    print(product_variants,"product_variants|||||||||||||||||||||||||||||||||")
+                  
                 except:
                     pass
             
@@ -133,11 +131,11 @@ def add_cart(request, product_id):
                 existing_variation = item.product_variant.all()
                 ex_var_list.append(list(existing_variation))
                 id.append(item.id)
-            print(ex_var_list,"+++++++++++++++++++++++++++++++++++++++++++++++++++")   
+          
             
             
             if product_variants in ex_var_list:
-                print("@@@@@@@@@@@@@@")
+
                 # increase cart_item quantity
                 index = ex_var_list.index(product_variants)
                 item_id = id[index]
@@ -225,7 +223,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
             tax = round(tax,2)
             grand_total = total+tax+shipping
             grand_total = round(grand_total, 2)
-            print(grand_total,"grandtotal form cart+++++++++++++++++++++++++++")
+        
     except ObjectDoesNotExist:
         pass
 
@@ -256,13 +254,12 @@ def checkout(request, total=0, quantity=0, cart_items=None):
     user = request.user
     user_pro, created = User_Profile.objects.get_or_create(user=user)
     user_profile_image_url = user_pro.image.url if user_pro.image else None
-    print(user, "user----------------")
-    print(user_pro, "user_pro----------------")
+ 
         
     user_pro.save()
     print(user_pro,"user_pro----------------")
     user_address=Address.objects.filter(user=request.user)
-    print(user_address,"user_address||||||||||||||||||||||||")
+
     
     
     

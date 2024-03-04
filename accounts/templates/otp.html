@@ -71,26 +71,18 @@
 <body>
     
 
-    <form method="POST" action="{% url 'account:otp_func' %}"> <!-- Replace with your form action URL -->
-        {% csrf_token %} <!-- Include this for security -->
+    <form method="POST" action="{% url 'account:otp_func' %}"> 
+        {% csrf_token %}
 
         <label for="otp">Enter the OTP sent to your email:</label>
         <input type="text" id="otp_entered" name="otp_entered" required>
 
-        <!-- Your existing timer and Resend OTP link -->
+        <!--  existing timer and Resend OTP link -->
         <div class="main" style="text-align: center;">
             <p id="timer" style="font-size: 16px; color: #555; padding: 10px; border: 1px solid #ccc; background-color: #f4f4f4;margin-top: 16px;">Time left: <span id="countdown">60</span> seconds</p>
             <a href="{% url 'account:new_otp' %}" id="resendLink" style="display: none;">Resend OTP</a>
-
-
         </div>
-
-
         <button type="submit" style="background-color: black;">Verify OTP</button>
-
-        
-        
-        
     </form>
     <script>
         var countdown = 60;
@@ -103,9 +95,6 @@
                 if (countdown <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById("timer").innerText = "Time's up!";
-                    //document.getElementById("confirmBtn").style.display = "none"; // Hide Confirm button
-                    //document.getElementById("resendLink").style.display = "none"; // Hide Resend OTP link
-
                     document.getElementById("resendLink").style.display = "inline"; // Show Resend OTP link
                 }
             }, 1000);

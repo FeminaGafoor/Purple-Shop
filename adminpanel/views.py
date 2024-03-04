@@ -465,7 +465,7 @@ def product_variant_manage(request):
     
 
 def add_product_variant(request):
-    print("||||||||||||||||||||")
+   
     
     variant_types_choice = (
         ('color', 'Color'),
@@ -479,7 +479,7 @@ def add_product_variant(request):
             variant_value = request.POST.get('variant_value')
             quantity = request.POST.get('quantity')
         
-            print(variant_types, "|||||||||||||||")
+          
 
             # Get the Product instance
             product = Product.objects.filter(product_name=product_name).first()
@@ -659,7 +659,7 @@ def order_list(request):
     url = request.META.get('HTTP_REFERER')
 
     if request.method == 'GET':
-        print("|||||||||||")
+      
         order_status = Order.ORDER_STATUS
         order_products = OrderProduct.objects.all().order_by('created_at')
         unique_order_ids = []
@@ -692,13 +692,13 @@ def order_list(request):
     
 
 def order_details(request, id):
-    print(id,"id|||||||||||||||||||||||||||")
+
 
     order_details = Order.objects.get(id=id)
-    print(order_details.address,"||||||||||address")
+  
     
     address = Address.objects.filter(user=order_details.user).last()
-    print(address,"++++++++")
+
   
     payment_method = order_details.payment.payment_method if order_details.payment else None
 
@@ -741,9 +741,9 @@ def order_details(request, id):
 def cancel_product(request, order_id, product_id):
     if order_id and product_id:
         order = get_object_or_404(Order, id=order_id)
-        print(order,"order from cancel_product|||||||||||||||||||||||||||||")
+    
         product = get_object_or_404(OrderProduct, id=product_id, order=order)
-        print(product,"product from cancel_product|||||||||||||||||||||||||||||||||||")
+       
       
         product.status = 'Cancelled'
         product.save()
@@ -775,7 +775,7 @@ def refund(request,id):
     order_product = OrderProduct.objects.get(id=id)
    
     
-    print(order_product,"from refund|||||||||||||||||||||||||||||")
+
     user_wallet = User_Profile.objects.get(user=order_product.order.user)
     print(user_wallet,"user_wallet|||||||||||||||||")
     if order_product.status == 'Cancelled':
@@ -785,19 +785,19 @@ def refund(request,id):
         
         
     if order_product.order.coupon:
-        print(order_product.order.order_total,"***************************")
+     
         total = order_product.order.order_total - order_product.order.coupon.discount_price
-        print(total,"total|||||||||")
+
         user_wallet.wallet += Decimal(str(total))
     else:
         user_wallet.wallet += Decimal(str(order_product.order.order_total))
     
     
     wallet_details = PaymentWallet(user=order_product.order.user)
-    print(wallet_details,"wallet_details||||||||||||||||||||")
+  
     wallet_details.payment_type = "Credit"
     wallet_details.wallet_balance = Decimal(str(order_product.price))
-    print(wallet_details.wallet_balance ,"wallet_details.wallet_balance ************************")
+ 
     mail_subject = "Your refund has been successfully approved."
     message = render_to_string(
             "refund_recieved_email.html", {"user": order_product.order.user, "wallet": wallet_details.wallet_balance}
@@ -805,8 +805,7 @@ def refund(request,id):
     to_email = order_product.order.user.email
     send_mail = EmailMessage(mail_subject, message, to=[to_email])
     send_mail.send()
-    
-    print("success |||||||||||||||||||||||||||||||||||||||||||||")
+ 
     wallet_details.save()
     user_wallet.save()
     order_product.order.save()
@@ -834,9 +833,9 @@ def generate_report(request):
         order_instance = Order()
         print(order_instance)
         start_date = request.GET.get("start_date")
-        print(start_date,"!!!!!!!!!!!!!!")
+  
         end_date = request.GET.get("end_date")
-        print(end_date,"!!!!!!!!!!!!!!!")
+  
         status = request.GET.get("status")
         print(status)
 
@@ -848,7 +847,7 @@ def generate_report(request):
             created_at__range=[start_date, end_date],
             status=status if status else None,
         ).order_by("created_at")
-        print(filtered_orders,"filtered_orders||||||||||")
+     
 
         context = {
             "sales": filtered_orders,

@@ -22,7 +22,7 @@ class UserOrderView(View):
         orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
         user_profile_image_url = user_profile.image.url if user_profile.image else None
         
-        print("order_detail||||||||||||||")
+
         order_data = []  # List to store order details and associated products
         
         for order in orders:
@@ -93,7 +93,7 @@ class CancelOrder(View):
     template_name = 'order_track.html'
 
     def post(self, request, id):
-        print("||||||||||||||halooooooooooooooo")
+     
         url = request.META.get("HTTP_REFERER")
         if request.method == 'POST':
             reason = request.POST.get('cancel_reason')
@@ -118,9 +118,9 @@ class Invoice(View):
     def get(self, request, id):
         user_profile = get_object_or_404(User_Profile, user=request.user)
         order = get_object_or_404(Order, id=id, user=user_profile.user)
-        print(order.user,"order||||||||||||||||||||||||")
+     
         order_products = OrderProduct.objects.filter(order=order, user=user_profile).order_by("-id")
-        print(order_products,"order_products||||||||||||||")
+     
         
         subtotal = sum(order_product.price * order_product.quantity for order_product in order_products)
         tax = (2 * subtotal) / 100
@@ -141,32 +141,7 @@ class Invoice(View):
         return render(request, self.template_name, context)
 
     
-    
-    
-#    class OrderReturn(View):
-    
-#     def post(self, request, id):
-#         url = request.META.get('HTTP_REFERER')
-#         if request.method == 'POST':
-#             reason = request.POST.get('return_reason')
-#             if not reason:
-#                 messages.error(request,"return reason is required.")
-#                 return HttpResponseRedirect(url)
-#             order_product = get_object_or_404(OrderProduct, id=id)
-#             # Check if the order was placed within the last 7 days since status became "Accepted"
-#             accepted_timestamp = order_product.update_at if order_product.update_at else order_product.create_at
-#             seven_days_ago = accepted_timestamp + timezone.timedelta(days=7)
-#             time = timezone.now()
-#             if time > seven_days_ago:
-#                 messages.error(request, "You can only return the order within 7 days after it's accepted.")
-                
-#                 return HttpResponseRedirect(url)
-#             else:   
-#                 orders = get_object_or_404(OrderProduct, id=id)
-#                 orders.user_note = reason
-#                 orders.status = "Return"
-#                 orders.save()
-#                 return HttpResponseRedirect(url)
+ 
 
 
 
@@ -174,7 +149,7 @@ def wallet(request):
     user = request.user
     if user.is_authenticated:
         user_profile = get_object_or_404(User_Profile, user=request.user)
-        # orders = Order.objects.filter(user=user_profile.user, is_ordered=True).order_by("-created_at")
+       
         user_profile_image_url = user_profile.image.url if user_profile.image else None
         
         wallet_history = PaymentWallet.objects.filter(user=user).order_by('-created_at')

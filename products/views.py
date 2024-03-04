@@ -29,11 +29,6 @@ def shop(request, category_slug=None):
         page = request.GET.get('page')
         paged_product = paginator.get_page(page)
 
-        # price_range = request.GET.get('price_range', None)
-        # if price_range :
-        #     min_price, max_price = get_price_range(price_range)
-        #     product = product.filter(price__gte=min_price, price__lte=max_price)
-
 
     context = {
         'product': paged_product,
@@ -65,7 +60,7 @@ def single_product(request,category_slug,product_slug):
 
 def search(request):
     products = []
-    print("!!!!!!!!!!!!!!!!!!!!!11")
+
     if 'search_product' in request.GET:
         search_product = request.GET['search_product']
         print(search_product,"search_product")
@@ -119,7 +114,7 @@ def filter(request):
             'images': product.images,
         } for product in products
     ]
-    print(serialized_products,"serialized_products!!!!!!!!!!!!!")
+
 
     context = {'product': serialized_products}
 

@@ -29,13 +29,10 @@ from django.core.mail import EmailMessage
 
 
 def sign_up(request):
-    print("|||||||||||||||||||||||||||||")
     if request.method == 'POST':
-        
         form = SignUpForm(request.POST)
-        
         if form.is_valid():
-            print("||||||||||!!!!!!!!!!!!!")
+          
             form.save()
             
             username = form.cleaned_data.get('username')
@@ -366,9 +363,6 @@ def edit_profile(request):
         phone = request.POST["phone"]
         image = request.FILES.get("image")
         
-  
-
-        # Get or create the User instance based on the username
         user_form, created = User.objects.get_or_create(username=username)
         user_form.email = email
         user_form.first_name = firstname
@@ -387,7 +381,7 @@ def edit_profile(request):
         profile.coupon = coupon
         profile.save()
         
-        print(profile.phone,"+++++++++++++++++++((((((((((((((((((((()))))))))))))))))))))")
+        
         return redirect('account:profile')
     else:
         
@@ -412,11 +406,11 @@ def edit_profile(request):
 
 def address(request):
     
-    # Get or create User_profile for the current user
+  
     user_pro, created = User_Profile.objects.get_or_create(user=request.user)
-    # user_profile_image_url = profile.image.url if profile.image else None
+    
     user_address = Address.objects.filter(user=request.user)
-    print("from address++++++++++++++++++++++")
+   
     context = {
         "user_pro":user_pro,
         "user_address": user_address,
@@ -434,7 +428,7 @@ def add_address(request):
         count = Address.objects.filter(user=request.user).count()
 
         if count >=  2:
-            print(count, "count=================")
+  
      
             messages.error(request, "Maximum of two addresses are allowed.")
             return redirect("outgoing_app:checkout")
@@ -472,7 +466,7 @@ def add_address(request):
 # -------------------------EDIT ADDRESS------------------------- 
     
 def edit_address(request):
-    print("edit++++++++++++")
+   
     user_address_id = request.POST.get("user_id")
     user_address = get_object_or_404(Address, id=user_address_id)
 
@@ -492,7 +486,7 @@ def edit_address(request):
         messages.success(request, 'Address updated successfully')
         return redirect('account:address')
 
-    # If the request method is not POST, render the template
+    
     return render(request, "checkout.html")    
     
    
@@ -502,7 +496,7 @@ def delete_address(request,id):
     
     user_address = get_object_or_404(Address, id=id)
     user_address.delete()
-    # Add success message if needed
+
     return redirect('account:address')
    
 
@@ -522,7 +516,7 @@ def change_password(request):
         user = user_profile.user  # Access the associated User instance
        
         if new_password == confirm_password:
-            # Use check_password on the User instance
+            
             success = user.check_password(current_password)
            
             if success:
